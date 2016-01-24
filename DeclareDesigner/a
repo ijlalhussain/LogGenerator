@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- This file has been generated with the OpenXES library. It conforms -->
+<!-- to the XML serialization of the XES standard for log storage and -->
+<!-- management. -->
+<!-- XES standard version: 1.0 -->
+<!-- OpenXES library version: 1.0RC7 -->
+<!-- OpenXES is available from http://www.openxes.org/ -->
+<log xes.version="1.0" xes.features="nested-attributes" openxes.version="1.0RC7" xmlns="http://www.xes-standard.org/">
+	<extension name="Time" prefix="time" uri="http://www.xes-standard.org/time.xesext"/>
+	<extension name="Lifecycle" prefix="lifecycle" uri="http://www.xes-standard.org/lifecycle.xesext"/>
+	<extension name="Concept" prefix="concept" uri="http://www.xes-standard.org/concept.xesext"/>
+	<classifier name="Event Name" keys="concept:name"/>
+	<string key="concept:name" value="Synthetic log for process: fractures treatment"/>
+	<string key="lifecycle:model" value="standard"/>
+	<trace>
+		<string key="concept:name" value="Synthetic trace no. 0"/>
+		<event>
+			<string key="concept:name" value="examination"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2014-01-18T13:26:35.580+02:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="examination"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2014-01-19T05:44:37.032+02:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="sling"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2014-01-20T01:56:22.539+02:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="x-ray"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2014-01-20T21:39:34.921+02:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="surgery"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2014-01-21T10:35:42.433+02:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="cast"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2014-01-21T20:18:34.769+02:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="x-ray"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2014-01-21T23:21:52.090+02:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="cast"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2014-01-22T19:38:11.057+02:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="x-ray"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2014-01-23T13:07:13.238+02:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="rehabilitation"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2014-01-24T04:25:31.951+02:00"/>
+		</event>
+	</trace>
+	<trace>
+		<string key="concept:name" value="Synthetic trace no. 1"/>
+		<event>
+			<string key="concept:name" value="examination"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2014-01-24T21:07:40.384+02:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="fixation"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2014-01-25T01:52:32.419+02:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="rehabilitation"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2014-01-25T03:17:42.843+02:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="x-ray"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2014-01-25T17:01:58.405+02:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="medication"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2014-01-26T13:49:33.002+02:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="medication"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2014-01-27T01:38:22.238+02:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="medication"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2014-01-27T17:16:47.037+02:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="medication"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2014-01-28T14:37:09.918+02:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="x-ray"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2014-01-29T05:51:35.749+02:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="rehabilitation"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2014-01-29T21:42:06.651+02:00"/>
+		</event>
+	</trace>
+	<trace>
+		<string key="concept:name" value="Synthetic trace no. 2"/>
+		<event>
+			<string key="concept:name" value="examination"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2014-01-30T12:02:54.959+02:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="rehabilitation"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2014-01-30T14:38:26.142+02:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="surgery"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2014-01-30T19:21:27.974+02:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="fixation"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2014-01-31T15:56:26.926+02:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="x-ray"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2014-02-01T13:59:47.189+02:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="examination"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2014-02-02T11:16:22.428+02:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="fixation"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2014-02-03T01:08:02.209+02:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="examination"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2014-02-03T14:31:13.143+02:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="x-ray"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2014-02-03T19:46:22.749+02:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="rehabilitation"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2014-02-04T01:45:59.162+02:00"/>
+		</event>
+	</trace>
+</log>
