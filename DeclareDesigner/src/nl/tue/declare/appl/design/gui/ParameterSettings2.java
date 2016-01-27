@@ -32,21 +32,18 @@ package nl.tue.declare.appl.design.gui;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
-import org.deckfour.xes.model.XLog;
-
 import minerful.concept.ProcessModel;
 import minerful.io.encdec.declare.DeclareEncoderDecoder;
 import minerful.logmaker.MinerFulLogMaker;
 import minerful.logmaker.params.LogMakerCmdParameters;
 import minerful.logmaker.params.LogMakerCmdParameters.Encoding;
+import log.generation.*;
 
 public class ParameterSettings2 extends javax.swing.JFrame {
 
@@ -260,8 +257,21 @@ public class ParameterSettings2 extends javax.swing.JFrame {
             	
             	
             	jProgressBar1.setValue(2);
-            	ProcessModel proMod =
-        				DeclareEncoderDecoder.fromDeclareMapToMinerfulProcessModel(ParameterSettings.jTextField5.getText());
+            	
+            	LogGeneration lg = new LogGeneration();
+            	ProcessModel proMod = null;
+            	if(lg.checkforCondition(ParameterSettings.jTextField5.getText()))
+            	{
+            		System.out.println("Modle with Conditions");
+            		proMod = DeclareEncoderDecoder.fromDeclareMapToMinerfulProcessModel(ParameterSettings.jTextField5.getText());	
+            	}
+            	else
+            	{            		
+            		System.out.println("Model with No Conditions");
+            		proMod = DeclareEncoderDecoder.fromDeclareMapToMinerfulProcessModel(ParameterSettings.jTextField5.getText());
+            	}
+            	
+            	 
         		LogMakerCmdParameters logMakParameters = new LogMakerCmdParameters(minVal, maxVal, traceVal);
         		//Tartu MIN_EVENTS_PER_TRACE, MAX_EVENTS_PER_TRACE, TRACES_IN_LOG);
         		jProgressBar1.setValue(6);
