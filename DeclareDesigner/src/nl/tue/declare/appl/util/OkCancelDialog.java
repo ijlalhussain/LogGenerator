@@ -13,8 +13,8 @@ public abstract class OkCancelDialog extends AbstractDialog {
 	 */
 	private static final long serialVersionUID = 898631367862962146L;
 	
-	private Button ok = new Button("ok",true);
-	private Button cancel = new Button("cancel",false);
+	private Button ok = new Button("Ok",true);
+	private Button cancel = new Button("Cancel",false);
 
 	public OkCancelDialog(Dialog parent, String title, Container monitorFrame) {
 		super(parent, title, monitorFrame);

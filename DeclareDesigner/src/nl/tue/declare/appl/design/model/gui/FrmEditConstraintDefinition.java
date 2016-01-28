@@ -44,11 +44,11 @@ public class FrmEditConstraintDefinition extends OkCancelDialog implements
 
 	// components
 	private JTextField condition = new JTextField("");
-	private JButton btnSyntax = new JButton("check syntax");
-	private JTextField name = new JTextField("");
-
-	private JRadioButton mandatory = new JRadioButton("mandatory");
-	private JRadioButton optional = new JRadioButton("optional");
+	private JButton btnSyntax = new JButton("Check Syntax");
+//	private JTextField name = new JTextField("");
+	
+	private JRadioButton mandatory = new JRadioButton("Mandatory");
+	private JRadioButton optional = new JRadioButton("Optional");
 
 	private JComboBox groups = new JComboBox();
 	private JTextArea decription = new TTextArea();
@@ -56,6 +56,12 @@ public class FrmEditConstraintDefinition extends OkCancelDialog implements
 	private JComboBox priority = new JComboBox();
 
 	private JPanel optionalPanel;
+	
+	String[] petStrings = {"", "alternateprecedence", "alternateresponse", "alternatesuccession", "chainprecedence", "chainsuccession",
+			"coexistence", "notchainsuccession", "notcoexistence", "notsuccession", "notsuccession",
+			"precedence", "response", "succession", "respondedexistence", "notsuccession","init",
+			"existence", "absence2"};
+	private JComboBox condname = new JComboBox(petStrings);
 
 	/**
 	 * 
@@ -71,10 +77,11 @@ public class FrmEditConstraintDefinition extends OkCancelDialog implements
 	 *            WorkCoordinator
 	 */
 	public FrmEditConstraintDefinition(Frame owner, JComponent aMonitorFrame) {
-		super(owner, "Constraint definition", aMonitorFrame);
-
-		name.setToolTipText("Enter constraint name.");
-		name.addKeyListener(new KeyListener() {
+		super(owner, "Constraint Definition", aMonitorFrame);
+		condname.setBounds(100,200,100,20);
+		condname.addActionListener(this);
+		condname.setToolTipText("Enter Constraint Name."); //name tartu
+		condname.addKeyListener(new KeyListener() { // name tartu
 			public void keyPressed(KeyEvent e) {
 				if (e.getKeyCode() == KeyEvent.VK_ENTER) {
 					FrmEditConstraintDefinition.this.positive.actionPerformed(null);
@@ -148,7 +155,7 @@ public class FrmEditConstraintDefinition extends OkCancelDialog implements
 
 		JPanel decriptionPanel = new JPanel(new BorderLayout());
 		JPanel decriptionCaption = new JPanel(new BorderLayout());
-		decriptionCaption.add(new JLabel("decription "), BorderLayout.NORTH);
+		decriptionCaption.add(new JLabel("Decription: "), BorderLayout.NORTH);
 		decriptionPanel.add(decriptionCaption, BorderLayout.WEST);
 		decriptionPanel.add(new JScrollPane(this.decription),
 				BorderLayout.CENTER);
@@ -296,9 +303,10 @@ public class FrmEditConstraintDefinition extends OkCancelDialog implements
 	 */
 	public void toConstraint(ConstraintDefinition constraint) {
 		if (constraint != null) {
-			constraint.setDisplay(name.getText());
-			System.out
-					.println(name.getText() + " = " + constraint.getDisplay());
+			{				
+				constraint.setDisplay(condname.getSelectedItem().toString());
+			}
+			System.out.println(condname.getSelectedItem().toString() + " = " + constraint.getDisplay()); //Tartu
 			constraint.getCondition().setText(condition.getText());
 			constraint.setMandatory(mandatory.isSelected());
 			if (!constraint.getMandatory()) {
@@ -311,6 +319,7 @@ public class FrmEditConstraintDefinition extends OkCancelDialog implements
 				}
 				level.setLevel(getPriority());
 				level.setMessage(message.getText());
+				condname.setSelectedItem (message.getText());
 			}
 		}
 	}
@@ -325,7 +334,8 @@ public class FrmEditConstraintDefinition extends OkCancelDialog implements
 	 */
 	public void fromConstraint(ConstraintDefinition constraint) {
 		if (constraint != null) {
-			name.setText(constraint.getName());
+			//name.setText(constraint.getName()); Tartu
+			condname.getModel().setSelectedItem(constraint.getName());
 			condition.setText(constraint.getCondition().getText());
 			setMandatory(constraint.getMandatory());
 			optionalChanged();
@@ -348,14 +358,14 @@ public class FrmEditConstraintDefinition extends OkCancelDialog implements
 	protected Component getContent() {
 		// *** prepare the top part of the form with input elements
 		JPanel conditionPanel = new JPanel(new BorderLayout());
-		conditionPanel.add(new JLabel("condition "), BorderLayout.WEST);
+		conditionPanel.add(new JLabel("Condition : "), BorderLayout.WEST);
 		conditionPanel.add(this.condition, BorderLayout.CENTER);
 		conditionPanel.add(this.btnSyntax, BorderLayout.EAST);
 		this.btnSyntax.addActionListener(this);
 		JPanel namePanel = new JPanel(new BorderLayout());
-		namePanel.add(new JLabel("name       "), BorderLayout.WEST);
-		namePanel.add(this.name, BorderLayout.CENTER);
-
+		namePanel.add(new JLabel("Name:       "), BorderLayout.WEST);
+		namePanel.add(this.condname, BorderLayout.CENTER); // name Tartu
+	//	namePanel.add(this.condname, BorderLayout.AFTER_LAST_LINE);
 		JPanel up = new JPanel(new GridLayout(2, 1));
 		up.add(namePanel);
 		up.add(conditionPanel);
