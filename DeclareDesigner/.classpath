@@ -22,5 +22,19 @@
 	<classpathentry kind="lib" path="D:/MasterProject/synthetic-log-generator/DeclareDesigner/lib/jgraph.jar"/>
 	<classpathentry kind="lib" path="D:/MasterProject/synthetic-log-generator/DeclareDesigner/lib/log4j-1.2.16.jar"/>
 	<classpathentry kind="lib" path="D:/MasterProject/synthetic-log-generator/DeclareDesigner/lib/automaton.jar"/>
+	<classpathentry kind="lib" path="D:/MasterProjectNew/synthetic-log-generator/DeclareDesigner/lib/jeval-0.9.4.jar"/>
+	<classpathentry kind="lib" path="D:/MasterProjectNew/synthetic-log-generator/DeclareDesigner/lib/ltl2aut.jar"/>
+	<classpathentry kind="lib" path="D:/MasterProjectNew/synthetic-log-generator/DeclareDesigner/lib/javailp-1.2a.jar"/>
+	<classpathentry kind="lib" path="D:/MasterProjectNew/synthetic-log-generator/DeclareDesigner/lib/lpsolve55j.jar"/>
+	<classpathentry kind="lib" path="D:/MasterProjectNew/synthetic-log-generator/DeclareDesigner/lib/cplex.jar"/>
+	<classpathentry kind="lib" path="D:/MasterProjectNew/synthetic-log-generator/DeclareDesigner/lib/glpk-java.jar"/>
+	<classpathentry kind="lib" path="D:/MasterProjectNew/synthetic-log-generator/DeclareDesigner/lib/gurobi.jar"/>
+	<classpathentry kind="lib" path="D:/MasterProjectNew/synthetic-log-generator/DeclareDesigner/lib/mosek.jar"/>
+	<classpathentry kind="lib" path="D:/MasterProjectNew/synthetic-log-generator/DeclareDesigner/lib/org.sat4j.core.jar"/>
+	<classpathentry kind="lib" path="D:/MasterProjectNew/synthetic-log-generator/DeclareDesigner/lib/org.sat4j.pb.jar"/>
+	<classpathentry kind="lib" path="D:/MasterProjectNew/synthetic-log-generator/DeclareDesigner/lib/collections-generic-4.01.jar"/>
+	<classpathentry kind="lib" path="D:/MasterProjectNew/synthetic-log-generator/DeclareDesigner/lib/java-cup-11a-runtime.jar"/>
+	<classpathentry kind="lib" path="D:/MasterProjectNew/synthetic-log-generator/DeclareDesigner/lib/jep-2.4.0.jar"/>
+	<classpathentry kind="lib" path="D:/MasterProjectNew/synthetic-log-generator/DeclareDesigner/lib/alt-rt.jar"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>

@@ -223,6 +223,9 @@ public class ParameterSettings2 extends javax.swing.JFrame {
         new Thread(new Runnable() {
 
             public void run() {
+            	
+            	String path = System.getProperty("java.library.path");
+            	System.out.println(path);
                 
             	if (jTextField5.getText().isEmpty())
             	{
