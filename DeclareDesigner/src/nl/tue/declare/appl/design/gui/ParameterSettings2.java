@@ -266,6 +266,8 @@ public class ParameterSettings2 extends javax.swing.JFrame {
             	if(lg.checkforCondition(ParameterSettings.jTextField5.getText()))
             	{
             		System.out.println("Modle with Conditions");
+            		DeclareLogGenerator dlg = new DeclareLogGenerator();
+            		dlg.GenerateLog(minVal, maxVal,traceVal, ParameterSettings.jTextField5.getText());
             		proMod = DeclareEncoderDecoder.fromDeclareMapToMinerfulProcessModel(ParameterSettings.jTextField5.getText());	
             	}
             	else

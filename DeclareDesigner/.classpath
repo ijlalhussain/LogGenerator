@@ -36,5 +36,8 @@
 	<classpathentry kind="lib" path="D:/MasterProjectNew/synthetic-log-generator/DeclareDesigner/lib/java-cup-11a-runtime.jar"/>
 	<classpathentry kind="lib" path="D:/MasterProjectNew/synthetic-log-generator/DeclareDesigner/lib/jep-2.4.0.jar"/>
 	<classpathentry kind="lib" path="D:/MasterProjectNew/synthetic-log-generator/DeclareDesigner/lib/alt-rt.jar"/>
+	<classpathentry kind="lib" path="D:/MasterProjectNew/synthetic-log-generator/DeclareDesigner/lib/Widgets.jar"/>
+	<classpathentry kind="lib" path="D:/MasterProjectNew/synthetic-log-generator/DeclareDesigner/lib/DeclareMiner.jar"/>
+	<classpathentry kind="lib" path="D:/MasterProjectNew/synthetic-log-generator/DeclareDesigner/lib/commons-lang3-3.4.jar"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>

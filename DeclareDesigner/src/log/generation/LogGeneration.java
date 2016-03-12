@@ -22,10 +22,7 @@ public class LogGeneration {
 		
 	public boolean checkforCondition(String declareMapFilePath){
 		
-		boolean ret =false;
-		
-		
-	
+		boolean ret =false;	
 		
 		AssignmentViewBroker broker = XMLBrokerFactory.newAssignmentBroker(declareMapFilePath);
 		AssignmentModel model = broker.readAssignment();
@@ -33,10 +30,13 @@ public class LogGeneration {
 		broker.readAssignmentGraphical(model, view);
 		TaskCharEncoderDecoder encdec = new TaskCharEncoderDecoder();
 	
+		
+	
 		for(ConstraintDefinition cd : model.getConstraintDefinitions()){
-			System.out.println(cd.getCondition());
+			System.out.println(cd.getCondition() + ""+ cd.getCondition().isTrue());
 			checkCondtion(cd.getCondition().toString());
 			for(Parameter p : cd.getParameters()){
+				System.out.println(p.getName());
 				for(ActivityDefinition ad : cd.getBranches(p)){
 					encdec.encode(new StringTaskClass(ad.getName()));
 					System.out.println(ad.getName());
@@ -49,11 +49,7 @@ public class LogGeneration {
 	}
 	
 	public void checkCondtion(String s){
-		
-		
-			
-
-		VariableStoreExample sx = new VariableStoreExample();
+				VariableStoreExample sx = new VariableStoreExample();
 		sx.CheckLinear(s);
 		Integer test = 5;
 		try {
