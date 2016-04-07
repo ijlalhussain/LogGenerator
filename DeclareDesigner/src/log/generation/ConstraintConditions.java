@@ -319,7 +319,7 @@ public class ConstraintConditions {
 	
 	public static void main(String[] a) {
 		for (String s : new String[]{
-				"[aaa][][1,     4,m]",
+				"[A.diagnosis == 5 && A.X < 3][T.diagnosis == A.diagnosis][]",
 				"second",
 				"[5,6,d]",
 				"",

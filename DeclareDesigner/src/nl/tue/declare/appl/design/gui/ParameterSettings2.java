@@ -101,7 +101,7 @@ public class ParameterSettings2 extends javax.swing.JFrame {
 
         jLabel6.setText("Select Output");
 
-        jTextField5.setText("");
+        jTextField5.setText("testdata.xes");
         jTextField5.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jTextField5ActionPerformed(evt);
@@ -267,32 +267,33 @@ public class ParameterSettings2 extends javax.swing.JFrame {
             	{
             		System.out.println("Modle with Conditions");
             		DeclareLogGenerator dlg = new DeclareLogGenerator();
-            		dlg.GenerateLog(minVal, maxVal,traceVal, ParameterSettings.jTextField5.getText());
-            		proMod = DeclareEncoderDecoder.fromDeclareMapToMinerfulProcessModel(ParameterSettings.jTextField5.getText());	
+            		dlg.GenerateLog(minVal, maxVal,traceVal, ParameterSettings.jTextField5.getText(),jTextField5.getText());
+            	//	proMod = DeclareEncoderDecoder.fromDeclareMapToMinerfulProcessModel(ParameterSettings.jTextField5.getText());
+            	//	JOptionPane.showMessageDialog(null, "Cool Generation completed!");
             	}
             	else
             	{            		
             		System.out.println("Model with No Conditions");
             		proMod = DeclareEncoderDecoder.fromDeclareMapToMinerfulProcessModel(ParameterSettings.jTextField5.getText());
+            		 
+            		LogMakerCmdParameters logMakParameters = new LogMakerCmdParameters(minVal, maxVal, traceVal);
+            		//Tartu MIN_EVENTS_PER_TRACE, MAX_EVENTS_PER_TRACE, TRACES_IN_LOG);
+            		jProgressBar1.setValue(6);
+            		MinerFulLogMaker logMak = new MinerFulLogMaker(logMakParameters);
+            		logMak.createLog(proMod);        		
+            		jProgressBar1.setValue(8);
+            		logMakParameters.outputEncoding = OUTPUT_ENCODING;        		
+    			//	System.out.println(logMak.printEncodedLog());			
+            		logMakParameters.outputLogFile = OUTPUT_LOG;
+            		logMak.storeLog();
             	}
             	
-            	 
-        		LogMakerCmdParameters logMakParameters = new LogMakerCmdParameters(minVal, maxVal, traceVal);
-        		//Tartu MIN_EVENTS_PER_TRACE, MAX_EVENTS_PER_TRACE, TRACES_IN_LOG);
-        		jProgressBar1.setValue(6);
-        		MinerFulLogMaker logMak = new MinerFulLogMaker(logMakParameters);
-        		logMak.createLog(proMod);        		
-        		jProgressBar1.setValue(8);
-        		logMakParameters.outputEncoding = OUTPUT_ENCODING;        		
-			//	System.out.println(logMak.printEncodedLog());			
-        		logMakParameters.outputLogFile = OUTPUT_LOG;
-        		logMak.storeLog();
+            	
         		jProgressBar1.setValue(10);
         		} catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
-				}
-            	
+				}            	
             	
                 JOptionPane.showMessageDialog(null, "Generation completed!");
                // System.exit(0); Tartu

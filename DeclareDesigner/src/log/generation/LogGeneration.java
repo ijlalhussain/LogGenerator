@@ -29,12 +29,11 @@ public class LogGeneration {
 		AssignmentModelView view = new AssignmentModelView(model);
 		broker.readAssignmentGraphical(model, view);
 		TaskCharEncoderDecoder encdec = new TaskCharEncoderDecoder();
-	
+
 		
-	
 		for(ConstraintDefinition cd : model.getConstraintDefinitions()){
 			System.out.println(cd.getCondition() + ""+ cd.getCondition().isTrue());
-			checkCondtion(cd.getCondition().toString());
+		//	checkCondtion(cd.getCondition().toString());
 			for(Parameter p : cd.getParameters()){
 				System.out.println(p.getName());
 				for(ActivityDefinition ad : cd.getBranches(p)){
