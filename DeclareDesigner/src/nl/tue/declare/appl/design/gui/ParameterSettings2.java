@@ -262,14 +262,16 @@ public class ParameterSettings2 extends javax.swing.JFrame {
             	jProgressBar1.setValue(2);
             	
             	LogGeneration lg = new LogGeneration();
-            	ProcessModel proMod = null;
+            	ProcessModel proMod = null;            	
+            	boolean isConditional =false;
+            	boolean isOk = false;
             	if(lg.checkforCondition(ParameterSettings.jTextField5.getText()))
             	{
-            		System.out.println("Modle with Conditions");
-            		DeclareLogGenerator dlg = new DeclareLogGenerator();
-            		dlg.GenerateLog(minVal, maxVal,traceVal, ParameterSettings.jTextField5.getText(),jTextField5.getText());
-            	//	proMod = DeclareEncoderDecoder.fromDeclareMapToMinerfulProcessModel(ParameterSettings.jTextField5.getText());
-            	//	JOptionPane.showMessageDialog(null, "Cool Generation completed!");
+            		isConditional =true;            		
+            		if (DeclareLogGenerator.GenerateLog(minVal, maxVal,traceVal, ParameterSettings.jTextField5.getText(),jTextField5.getText())){
+            			isOk=true;
+            		}
+            		System.out.println("Modle with Conditions");            		
             	}
             	else
             	{            		
@@ -278,26 +280,30 @@ public class ParameterSettings2 extends javax.swing.JFrame {
             		 
             		LogMakerCmdParameters logMakParameters = new LogMakerCmdParameters(minVal, maxVal, traceVal);
             		//Tartu MIN_EVENTS_PER_TRACE, MAX_EVENTS_PER_TRACE, TRACES_IN_LOG);
-            		jProgressBar1.setValue(6);
+            		jProgressBar1.setValue(7);
             		MinerFulLogMaker logMak = new MinerFulLogMaker(logMakParameters);
             		logMak.createLog(proMod);        		
-            		jProgressBar1.setValue(8);
+            		jProgressBar1.setValue(9);
             		logMakParameters.outputEncoding = OUTPUT_ENCODING;        		
     			//	System.out.println(logMak.printEncodedLog());			
             		logMakParameters.outputLogFile = OUTPUT_LOG;
-            		logMak.storeLog();
+            		logMak.storeLog();                    
+                   // System.exit(0); Tartu
+
+            	}
+            	jProgressBar1.setValue(10);
+            	if (isConditional){            		
+            		if (isOk) JOptionPane.showMessageDialog(null, "Log Generation (with data) completed!");
+            	} else {
+            		JOptionPane.showMessageDialog(null, "Simple Log Generation completed!");
             	}
             	
-            	
-        		jProgressBar1.setValue(10);
+        		
         		} catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}            	
-            	
-                JOptionPane.showMessageDialog(null, "Generation completed!");
-               // System.exit(0); Tartu
-            }
+            	            }
         }).start();
     }//GEN-LAST:event_jButton6ActionPerformed
     
@@ -349,7 +355,7 @@ public class ParameterSettings2 extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JPanel jPanel2;
-    private javax.swing.JProgressBar jProgressBar1;
+    public static javax.swing.JProgressBar jProgressBar1;
     private javax.swing.JTextField jTextField5;
     private javax.swing.JTextField jTextField7;
     // End of variables declaration//GEN-END:variables

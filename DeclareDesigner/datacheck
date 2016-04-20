@@ -17,52 +17,52 @@
 		<event>
 			<string key="concept:name" value="activity 1"/>
 			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-02-14T04:58:38.847+02:00"/>
+			<date key="time:timestamp" value="2014-04-08T02:36:27.015+03:00"/>
 		</event>
 		<event>
 			<string key="concept:name" value="activity 1"/>
 			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-02-15T02:40:22.830+02:00"/>
+			<date key="time:timestamp" value="2014-04-08T06:53:55.276+03:00"/>
 		</event>
 		<event>
 			<string key="concept:name" value="activity 1"/>
 			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-02-15T20:54:00.028+02:00"/>
+			<date key="time:timestamp" value="2014-04-08T14:17:27.445+03:00"/>
 		</event>
 		<event>
 			<string key="concept:name" value="activity 1"/>
 			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-02-16T15:07:16.241+02:00"/>
+			<date key="time:timestamp" value="2014-04-09T01:54:18.469+03:00"/>
 		</event>
 		<event>
 			<string key="concept:name" value="activity 1"/>
 			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-02-17T07:07:34.299+02:00"/>
+			<date key="time:timestamp" value="2014-04-10T01:20:40.157+03:00"/>
 		</event>
 		<event>
 			<string key="concept:name" value="activity 1"/>
 			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-02-17T19:52:43.472+02:00"/>
+			<date key="time:timestamp" value="2014-04-10T19:40:43.095+03:00"/>
 		</event>
 		<event>
 			<string key="concept:name" value="activity 1"/>
 			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-02-17T21:55:27.478+02:00"/>
+			<date key="time:timestamp" value="2014-04-10T19:58:44.152+03:00"/>
 		</event>
 		<event>
 			<string key="concept:name" value="activity 1"/>
 			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-02-18T19:36:03.357+02:00"/>
+			<date key="time:timestamp" value="2014-04-11T03:04:46.971+03:00"/>
 		</event>
 		<event>
 			<string key="concept:name" value="activity 1"/>
 			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-02-19T02:48:35.018+02:00"/>
+			<date key="time:timestamp" value="2014-04-12T02:07:51.968+03:00"/>
 		</event>
 		<event>
 			<string key="concept:name" value="activity 1"/>
 			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-02-19T06:34:11.909+02:00"/>
+			<date key="time:timestamp" value="2014-04-12T04:16:33.905+03:00"/>
 		</event>
 	</trace>
 	<trace>
@@ -70,52 +70,37 @@
 		<event>
 			<string key="concept:name" value="activity 1"/>
 			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-02-20T00:51:57.814+02:00"/>
+			<date key="time:timestamp" value="2014-04-13T00:20:19.520+03:00"/>
 		</event>
 		<event>
 			<string key="concept:name" value="activity 1"/>
 			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-02-20T16:19:25.062+02:00"/>
+			<date key="time:timestamp" value="2014-04-13T13:09:20.919+03:00"/>
 		</event>
 		<event>
 			<string key="concept:name" value="activity 1"/>
 			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-02-21T10:50:54.290+02:00"/>
+			<date key="time:timestamp" value="2014-04-13T18:52:31.265+03:00"/>
 		</event>
 		<event>
 			<string key="concept:name" value="activity 1"/>
 			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-02-21T22:17:43.356+02:00"/>
+			<date key="time:timestamp" value="2014-04-14T03:34:48.246+03:00"/>
 		</event>
 		<event>
 			<string key="concept:name" value="activity 1"/>
 			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-02-22T03:33:32.677+02:00"/>
+			<date key="time:timestamp" value="2014-04-14T05:41:38.969+03:00"/>
 		</event>
 		<event>
 			<string key="concept:name" value="activity 1"/>
 			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-02-22T20:33:14.343+02:00"/>
+			<date key="time:timestamp" value="2014-04-14T19:42:38.720+03:00"/>
 		</event>
 		<event>
 			<string key="concept:name" value="activity 1"/>
 			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-02-23T07:36:27.747+02:00"/>
-		</event>
-		<event>
-			<string key="concept:name" value="activity 1"/>
-			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-02-23T20:44:43.098+02:00"/>
-		</event>
-		<event>
-			<string key="concept:name" value="activity 1"/>
-			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-02-23T21:19:04.472+02:00"/>
-		</event>
-		<event>
-			<string key="concept:name" value="activity 1"/>
-			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-02-24T07:54:20.666+02:00"/>
+			<date key="time:timestamp" value="2014-04-15T10:38:00.994+03:00"/>
 		</event>
 	</trace>
 	<trace>
@@ -123,52 +108,27 @@
 		<event>
 			<string key="concept:name" value="activity 1"/>
 			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-02-24T16:24:20.994+02:00"/>
+			<date key="time:timestamp" value="2014-04-15T17:11:16.458+03:00"/>
 		</event>
 		<event>
 			<string key="concept:name" value="activity 1"/>
 			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-02-25T07:40:57.309+02:00"/>
+			<date key="time:timestamp" value="2014-04-15T18:55:06.965+03:00"/>
 		</event>
 		<event>
 			<string key="concept:name" value="activity 1"/>
 			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-02-25T10:41:29.122+02:00"/>
+			<date key="time:timestamp" value="2014-04-16T03:48:05.273+03:00"/>
 		</event>
 		<event>
 			<string key="concept:name" value="activity 1"/>
 			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-02-26T06:40:55.709+02:00"/>
+			<date key="time:timestamp" value="2014-04-16T07:11:24.567+03:00"/>
 		</event>
 		<event>
 			<string key="concept:name" value="activity 1"/>
 			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-02-26T06:42:30.845+02:00"/>
-		</event>
-		<event>
-			<string key="concept:name" value="activity 1"/>
-			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-02-26T18:54:57.916+02:00"/>
-		</event>
-		<event>
-			<string key="concept:name" value="activity 1"/>
-			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-02-27T12:15:02.793+02:00"/>
-		</event>
-		<event>
-			<string key="concept:name" value="activity 1"/>
-			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-02-28T01:43:10.979+02:00"/>
-		</event>
-		<event>
-			<string key="concept:name" value="activity 1"/>
-			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-02-28T23:35:54.031+02:00"/>
-		</event>
-		<event>
-			<string key="concept:name" value="activity 1"/>
-			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-03-01T03:59:22.690+02:00"/>
+			<date key="time:timestamp" value="2014-04-16T13:40:34.505+03:00"/>
 		</event>
 	</trace>
 	<trace>
@@ -176,52 +136,27 @@
 		<event>
 			<string key="concept:name" value="activity 1"/>
 			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-03-01T17:30:34.037+02:00"/>
+			<date key="time:timestamp" value="2014-04-16T18:02:03.095+03:00"/>
 		</event>
 		<event>
 			<string key="concept:name" value="activity 1"/>
 			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-03-02T15:57:54.780+02:00"/>
+			<date key="time:timestamp" value="2014-04-17T11:12:27.551+03:00"/>
 		</event>
 		<event>
 			<string key="concept:name" value="activity 1"/>
 			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-03-03T09:57:26.736+02:00"/>
+			<date key="time:timestamp" value="2014-04-17T22:01:31.635+03:00"/>
 		</event>
 		<event>
 			<string key="concept:name" value="activity 1"/>
 			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-03-03T14:40:34.280+02:00"/>
+			<date key="time:timestamp" value="2014-04-18T18:54:44.563+03:00"/>
 		</event>
 		<event>
 			<string key="concept:name" value="activity 1"/>
 			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-03-03T16:59:31.050+02:00"/>
-		</event>
-		<event>
-			<string key="concept:name" value="activity 1"/>
-			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-03-04T15:47:47.660+02:00"/>
-		</event>
-		<event>
-			<string key="concept:name" value="activity 1"/>
-			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-03-05T06:46:52.393+02:00"/>
-		</event>
-		<event>
-			<string key="concept:name" value="activity 1"/>
-			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-03-05T14:35:17.990+02:00"/>
-		</event>
-		<event>
-			<string key="concept:name" value="activity 1"/>
-			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-03-06T03:27:43.319+02:00"/>
-		</event>
-		<event>
-			<string key="concept:name" value="activity 1"/>
-			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-03-06T05:26:00.593+02:00"/>
+			<date key="time:timestamp" value="2014-04-18T22:58:19.127+03:00"/>
 		</event>
 	</trace>
 	<trace>
@@ -229,52 +164,32 @@
 		<event>
 			<string key="concept:name" value="activity 1"/>
 			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-03-06T08:41:52.525+02:00"/>
+			<date key="time:timestamp" value="2014-04-19T19:29:42.219+03:00"/>
 		</event>
 		<event>
 			<string key="concept:name" value="activity 1"/>
 			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-03-06T19:12:10.266+02:00"/>
+			<date key="time:timestamp" value="2014-04-20T14:48:26.498+03:00"/>
 		</event>
 		<event>
 			<string key="concept:name" value="activity 1"/>
 			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-03-06T22:20:28.520+02:00"/>
+			<date key="time:timestamp" value="2014-04-20T23:48:49.705+03:00"/>
 		</event>
 		<event>
 			<string key="concept:name" value="activity 1"/>
 			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-03-07T00:28:42.864+02:00"/>
+			<date key="time:timestamp" value="2014-04-21T22:32:57.355+03:00"/>
 		</event>
 		<event>
 			<string key="concept:name" value="activity 1"/>
 			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-03-07T18:24:55.967+02:00"/>
+			<date key="time:timestamp" value="2014-04-22T19:47:36.136+03:00"/>
 		</event>
 		<event>
 			<string key="concept:name" value="activity 1"/>
 			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-03-08T06:58:26.715+02:00"/>
-		</event>
-		<event>
-			<string key="concept:name" value="activity 1"/>
-			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-03-09T05:34:24.600+02:00"/>
-		</event>
-		<event>
-			<string key="concept:name" value="activity 1"/>
-			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-03-09T15:11:21.359+02:00"/>
-		</event>
-		<event>
-			<string key="concept:name" value="activity 1"/>
-			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-03-10T02:16:27.228+02:00"/>
-		</event>
-		<event>
-			<string key="concept:name" value="activity 1"/>
-			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-03-10T13:16:36.721+02:00"/>
+			<date key="time:timestamp" value="2014-04-23T16:37:16.956+03:00"/>
 		</event>
 	</trace>
 	<trace>
@@ -282,52 +197,27 @@
 		<event>
 			<string key="concept:name" value="activity 1"/>
 			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-03-10T19:22:07.244+02:00"/>
+			<date key="time:timestamp" value="2014-04-23T18:25:46.218+03:00"/>
 		</event>
 		<event>
 			<string key="concept:name" value="activity 1"/>
 			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-03-11T12:03:44.208+02:00"/>
+			<date key="time:timestamp" value="2014-04-24T07:19:49.671+03:00"/>
 		</event>
 		<event>
 			<string key="concept:name" value="activity 1"/>
 			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-03-11T13:44:18.333+02:00"/>
+			<date key="time:timestamp" value="2014-04-24T21:48:10.033+03:00"/>
 		</event>
 		<event>
 			<string key="concept:name" value="activity 1"/>
 			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-03-12T06:08:20.999+02:00"/>
+			<date key="time:timestamp" value="2014-04-25T21:38:05.129+03:00"/>
 		</event>
 		<event>
 			<string key="concept:name" value="activity 1"/>
 			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-03-12T13:08:07.827+02:00"/>
-		</event>
-		<event>
-			<string key="concept:name" value="activity 1"/>
-			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-03-13T11:42:00.439+02:00"/>
-		</event>
-		<event>
-			<string key="concept:name" value="activity 1"/>
-			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-03-13T13:24:48.829+02:00"/>
-		</event>
-		<event>
-			<string key="concept:name" value="activity 1"/>
-			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-03-13T19:52:45.710+02:00"/>
-		</event>
-		<event>
-			<string key="concept:name" value="activity 1"/>
-			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-03-14T14:58:24.912+02:00"/>
-		</event>
-		<event>
-			<string key="concept:name" value="activity 1"/>
-			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-03-14T18:22:27.036+02:00"/>
+			<date key="time:timestamp" value="2014-04-26T08:52:01.464+03:00"/>
 		</event>
 	</trace>
 	<trace>
@@ -335,52 +225,37 @@
 		<event>
 			<string key="concept:name" value="activity 1"/>
 			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-03-15T14:05:09.513+02:00"/>
+			<date key="time:timestamp" value="2014-04-27T06:09:07.733+03:00"/>
 		</event>
 		<event>
 			<string key="concept:name" value="activity 1"/>
 			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-03-16T00:46:15.224+02:00"/>
+			<date key="time:timestamp" value="2014-04-28T05:46:44.472+03:00"/>
 		</event>
 		<event>
 			<string key="concept:name" value="activity 1"/>
 			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-03-16T13:58:55.416+02:00"/>
+			<date key="time:timestamp" value="2014-04-28T16:00:39.673+03:00"/>
 		</event>
 		<event>
 			<string key="concept:name" value="activity 1"/>
 			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-03-17T11:53:40.265+02:00"/>
+			<date key="time:timestamp" value="2014-04-29T10:08:30.178+03:00"/>
 		</event>
 		<event>
 			<string key="concept:name" value="activity 1"/>
 			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-03-17T21:49:18.905+02:00"/>
+			<date key="time:timestamp" value="2014-04-30T05:12:49.463+03:00"/>
 		</event>
 		<event>
 			<string key="concept:name" value="activity 1"/>
 			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-03-18T03:27:07.527+02:00"/>
+			<date key="time:timestamp" value="2014-05-01T04:51:55.755+03:00"/>
 		</event>
 		<event>
 			<string key="concept:name" value="activity 1"/>
 			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-03-18T13:59:04.510+02:00"/>
-		</event>
-		<event>
-			<string key="concept:name" value="activity 1"/>
-			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-03-19T01:03:19.196+02:00"/>
-		</event>
-		<event>
-			<string key="concept:name" value="activity 1"/>
-			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-03-19T17:25:00.021+02:00"/>
-		</event>
-		<event>
-			<string key="concept:name" value="activity 1"/>
-			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-03-19T21:37:36.555+02:00"/>
+			<date key="time:timestamp" value="2014-05-01T12:38:12.434+03:00"/>
 		</event>
 	</trace>
 	<trace>
@@ -388,52 +263,27 @@
 		<event>
 			<string key="concept:name" value="activity 1"/>
 			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-03-19T23:16:36.051+02:00"/>
+			<date key="time:timestamp" value="2014-05-01T15:01:44.737+03:00"/>
 		</event>
 		<event>
 			<string key="concept:name" value="activity 1"/>
 			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-03-20T18:40:59.820+02:00"/>
+			<date key="time:timestamp" value="2014-05-02T02:52:02.478+03:00"/>
 		</event>
 		<event>
 			<string key="concept:name" value="activity 1"/>
 			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-03-21T03:10:21.691+02:00"/>
+			<date key="time:timestamp" value="2014-05-02T05:55:35.333+03:00"/>
 		</event>
 		<event>
 			<string key="concept:name" value="activity 1"/>
 			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-03-21T13:35:31.340+02:00"/>
+			<date key="time:timestamp" value="2014-05-03T00:11:13.978+03:00"/>
 		</event>
 		<event>
 			<string key="concept:name" value="activity 1"/>
 			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-03-21T15:02:24.888+02:00"/>
-		</event>
-		<event>
-			<string key="concept:name" value="activity 1"/>
-			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-03-22T05:29:52.734+02:00"/>
-		</event>
-		<event>
-			<string key="concept:name" value="activity 1"/>
-			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-03-22T10:45:28.261+02:00"/>
-		</event>
-		<event>
-			<string key="concept:name" value="activity 1"/>
-			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-03-22T23:16:04.872+02:00"/>
-		</event>
-		<event>
-			<string key="concept:name" value="activity 1"/>
-			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-03-23T15:48:26.136+02:00"/>
-		</event>
-		<event>
-			<string key="concept:name" value="activity 1"/>
-			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-03-24T04:19:40.063+02:00"/>
+			<date key="time:timestamp" value="2014-05-03T02:33:50.312+03:00"/>
 		</event>
 	</trace>
 	<trace>
@@ -441,52 +291,27 @@
 		<event>
 			<string key="concept:name" value="activity 1"/>
 			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-03-25T01:59:15.194+02:00"/>
+			<date key="time:timestamp" value="2014-05-03T11:09:20.912+03:00"/>
 		</event>
 		<event>
 			<string key="concept:name" value="activity 1"/>
 			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-03-25T08:59:26.271+02:00"/>
+			<date key="time:timestamp" value="2014-05-04T01:07:00.957+03:00"/>
 		</event>
 		<event>
 			<string key="concept:name" value="activity 1"/>
 			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-03-25T11:23:38.150+02:00"/>
+			<date key="time:timestamp" value="2014-05-05T00:18:53.753+03:00"/>
 		</event>
 		<event>
 			<string key="concept:name" value="activity 1"/>
 			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-03-25T13:19:11.713+02:00"/>
+			<date key="time:timestamp" value="2014-05-05T22:52:07.835+03:00"/>
 		</event>
 		<event>
 			<string key="concept:name" value="activity 1"/>
 			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-03-25T18:59:09.376+02:00"/>
-		</event>
-		<event>
-			<string key="concept:name" value="activity 1"/>
-			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-03-26T10:25:27.157+02:00"/>
-		</event>
-		<event>
-			<string key="concept:name" value="activity 1"/>
-			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-03-27T03:40:56.044+02:00"/>
-		</event>
-		<event>
-			<string key="concept:name" value="activity 1"/>
-			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-03-28T03:36:55.322+02:00"/>
-		</event>
-		<event>
-			<string key="concept:name" value="activity 1"/>
-			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-03-29T00:30:57.068+02:00"/>
-		</event>
-		<event>
-			<string key="concept:name" value="activity 1"/>
-			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-03-29T16:34:44.247+02:00"/>
+			<date key="time:timestamp" value="2014-05-06T04:19:03.691+03:00"/>
 		</event>
 	</trace>
 	<trace>
@@ -494,52 +319,27 @@
 		<event>
 			<string key="concept:name" value="activity 1"/>
 			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-03-29T17:17:37.313+02:00"/>
+			<date key="time:timestamp" value="2014-05-06T20:12:53.581+03:00"/>
 		</event>
 		<event>
 			<string key="concept:name" value="activity 1"/>
 			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-03-30T05:54:51.989+03:00"/>
+			<date key="time:timestamp" value="2014-05-07T00:05:05.925+03:00"/>
 		</event>
 		<event>
 			<string key="concept:name" value="activity 1"/>
 			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-03-30T08:07:59.915+03:00"/>
+			<date key="time:timestamp" value="2014-05-07T13:16:06.689+03:00"/>
 		</event>
 		<event>
 			<string key="concept:name" value="activity 1"/>
 			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-03-31T07:13:00.421+03:00"/>
+			<date key="time:timestamp" value="2014-05-08T04:55:48.147+03:00"/>
 		</event>
 		<event>
 			<string key="concept:name" value="activity 1"/>
 			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-03-31T15:55:41.180+03:00"/>
-		</event>
-		<event>
-			<string key="concept:name" value="activity 1"/>
-			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-04-01T06:17:32.090+03:00"/>
-		</event>
-		<event>
-			<string key="concept:name" value="activity 1"/>
-			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-04-01T21:31:16.828+03:00"/>
-		</event>
-		<event>
-			<string key="concept:name" value="activity 1"/>
-			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-04-01T22:24:24.233+03:00"/>
-		</event>
-		<event>
-			<string key="concept:name" value="activity 1"/>
-			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-04-01T23:33:08.996+03:00"/>
-		</event>
-		<event>
-			<string key="concept:name" value="activity 1"/>
-			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-04-02T10:55:30.315+03:00"/>
+			<date key="time:timestamp" value="2014-05-08T12:52:40.621+03:00"/>
 		</event>
 	</trace>
 	<trace>
@@ -547,52 +347,37 @@
 		<event>
 			<string key="concept:name" value="activity 1"/>
 			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-04-02T20:29:48.886+03:00"/>
+			<date key="time:timestamp" value="2014-05-09T11:34:20.634+03:00"/>
 		</event>
 		<event>
 			<string key="concept:name" value="activity 1"/>
 			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-04-02T22:52:31.646+03:00"/>
+			<date key="time:timestamp" value="2014-05-09T21:19:02.708+03:00"/>
 		</event>
 		<event>
 			<string key="concept:name" value="activity 1"/>
 			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-04-03T16:05:44.949+03:00"/>
+			<date key="time:timestamp" value="2014-05-10T08:13:26.205+03:00"/>
 		</event>
 		<event>
 			<string key="concept:name" value="activity 1"/>
 			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-04-03T18:22:34.488+03:00"/>
+			<date key="time:timestamp" value="2014-05-11T01:32:50.232+03:00"/>
 		</event>
 		<event>
 			<string key="concept:name" value="activity 1"/>
 			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-04-04T15:56:57.332+03:00"/>
+			<date key="time:timestamp" value="2014-05-11T10:57:31.947+03:00"/>
 		</event>
 		<event>
 			<string key="concept:name" value="activity 1"/>
 			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-04-05T12:57:50.957+03:00"/>
+			<date key="time:timestamp" value="2014-05-11T23:36:55.888+03:00"/>
 		</event>
 		<event>
 			<string key="concept:name" value="activity 1"/>
 			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-04-05T22:29:42.657+03:00"/>
-		</event>
-		<event>
-			<string key="concept:name" value="activity 1"/>
-			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-04-06T18:45:16.185+03:00"/>
-		</event>
-		<event>
-			<string key="concept:name" value="activity 1"/>
-			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-04-07T14:29:57.006+03:00"/>
-		</event>
-		<event>
-			<string key="concept:name" value="activity 1"/>
-			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-04-08T02:31:05.220+03:00"/>
+			<date key="time:timestamp" value="2014-05-12T09:20:25.401+03:00"/>
 		</event>
 	</trace>
 	<trace>
@@ -600,52 +385,27 @@
 		<event>
 			<string key="concept:name" value="activity 1"/>
 			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-04-08T19:39:39.939+03:00"/>
+			<date key="time:timestamp" value="2014-05-13T05:30:14.586+03:00"/>
 		</event>
 		<event>
 			<string key="concept:name" value="activity 1"/>
 			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-04-09T02:30:25.892+03:00"/>
+			<date key="time:timestamp" value="2014-05-13T18:38:44.270+03:00"/>
 		</event>
 		<event>
 			<string key="concept:name" value="activity 1"/>
 			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-04-09T21:47:14.043+03:00"/>
+			<date key="time:timestamp" value="2014-05-14T12:46:29.474+03:00"/>
 		</event>
 		<event>
 			<string key="concept:name" value="activity 1"/>
 			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-04-10T08:30:57.009+03:00"/>
+			<date key="time:timestamp" value="2014-05-14T18:13:14.212+03:00"/>
 		</event>
 		<event>
 			<string key="concept:name" value="activity 1"/>
 			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-04-10T20:48:57.531+03:00"/>
-		</event>
-		<event>
-			<string key="concept:name" value="activity 1"/>
-			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-04-11T13:04:58.138+03:00"/>
-		</event>
-		<event>
-			<string key="concept:name" value="activity 1"/>
-			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-04-11T17:48:55.044+03:00"/>
-		</event>
-		<event>
-			<string key="concept:name" value="activity 1"/>
-			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-04-12T02:56:11.893+03:00"/>
-		</event>
-		<event>
-			<string key="concept:name" value="activity 1"/>
-			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-04-12T07:15:31.514+03:00"/>
-		</event>
-		<event>
-			<string key="concept:name" value="activity 1"/>
-			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-04-12T22:10:35.639+03:00"/>
+			<date key="time:timestamp" value="2014-05-15T13:08:55.255+03:00"/>
 		</event>
 	</trace>
 	<trace>
@@ -653,52 +413,32 @@
 		<event>
 			<string key="concept:name" value="activity 1"/>
 			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-04-13T17:43:39.100+03:00"/>
+			<date key="time:timestamp" value="2014-05-16T03:44:07.298+03:00"/>
 		</event>
 		<event>
 			<string key="concept:name" value="activity 1"/>
 			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-04-14T13:10:56.020+03:00"/>
+			<date key="time:timestamp" value="2014-05-16T21:15:15.479+03:00"/>
 		</event>
 		<event>
 			<string key="concept:name" value="activity 1"/>
 			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-04-15T08:34:24.902+03:00"/>
+			<date key="time:timestamp" value="2014-05-17T06:52:22.017+03:00"/>
 		</event>
 		<event>
 			<string key="concept:name" value="activity 1"/>
 			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-04-16T00:10:49.265+03:00"/>
+			<date key="time:timestamp" value="2014-05-17T22:30:37.792+03:00"/>
 		</event>
 		<event>
 			<string key="concept:name" value="activity 1"/>
 			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-04-16T09:44:08.847+03:00"/>
+			<date key="time:timestamp" value="2014-05-18T21:47:44.564+03:00"/>
 		</event>
 		<event>
 			<string key="concept:name" value="activity 1"/>
 			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-04-16T17:18:18.318+03:00"/>
-		</event>
-		<event>
-			<string key="concept:name" value="activity 1"/>
-			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-04-17T15:07:08.660+03:00"/>
-		</event>
-		<event>
-			<string key="concept:name" value="activity 1"/>
-			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-04-18T10:38:11.421+03:00"/>
-		</event>
-		<event>
-			<string key="concept:name" value="activity 1"/>
-			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-04-18T23:23:36.046+03:00"/>
-		</event>
-		<event>
-			<string key="concept:name" value="activity 1"/>
-			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-04-19T19:42:29.396+03:00"/>
+			<date key="time:timestamp" value="2014-05-19T14:54:36.418+03:00"/>
 		</event>
 	</trace>
 	<trace>
@@ -706,52 +446,37 @@
 		<event>
 			<string key="concept:name" value="activity 1"/>
 			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-04-20T12:45:28.961+03:00"/>
+			<date key="time:timestamp" value="2014-05-19T22:39:05.663+03:00"/>
 		</event>
 		<event>
 			<string key="concept:name" value="activity 1"/>
 			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-04-21T03:45:55.348+03:00"/>
+			<date key="time:timestamp" value="2014-05-20T19:26:42.925+03:00"/>
 		</event>
 		<event>
 			<string key="concept:name" value="activity 1"/>
 			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-04-21T14:09:09.694+03:00"/>
+			<date key="time:timestamp" value="2014-05-21T01:54:22.285+03:00"/>
 		</event>
 		<event>
 			<string key="concept:name" value="activity 1"/>
 			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-04-21T23:20:31.282+03:00"/>
+			<date key="time:timestamp" value="2014-05-22T01:29:38.017+03:00"/>
 		</event>
 		<event>
 			<string key="concept:name" value="activity 1"/>
 			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-04-22T18:11:36.094+03:00"/>
+			<date key="time:timestamp" value="2014-05-22T20:03:58.778+03:00"/>
 		</event>
 		<event>
 			<string key="concept:name" value="activity 1"/>
 			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-04-23T17:44:08.311+03:00"/>
+			<date key="time:timestamp" value="2014-05-22T23:05:47.219+03:00"/>
 		</event>
 		<event>
 			<string key="concept:name" value="activity 1"/>
 			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-04-23T20:05:01.868+03:00"/>
-		</event>
-		<event>
-			<string key="concept:name" value="activity 1"/>
-			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-04-24T15:39:09.320+03:00"/>
-		</event>
-		<event>
-			<string key="concept:name" value="activity 1"/>
-			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-04-24T22:44:40.264+03:00"/>
-		</event>
-		<event>
-			<string key="concept:name" value="activity 1"/>
-			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-04-25T04:14:47.430+03:00"/>
+			<date key="time:timestamp" value="2014-05-23T16:38:12.344+03:00"/>
 		</event>
 	</trace>
 	<trace>
@@ -759,52 +484,37 @@
 		<event>
 			<string key="concept:name" value="activity 1"/>
 			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-04-25T23:17:03.774+03:00"/>
+			<date key="time:timestamp" value="2014-05-24T01:56:25.224+03:00"/>
 		</event>
 		<event>
 			<string key="concept:name" value="activity 1"/>
 			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-04-26T03:52:19.479+03:00"/>
+			<date key="time:timestamp" value="2014-05-24T07:46:34.563+03:00"/>
 		</event>
 		<event>
 			<string key="concept:name" value="activity 1"/>
 			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-04-26T19:47:53.226+03:00"/>
+			<date key="time:timestamp" value="2014-05-25T02:28:25.752+03:00"/>
 		</event>
 		<event>
 			<string key="concept:name" value="activity 1"/>
 			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-04-27T05:37:21.534+03:00"/>
+			<date key="time:timestamp" value="2014-05-26T00:24:59.803+03:00"/>
 		</event>
 		<event>
 			<string key="concept:name" value="activity 1"/>
 			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-04-27T15:31:36.773+03:00"/>
+			<date key="time:timestamp" value="2014-05-26T11:04:38.400+03:00"/>
 		</event>
 		<event>
 			<string key="concept:name" value="activity 1"/>
 			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-04-28T04:28:13.066+03:00"/>
+			<date key="time:timestamp" value="2014-05-26T17:24:51.106+03:00"/>
 		</event>
 		<event>
 			<string key="concept:name" value="activity 1"/>
 			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-04-29T00:28:26.602+03:00"/>
-		</event>
-		<event>
-			<string key="concept:name" value="activity 1"/>
-			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-04-29T15:21:38.515+03:00"/>
-		</event>
-		<event>
-			<string key="concept:name" value="activity 1"/>
-			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-04-30T01:54:18.336+03:00"/>
-		</event>
-		<event>
-			<string key="concept:name" value="activity 1"/>
-			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-04-30T07:07:49.833+03:00"/>
+			<date key="time:timestamp" value="2014-05-27T03:17:09.035+03:00"/>
 		</event>
 	</trace>
 	<trace>
@@ -812,52 +522,32 @@
 		<event>
 			<string key="concept:name" value="activity 1"/>
 			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-04-30T10:51:21.537+03:00"/>
+			<date key="time:timestamp" value="2014-05-27T19:01:50.878+03:00"/>
 		</event>
 		<event>
 			<string key="concept:name" value="activity 1"/>
 			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-04-30T22:45:57.491+03:00"/>
+			<date key="time:timestamp" value="2014-05-28T11:27:05.139+03:00"/>
 		</event>
 		<event>
 			<string key="concept:name" value="activity 1"/>
 			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-05-01T06:54:36.988+03:00"/>
+			<date key="time:timestamp" value="2014-05-28T21:19:54.688+03:00"/>
 		</event>
 		<event>
 			<string key="concept:name" value="activity 1"/>
 			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-05-01T19:38:31.153+03:00"/>
+			<date key="time:timestamp" value="2014-05-29T03:10:11.679+03:00"/>
 		</event>
 		<event>
 			<string key="concept:name" value="activity 1"/>
 			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-05-02T19:31:50.418+03:00"/>
+			<date key="time:timestamp" value="2014-05-29T03:39:04.184+03:00"/>
 		</event>
 		<event>
 			<string key="concept:name" value="activity 1"/>
 			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-05-03T02:39:36.044+03:00"/>
-		</event>
-		<event>
-			<string key="concept:name" value="activity 1"/>
-			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-05-03T06:52:09.294+03:00"/>
-		</event>
-		<event>
-			<string key="concept:name" value="activity 1"/>
-			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-05-03T12:31:34.267+03:00"/>
-		</event>
-		<event>
-			<string key="concept:name" value="activity 1"/>
-			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-05-03T12:37:56.826+03:00"/>
-		</event>
-		<event>
-			<string key="concept:name" value="activity 1"/>
-			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-05-04T03:26:55.382+03:00"/>
+			<date key="time:timestamp" value="2014-05-29T06:23:51.595+03:00"/>
 		</event>
 	</trace>
 	<trace>
@@ -865,52 +555,27 @@
 		<event>
 			<string key="concept:name" value="activity 1"/>
 			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-05-05T01:19:26.047+03:00"/>
+			<date key="time:timestamp" value="2014-05-29T15:57:25.242+03:00"/>
 		</event>
 		<event>
 			<string key="concept:name" value="activity 1"/>
 			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-05-05T04:59:57.709+03:00"/>
+			<date key="time:timestamp" value="2014-05-29T16:06:03.800+03:00"/>
 		</event>
 		<event>
 			<string key="concept:name" value="activity 1"/>
 			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-05-06T00:50:53.989+03:00"/>
+			<date key="time:timestamp" value="2014-05-29T19:04:04.160+03:00"/>
 		</event>
 		<event>
 			<string key="concept:name" value="activity 1"/>
 			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-05-06T13:04:31.682+03:00"/>
+			<date key="time:timestamp" value="2014-05-30T13:40:52.078+03:00"/>
 		</event>
 		<event>
 			<string key="concept:name" value="activity 1"/>
 			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-05-06T14:20:22.557+03:00"/>
-		</event>
-		<event>
-			<string key="concept:name" value="activity 1"/>
-			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-05-07T02:49:26.327+03:00"/>
-		</event>
-		<event>
-			<string key="concept:name" value="activity 1"/>
-			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-05-07T14:25:25.279+03:00"/>
-		</event>
-		<event>
-			<string key="concept:name" value="activity 1"/>
-			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-05-08T08:10:11.104+03:00"/>
-		</event>
-		<event>
-			<string key="concept:name" value="activity 1"/>
-			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-05-08T20:35:45.332+03:00"/>
-		</event>
-		<event>
-			<string key="concept:name" value="activity 1"/>
-			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-05-09T08:00:34.088+03:00"/>
+			<date key="time:timestamp" value="2014-05-31T00:12:15.233+03:00"/>
 		</event>
 	</trace>
 	<trace>
@@ -918,52 +583,32 @@
 		<event>
 			<string key="concept:name" value="activity 1"/>
 			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-05-09T08:59:40.900+03:00"/>
+			<date key="time:timestamp" value="2014-05-31T22:38:29.169+03:00"/>
 		</event>
 		<event>
 			<string key="concept:name" value="activity 1"/>
 			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-05-10T00:04:41.130+03:00"/>
+			<date key="time:timestamp" value="2014-06-01T00:58:53.150+03:00"/>
 		</event>
 		<event>
 			<string key="concept:name" value="activity 1"/>
 			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-05-10T01:23:13.915+03:00"/>
+			<date key="time:timestamp" value="2014-06-02T00:49:09.500+03:00"/>
 		</event>
 		<event>
 			<string key="concept:name" value="activity 1"/>
 			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-05-10T06:23:01.526+03:00"/>
+			<date key="time:timestamp" value="2014-06-02T23:43:37.260+03:00"/>
 		</event>
 		<event>
 			<string key="concept:name" value="activity 1"/>
 			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-05-10T15:33:39.902+03:00"/>
+			<date key="time:timestamp" value="2014-06-03T11:18:51.767+03:00"/>
 		</event>
 		<event>
 			<string key="concept:name" value="activity 1"/>
 			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-05-11T08:46:19.834+03:00"/>
-		</event>
-		<event>
-			<string key="concept:name" value="activity 1"/>
-			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-05-12T08:01:17.685+03:00"/>
-		</event>
-		<event>
-			<string key="concept:name" value="activity 1"/>
-			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-05-12T13:43:25.751+03:00"/>
-		</event>
-		<event>
-			<string key="concept:name" value="activity 1"/>
-			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-05-13T05:07:01.095+03:00"/>
-		</event>
-		<event>
-			<string key="concept:name" value="activity 1"/>
-			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-05-13T16:08:27.799+03:00"/>
+			<date key="time:timestamp" value="2014-06-03T15:46:51.424+03:00"/>
 		</event>
 	</trace>
 	<trace>
@@ -971,52 +616,27 @@
 		<event>
 			<string key="concept:name" value="activity 1"/>
 			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-05-14T02:09:52.711+03:00"/>
+			<date key="time:timestamp" value="2014-06-03T21:42:19.561+03:00"/>
 		</event>
 		<event>
 			<string key="concept:name" value="activity 1"/>
 			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-05-14T08:41:17.887+03:00"/>
+			<date key="time:timestamp" value="2014-06-04T02:55:41.522+03:00"/>
 		</event>
 		<event>
 			<string key="concept:name" value="activity 1"/>
 			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-05-14T19:09:59.832+03:00"/>
+			<date key="time:timestamp" value="2014-06-04T13:36:10.440+03:00"/>
 		</event>
 		<event>
 			<string key="concept:name" value="activity 1"/>
 			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-05-15T19:09:53.487+03:00"/>
+			<date key="time:timestamp" value="2014-06-05T03:22:45.703+03:00"/>
 		</event>
 		<event>
 			<string key="concept:name" value="activity 1"/>
 			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-05-16T00:25:48.412+03:00"/>
-		</event>
-		<event>
-			<string key="concept:name" value="activity 1"/>
-			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-05-16T06:08:10.730+03:00"/>
-		</event>
-		<event>
-			<string key="concept:name" value="activity 1"/>
-			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-05-16T10:50:05.185+03:00"/>
-		</event>
-		<event>
-			<string key="concept:name" value="activity 1"/>
-			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-05-16T22:37:18.828+03:00"/>
-		</event>
-		<event>
-			<string key="concept:name" value="activity 1"/>
-			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-05-17T01:15:37.790+03:00"/>
-		</event>
-		<event>
-			<string key="concept:name" value="activity 1"/>
-			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-05-17T19:51:40.931+03:00"/>
+			<date key="time:timestamp" value="2014-06-05T11:19:40.141+03:00"/>
 		</event>
 	</trace>
 	<trace>
@@ -1024,52 +644,42 @@
 		<event>
 			<string key="concept:name" value="activity 1"/>
 			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-05-18T04:02:55.277+03:00"/>
+			<date key="time:timestamp" value="2014-06-06T10:07:25.733+03:00"/>
 		</event>
 		<event>
 			<string key="concept:name" value="activity 1"/>
 			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-05-18T18:21:24.319+03:00"/>
+			<date key="time:timestamp" value="2014-06-06T20:39:29.183+03:00"/>
 		</event>
 		<event>
 			<string key="concept:name" value="activity 1"/>
 			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-05-18T18:27:05.205+03:00"/>
+			<date key="time:timestamp" value="2014-06-07T11:32:07.332+03:00"/>
 		</event>
 		<event>
 			<string key="concept:name" value="activity 1"/>
 			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-05-19T11:32:08.777+03:00"/>
+			<date key="time:timestamp" value="2014-06-07T18:52:14.648+03:00"/>
 		</event>
 		<event>
 			<string key="concept:name" value="activity 1"/>
 			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-05-19T23:26:22.431+03:00"/>
+			<date key="time:timestamp" value="2014-06-08T02:23:02.926+03:00"/>
 		</event>
 		<event>
 			<string key="concept:name" value="activity 1"/>
 			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-05-20T15:01:09.309+03:00"/>
+			<date key="time:timestamp" value="2014-06-08T05:22:43.587+03:00"/>
 		</event>
 		<event>
 			<string key="concept:name" value="activity 1"/>
 			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-05-20T23:55:32.554+03:00"/>
+			<date key="time:timestamp" value="2014-06-08T22:39:32.313+03:00"/>
 		</event>
 		<event>
 			<string key="concept:name" value="activity 1"/>
 			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-05-21T08:03:21.779+03:00"/>
-		</event>
-		<event>
-			<string key="concept:name" value="activity 1"/>
-			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-05-22T03:53:02.686+03:00"/>
-		</event>
-		<event>
-			<string key="concept:name" value="activity 1"/>
-			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-05-22T05:35:16.838+03:00"/>
+			<date key="time:timestamp" value="2014-06-09T02:11:52.961+03:00"/>
 		</event>
 	</trace>
 	<trace>
@@ -1077,52 +687,27 @@
 		<event>
 			<string key="concept:name" value="activity 1"/>
 			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-05-22T16:23:22.693+03:00"/>
+			<date key="time:timestamp" value="2014-06-09T14:54:25.206+03:00"/>
 		</event>
 		<event>
 			<string key="concept:name" value="activity 1"/>
 			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-05-23T12:08:25.690+03:00"/>
+			<date key="time:timestamp" value="2014-06-09T19:14:18.772+03:00"/>
 		</event>
 		<event>
 			<string key="concept:name" value="activity 1"/>
 			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-05-23T14:25:57.155+03:00"/>
+			<date key="time:timestamp" value="2014-06-10T11:40:59.039+03:00"/>
 		</event>
 		<event>
 			<string key="concept:name" value="activity 1"/>
 			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-05-24T09:15:49.041+03:00"/>
+			<date key="time:timestamp" value="2014-06-11T06:37:32.890+03:00"/>
 		</event>
 		<event>
 			<string key="concept:name" value="activity 1"/>
 			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-05-24T23:31:32.554+03:00"/>
-		</event>
-		<event>
-			<string key="concept:name" value="activity 1"/>
-			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-05-25T15:03:34.011+03:00"/>
-		</event>
-		<event>
-			<string key="concept:name" value="activity 1"/>
-			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-05-26T01:53:37.663+03:00"/>
-		</event>
-		<event>
-			<string key="concept:name" value="activity 1"/>
-			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-05-26T16:56:45.131+03:00"/>
-		</event>
-		<event>
-			<string key="concept:name" value="activity 1"/>
-			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-05-27T12:25:35.091+03:00"/>
-		</event>
-		<event>
-			<string key="concept:name" value="activity 1"/>
-			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-05-28T12:07:26.487+03:00"/>
+			<date key="time:timestamp" value="2014-06-11T13:04:24.768+03:00"/>
 		</event>
 	</trace>
 	<trace>
@@ -1130,52 +715,37 @@
 		<event>
 			<string key="concept:name" value="activity 1"/>
 			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-05-29T06:49:52.424+03:00"/>
+			<date key="time:timestamp" value="2014-06-12T10:06:00.246+03:00"/>
 		</event>
 		<event>
 			<string key="concept:name" value="activity 1"/>
 			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-05-30T04:37:57.416+03:00"/>
+			<date key="time:timestamp" value="2014-06-12T20:07:02.151+03:00"/>
 		</event>
 		<event>
 			<string key="concept:name" value="activity 1"/>
 			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-05-30T06:36:20.869+03:00"/>
+			<date key="time:timestamp" value="2014-06-12T20:52:48.896+03:00"/>
 		</event>
 		<event>
 			<string key="concept:name" value="activity 1"/>
 			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-05-30T21:46:49.982+03:00"/>
+			<date key="time:timestamp" value="2014-06-13T07:40:33.595+03:00"/>
 		</event>
 		<event>
 			<string key="concept:name" value="activity 1"/>
 			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-05-31T20:12:04.538+03:00"/>
+			<date key="time:timestamp" value="2014-06-13T12:01:23.100+03:00"/>
 		</event>
 		<event>
 			<string key="concept:name" value="activity 1"/>
 			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-06-01T12:15:30.740+03:00"/>
+			<date key="time:timestamp" value="2014-06-14T03:25:52.532+03:00"/>
 		</event>
 		<event>
 			<string key="concept:name" value="activity 1"/>
 			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-06-01T14:34:42.336+03:00"/>
-		</event>
-		<event>
-			<string key="concept:name" value="activity 1"/>
-			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-06-02T05:02:33.143+03:00"/>
-		</event>
-		<event>
-			<string key="concept:name" value="activity 1"/>
-			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-06-03T03:10:18.641+03:00"/>
-		</event>
-		<event>
-			<string key="concept:name" value="activity 1"/>
-			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-06-03T07:32:39.269+03:00"/>
+			<date key="time:timestamp" value="2014-06-14T07:20:21.003+03:00"/>
 		</event>
 	</trace>
 	<trace>
@@ -1183,52 +753,42 @@
 		<event>
 			<string key="concept:name" value="activity 1"/>
 			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-06-03T09:41:49.056+03:00"/>
+			<date key="time:timestamp" value="2014-06-14T13:14:53.390+03:00"/>
 		</event>
 		<event>
 			<string key="concept:name" value="activity 1"/>
 			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-06-03T16:09:04.565+03:00"/>
+			<date key="time:timestamp" value="2014-06-15T05:55:41.444+03:00"/>
 		</event>
 		<event>
 			<string key="concept:name" value="activity 1"/>
 			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-06-04T11:24:19.446+03:00"/>
+			<date key="time:timestamp" value="2014-06-15T09:56:46.807+03:00"/>
 		</event>
 		<event>
 			<string key="concept:name" value="activity 1"/>
 			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-06-04T21:34:04.339+03:00"/>
+			<date key="time:timestamp" value="2014-06-15T13:04:05.575+03:00"/>
 		</event>
 		<event>
 			<string key="concept:name" value="activity 1"/>
 			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-06-05T03:48:56.234+03:00"/>
+			<date key="time:timestamp" value="2014-06-15T19:52:27.065+03:00"/>
 		</event>
 		<event>
 			<string key="concept:name" value="activity 1"/>
 			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-06-05T23:17:27.905+03:00"/>
+			<date key="time:timestamp" value="2014-06-16T17:41:14.050+03:00"/>
 		</event>
 		<event>
 			<string key="concept:name" value="activity 1"/>
 			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-06-06T19:59:00.212+03:00"/>
+			<date key="time:timestamp" value="2014-06-16T22:59:25.737+03:00"/>
 		</event>
 		<event>
 			<string key="concept:name" value="activity 1"/>
 			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-06-07T10:32:45.092+03:00"/>
-		</event>
-		<event>
-			<string key="concept:name" value="activity 1"/>
-			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-06-08T00:37:46.978+03:00"/>
-		</event>
-		<event>
-			<string key="concept:name" value="activity 1"/>
-			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-06-08T07:25:18.530+03:00"/>
+			<date key="time:timestamp" value="2014-06-17T07:50:05.829+03:00"/>
 		</event>
 	</trace>
 	<trace>
@@ -1236,52 +796,32 @@
 		<event>
 			<string key="concept:name" value="activity 1"/>
 			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-06-08T17:11:00.115+03:00"/>
+			<date key="time:timestamp" value="2014-06-17T08:54:23.757+03:00"/>
 		</event>
 		<event>
 			<string key="concept:name" value="activity 1"/>
 			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-06-09T00:13:54.496+03:00"/>
+			<date key="time:timestamp" value="2014-06-18T02:35:42.756+03:00"/>
 		</event>
 		<event>
 			<string key="concept:name" value="activity 1"/>
 			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-06-09T08:49:13.360+03:00"/>
+			<date key="time:timestamp" value="2014-06-18T11:43:53.302+03:00"/>
 		</event>
 		<event>
 			<string key="concept:name" value="activity 1"/>
 			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-06-10T01:44:19.897+03:00"/>
+			<date key="time:timestamp" value="2014-06-18T18:20:41.586+03:00"/>
 		</event>
 		<event>
 			<string key="concept:name" value="activity 1"/>
 			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-06-10T15:32:50.519+03:00"/>
+			<date key="time:timestamp" value="2014-06-19T06:00:14.284+03:00"/>
 		</event>
 		<event>
 			<string key="concept:name" value="activity 1"/>
 			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-06-10T19:24:44.498+03:00"/>
-		</event>
-		<event>
-			<string key="concept:name" value="activity 1"/>
-			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-06-11T14:42:33.463+03:00"/>
-		</event>
-		<event>
-			<string key="concept:name" value="activity 1"/>
-			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-06-11T16:10:28.129+03:00"/>
-		</event>
-		<event>
-			<string key="concept:name" value="activity 1"/>
-			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-06-11T19:39:29.455+03:00"/>
-		</event>
-		<event>
-			<string key="concept:name" value="activity 1"/>
-			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-06-12T10:24:36.293+03:00"/>
+			<date key="time:timestamp" value="2014-06-19T18:37:12.697+03:00"/>
 		</event>
 	</trace>
 	<trace>
@@ -1289,52 +829,27 @@
 		<event>
 			<string key="concept:name" value="activity 1"/>
 			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-06-13T02:29:32.250+03:00"/>
+			<date key="time:timestamp" value="2014-06-20T07:33:23.763+03:00"/>
 		</event>
 		<event>
 			<string key="concept:name" value="activity 1"/>
 			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-06-13T11:49:10.487+03:00"/>
+			<date key="time:timestamp" value="2014-06-20T08:11:05.225+03:00"/>
 		</event>
 		<event>
 			<string key="concept:name" value="activity 1"/>
 			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-06-13T15:29:22.304+03:00"/>
+			<date key="time:timestamp" value="2014-06-20T17:33:05.254+03:00"/>
 		</event>
 		<event>
 			<string key="concept:name" value="activity 1"/>
 			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-06-14T02:13:14.707+03:00"/>
+			<date key="time:timestamp" value="2014-06-21T11:20:21.402+03:00"/>
 		</event>
 		<event>
 			<string key="concept:name" value="activity 1"/>
 			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-06-14T11:04:49.895+03:00"/>
-		</event>
-		<event>
-			<string key="concept:name" value="activity 1"/>
-			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-06-14T23:40:24.570+03:00"/>
-		</event>
-		<event>
-			<string key="concept:name" value="activity 1"/>
-			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-06-15T10:59:12.917+03:00"/>
-		</event>
-		<event>
-			<string key="concept:name" value="activity 1"/>
-			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-06-16T06:37:36.637+03:00"/>
-		</event>
-		<event>
-			<string key="concept:name" value="activity 1"/>
-			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-06-16T08:33:19.967+03:00"/>
-		</event>
-		<event>
-			<string key="concept:name" value="activity 1"/>
-			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-06-16T22:54:22.372+03:00"/>
+			<date key="time:timestamp" value="2014-06-22T02:12:46.997+03:00"/>
 		</event>
 	</trace>
 	<trace>
@@ -1342,52 +857,27 @@
 		<event>
 			<string key="concept:name" value="activity 1"/>
 			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-06-17T05:40:20.037+03:00"/>
+			<date key="time:timestamp" value="2014-06-23T01:22:36.762+03:00"/>
 		</event>
 		<event>
 			<string key="concept:name" value="activity 1"/>
 			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-06-18T04:19:14.199+03:00"/>
+			<date key="time:timestamp" value="2014-06-23T15:43:26.021+03:00"/>
 		</event>
 		<event>
 			<string key="concept:name" value="activity 1"/>
 			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-06-18T22:15:49.656+03:00"/>
+			<date key="time:timestamp" value="2014-06-23T16:25:48.241+03:00"/>
 		</event>
 		<event>
 			<string key="concept:name" value="activity 1"/>
 			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-06-19T01:18:02.730+03:00"/>
+			<date key="time:timestamp" value="2014-06-24T01:11:52.700+03:00"/>
 		</event>
 		<event>
 			<string key="concept:name" value="activity 1"/>
 			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-06-19T03:28:49.483+03:00"/>
-		</event>
-		<event>
-			<string key="concept:name" value="activity 1"/>
-			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-06-19T14:40:14.171+03:00"/>
-		</event>
-		<event>
-			<string key="concept:name" value="activity 1"/>
-			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-06-20T08:37:11.555+03:00"/>
-		</event>
-		<event>
-			<string key="concept:name" value="activity 1"/>
-			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-06-20T18:17:55.728+03:00"/>
-		</event>
-		<event>
-			<string key="concept:name" value="activity 1"/>
-			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-06-21T03:38:02.716+03:00"/>
-		</event>
-		<event>
-			<string key="concept:name" value="activity 1"/>
-			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-06-21T19:17:21.442+03:00"/>
+			<date key="time:timestamp" value="2014-06-24T20:43:37.568+03:00"/>
 		</event>
 	</trace>
 	<trace>
@@ -1395,52 +885,32 @@
 		<event>
 			<string key="concept:name" value="activity 1"/>
 			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-06-22T18:10:44.916+03:00"/>
+			<date key="time:timestamp" value="2014-06-24T21:22:11.010+03:00"/>
 		</event>
 		<event>
 			<string key="concept:name" value="activity 1"/>
 			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-06-23T11:01:33.417+03:00"/>
+			<date key="time:timestamp" value="2014-06-25T00:14:22.393+03:00"/>
 		</event>
 		<event>
 			<string key="concept:name" value="activity 1"/>
 			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-06-24T05:48:59.939+03:00"/>
+			<date key="time:timestamp" value="2014-06-26T00:09:48.568+03:00"/>
 		</event>
 		<event>
 			<string key="concept:name" value="activity 1"/>
 			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-06-24T10:30:20.748+03:00"/>
+			<date key="time:timestamp" value="2014-06-26T01:04:00.548+03:00"/>
 		</event>
 		<event>
 			<string key="concept:name" value="activity 1"/>
 			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-06-24T11:18:34.157+03:00"/>
+			<date key="time:timestamp" value="2014-06-26T07:30:06.452+03:00"/>
 		</event>
 		<event>
 			<string key="concept:name" value="activity 1"/>
 			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-06-24T23:38:43.935+03:00"/>
-		</event>
-		<event>
-			<string key="concept:name" value="activity 1"/>
-			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-06-25T03:19:25.148+03:00"/>
-		</event>
-		<event>
-			<string key="concept:name" value="activity 1"/>
-			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-06-25T22:19:20.430+03:00"/>
-		</event>
-		<event>
-			<string key="concept:name" value="activity 1"/>
-			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-06-26T15:15:29.450+03:00"/>
-		</event>
-		<event>
-			<string key="concept:name" value="activity 1"/>
-			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-06-26T22:05:00.661+03:00"/>
+			<date key="time:timestamp" value="2014-06-26T17:20:43.934+03:00"/>
 		</event>
 	</trace>
 	<trace>
@@ -1448,52 +918,27 @@
 		<event>
 			<string key="concept:name" value="activity 1"/>
 			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-06-26T23:30:05.482+03:00"/>
+			<date key="time:timestamp" value="2014-06-26T22:24:54.284+03:00"/>
 		</event>
 		<event>
 			<string key="concept:name" value="activity 1"/>
 			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-06-27T17:42:03.655+03:00"/>
+			<date key="time:timestamp" value="2014-06-27T16:22:34.868+03:00"/>
 		</event>
 		<event>
 			<string key="concept:name" value="activity 1"/>
 			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-06-28T07:59:01.749+03:00"/>
+			<date key="time:timestamp" value="2014-06-28T15:34:44.665+03:00"/>
 		</event>
 		<event>
 			<string key="concept:name" value="activity 1"/>
 			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-06-28T22:45:11.799+03:00"/>
+			<date key="time:timestamp" value="2014-06-29T11:49:51.531+03:00"/>
 		</event>
 		<event>
 			<string key="concept:name" value="activity 1"/>
 			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-06-29T03:15:38.005+03:00"/>
-		</event>
-		<event>
-			<string key="concept:name" value="activity 1"/>
-			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-06-29T08:03:31.568+03:00"/>
-		</event>
-		<event>
-			<string key="concept:name" value="activity 1"/>
-			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-06-29T11:45:30.237+03:00"/>
-		</event>
-		<event>
-			<string key="concept:name" value="activity 1"/>
-			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-06-30T02:13:27.727+03:00"/>
-		</event>
-		<event>
-			<string key="concept:name" value="activity 1"/>
-			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-06-30T03:10:37.699+03:00"/>
-		</event>
-		<event>
-			<string key="concept:name" value="activity 1"/>
-			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-06-30T06:27:01.561+03:00"/>
+			<date key="time:timestamp" value="2014-06-29T19:45:08.389+03:00"/>
 		</event>
 	</trace>
 	<trace>
@@ -1501,52 +946,37 @@
 		<event>
 			<string key="concept:name" value="activity 1"/>
 			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-07-01T04:18:36.651+03:00"/>
+			<date key="time:timestamp" value="2014-06-30T09:41:47.493+03:00"/>
 		</event>
 		<event>
 			<string key="concept:name" value="activity 1"/>
 			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-07-01T08:56:17.277+03:00"/>
+			<date key="time:timestamp" value="2014-06-30T09:49:53.890+03:00"/>
 		</event>
 		<event>
 			<string key="concept:name" value="activity 1"/>
 			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-07-02T01:53:10.538+03:00"/>
+			<date key="time:timestamp" value="2014-07-01T08:05:24.653+03:00"/>
 		</event>
 		<event>
 			<string key="concept:name" value="activity 1"/>
 			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-07-02T22:03:09.300+03:00"/>
+			<date key="time:timestamp" value="2014-07-01T17:53:05.668+03:00"/>
 		</event>
 		<event>
 			<string key="concept:name" value="activity 1"/>
 			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-07-03T13:15:24.677+03:00"/>
+			<date key="time:timestamp" value="2014-07-02T08:59:24.324+03:00"/>
 		</event>
 		<event>
 			<string key="concept:name" value="activity 1"/>
 			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-07-03T15:02:05.951+03:00"/>
+			<date key="time:timestamp" value="2014-07-02T18:21:36.717+03:00"/>
 		</event>
 		<event>
 			<string key="concept:name" value="activity 1"/>
 			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-07-03T17:29:01.670+03:00"/>
-		</event>
-		<event>
-			<string key="concept:name" value="activity 1"/>
-			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-07-04T00:01:29.684+03:00"/>
-		</event>
-		<event>
-			<string key="concept:name" value="activity 1"/>
-			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-07-04T11:41:51.274+03:00"/>
-		</event>
-		<event>
-			<string key="concept:name" value="activity 1"/>
-			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-07-04T16:23:44.291+03:00"/>
+			<date key="time:timestamp" value="2014-07-03T15:30:27.927+03:00"/>
 		</event>
 	</trace>
 	<trace>
@@ -1554,52 +984,382 @@
 		<event>
 			<string key="concept:name" value="activity 1"/>
 			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-07-04T23:12:38.193+03:00"/>
+			<date key="time:timestamp" value="2014-07-04T06:34:49.332+03:00"/>
 		</event>
 		<event>
 			<string key="concept:name" value="activity 1"/>
 			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-07-05T18:09:06.732+03:00"/>
+			<date key="time:timestamp" value="2014-07-05T02:25:01.395+03:00"/>
 		</event>
 		<event>
 			<string key="concept:name" value="activity 1"/>
 			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-07-05T21:21:51.029+03:00"/>
+			<date key="time:timestamp" value="2014-07-05T21:16:05.025+03:00"/>
 		</event>
 		<event>
 			<string key="concept:name" value="activity 1"/>
 			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-07-06T16:53:57.885+03:00"/>
+			<date key="time:timestamp" value="2014-07-06T08:58:24.362+03:00"/>
 		</event>
 		<event>
 			<string key="concept:name" value="activity 1"/>
 			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-07-07T14:35:49.997+03:00"/>
+			<date key="time:timestamp" value="2014-07-06T18:05:05.303+03:00"/>
 		</event>
 		<event>
 			<string key="concept:name" value="activity 1"/>
 			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-07-07T20:14:21.835+03:00"/>
+			<date key="time:timestamp" value="2014-07-07T07:56:38.872+03:00"/>
 		</event>
 		<event>
 			<string key="concept:name" value="activity 1"/>
 			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-07-07T23:12:34.614+03:00"/>
+			<date key="time:timestamp" value="2014-07-07T18:06:58.848+03:00"/>
+		</event>
+	</trace>
+	<trace>
+		<string key="concept:name" value="Synthetic trace no. 30"/>
+		<event>
+			<string key="concept:name" value="activity 1"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2014-07-07T19:57:53.149+03:00"/>
 		</event>
 		<event>
 			<string key="concept:name" value="activity 1"/>
 			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-07-08T22:38:29.684+03:00"/>
+			<date key="time:timestamp" value="2014-07-08T15:38:24.685+03:00"/>
 		</event>
 		<event>
 			<string key="concept:name" value="activity 1"/>
 			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-07-09T09:09:46.216+03:00"/>
+			<date key="time:timestamp" value="2014-07-09T07:05:49.235+03:00"/>
 		</event>
 		<event>
 			<string key="concept:name" value="activity 1"/>
 			<string key="lifecycle:transition" value="complete"/>
-			<date key="time:timestamp" value="2014-07-10T02:42:37.522+03:00"/>
+			<date key="time:timestamp" value="2014-07-10T06:21:00.198+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="activity 1"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2014-07-10T20:46:37.516+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="activity 1"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2014-07-11T12:10:09.920+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="activity 1"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2014-07-12T06:21:00.236+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="activity 1"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2014-07-12T16:23:49.545+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="activity 1"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2014-07-13T13:53:37.123+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="activity 1"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2014-07-14T03:50:12.027+03:00"/>
+		</event>
+	</trace>
+	<trace>
+		<string key="concept:name" value="Synthetic trace no. 31"/>
+		<event>
+			<string key="concept:name" value="activity 1"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2014-07-14T16:42:24.525+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="activity 1"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2014-07-15T12:52:19.523+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="activity 1"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2014-07-15T22:21:04.372+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="activity 1"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2014-07-16T13:05:22.209+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="activity 1"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2014-07-17T09:44:14.681+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="activity 1"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2014-07-17T10:31:49.337+03:00"/>
+		</event>
+	</trace>
+	<trace>
+		<string key="concept:name" value="Synthetic trace no. 32"/>
+		<event>
+			<string key="concept:name" value="activity 1"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2014-07-17T13:54:01.025+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="activity 1"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2014-07-18T00:00:21.682+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="activity 1"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2014-07-18T07:38:04.320+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="activity 1"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2014-07-19T00:41:03.213+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="activity 1"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2014-07-19T02:27:44.263+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="activity 1"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2014-07-19T16:22:54.555+03:00"/>
+		</event>
+	</trace>
+	<trace>
+		<string key="concept:name" value="Synthetic trace no. 33"/>
+		<event>
+			<string key="concept:name" value="activity 1"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2014-07-20T00:02:25.620+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="activity 1"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2014-07-20T22:25:29.678+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="activity 1"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2014-07-20T23:45:42.628+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="activity 1"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2014-07-21T23:09:06.874+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="activity 1"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2014-07-22T04:42:47.292+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="activity 1"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2014-07-22T18:39:30.625+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="activity 1"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2014-07-23T13:46:37.484+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="activity 1"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2014-07-23T23:19:08.880+03:00"/>
+		</event>
+	</trace>
+	<trace>
+		<string key="concept:name" value="Synthetic trace no. 34"/>
+		<event>
+			<string key="concept:name" value="activity 1"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2014-07-24T09:14:13.401+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="activity 1"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2014-07-24T23:33:13.761+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="activity 1"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2014-07-25T19:37:04.887+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="activity 1"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2014-07-26T15:50:32.820+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="activity 1"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2014-07-27T01:19:52.594+03:00"/>
+		</event>
+	</trace>
+	<trace>
+		<string key="concept:name" value="Synthetic trace no. 35"/>
+		<event>
+			<string key="concept:name" value="activity 1"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2014-07-27T18:56:11.674+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="activity 1"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2014-07-28T18:36:58.960+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="activity 1"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2014-07-29T12:28:24.819+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="activity 1"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2014-07-30T00:08:33.699+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="activity 1"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2014-07-30T18:49:53.069+03:00"/>
+		</event>
+	</trace>
+	<trace>
+		<string key="concept:name" value="Synthetic trace no. 36"/>
+		<event>
+			<string key="concept:name" value="activity 1"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2014-07-31T11:35:48.569+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="activity 1"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2014-08-01T04:58:20.778+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="activity 1"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2014-08-01T14:17:02.275+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="activity 1"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2014-08-02T10:51:20.490+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="activity 1"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2014-08-03T10:09:18.332+03:00"/>
+		</event>
+	</trace>
+	<trace>
+		<string key="concept:name" value="Synthetic trace no. 37"/>
+		<event>
+			<string key="concept:name" value="activity 1"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2014-08-03T17:20:41.147+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="activity 1"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2014-08-04T10:53:32.724+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="activity 1"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2014-08-04T11:19:22.858+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="activity 1"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2014-08-05T06:36:46.486+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="activity 1"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2014-08-05T11:56:26.604+03:00"/>
+		</event>
+	</trace>
+	<trace>
+		<string key="concept:name" value="Synthetic trace no. 38"/>
+		<event>
+			<string key="concept:name" value="activity 1"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2014-08-05T22:41:09.420+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="activity 1"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2014-08-06T16:41:21.792+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="activity 1"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2014-08-07T03:44:04.937+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="activity 1"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2014-08-07T17:04:33.424+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="activity 1"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2014-08-08T05:14:27.872+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="activity 1"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2014-08-08T06:16:07.792+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="activity 1"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2014-08-08T21:10:48.481+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="activity 1"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2014-08-09T19:10:16.186+03:00"/>
+		</event>
+	</trace>
+	<trace>
+		<string key="concept:name" value="Synthetic trace no. 39"/>
+		<event>
+			<string key="concept:name" value="activity 1"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2014-08-10T00:27:53.161+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="activity 1"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2014-08-10T15:36:04.700+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="activity 1"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2014-08-10T18:46:16.815+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="activity 1"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2014-08-11T14:50:38.268+03:00"/>
+		</event>
+		<event>
+			<string key="concept:name" value="activity 1"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2014-08-11T19:42:51.244+03:00"/>
 		</event>
 	</trace>
 </log>
