@@ -12,6 +12,10 @@ import java.util.Random;
 
 
 
+
+
+
+
 import minerful.logmaker.MinerFulLogMaker;
 import minerful.logmaker.params.LogMakerCmdParameters;
 import minerful.logmaker.params.LogMakerCmdParameters.Encoding;
@@ -42,6 +46,7 @@ import nl.tue.declare.execution.WorkItemData;
 import java.io.ObjectInputStream.GetField;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Map.Entry;
 
 import javax.swing.JOptionPane;
 
@@ -51,11 +56,11 @@ import org.deckfour.xes.model.XLog;
 
 
 public class DeclareLogGenerator {
-	public static long traceLength = 0;
+	/*public static long traceLength = 0;*/
 	static LinkedHashMap<String, Alphabet> abMap = new LinkedHashMap<String, Alphabet>();
 	static LinkedHashMap<String, Alphabet> abMapx = new LinkedHashMap<String, Alphabet>();
-	static LinkedHashMap<String, Alphabet> abMapxx = new LinkedHashMap<String, Alphabet>();
-	static LinkedHashMap<String, ArrayList<String>> abMapCombine = new LinkedHashMap<String, ArrayList<String>>();
+/*	static LinkedHashMap<String, Alphabet> abMapxx = new LinkedHashMap<String, Alphabet>();
+*/	/*static LinkedHashMap<String, ArrayList<String>> abMapCombine = new LinkedHashMap<String, ArrayList<String>>();*/
 	ArrayList<WorkItemData> data;
 	static ArrayList<String> alphabets1 = new ArrayList();
 	static ArrayList<String> firstact = new ArrayList();
@@ -65,7 +70,7 @@ public class DeclareLogGenerator {
 	static ArrayList<String> alphabetList = new ArrayList();
 	static ArrayList<String> repeatList = new ArrayList();
 	static ArrayList<String> combinedList = new ArrayList();
-	HashMap<String, String> attributes;
+	static String secondkey ="";
 	private LogMakerCmdParameters parameters;
 	public static Encoding OUTPUT_ENCODING = Encoding.xes;
 	public static final File OUTPUT_LOG = new File("");
@@ -77,19 +82,21 @@ public class DeclareLogGenerator {
 		AssignmentModel model = broker.readAssignment();
 		// addNewData(model);
 		checkActivation(model); // add activation conditions
-		getAlphabets(model);
+		getAlphabets(model); // add first aphabets and condition
 		ParameterSettings2.jProgressBar1.setValue(3);
-		AddFirstLetter(model);
-		generateCombination();
+		AddFirstLetter(model); //add into abMap
+		generateCombination(); // count alphabets
 		abMapx.clear();
-		SetCombinationCondtion();
+		SetCombinationCondtion(); // combination without rep.
 		IlpSolver.CheckIlpConditions(combinedList, abMapx);
 		ParameterSettings2.jProgressBar1.setValue(4);
+		
 		IlpSolver.purifyLog(combinedList, abMapx);
 		if (abMapx.isEmpty()) {
 			JOptionPane.showMessageDialog(null, "Unable to Generate Log!");
 			return false;
 		}
+		addCorrelatedConditions();
 		XLog xlog = LogService
 				.GenerateLog(model, abMapx, LogSize, combinedList);
 		XLifecycleExtension lifeExtension = XLifecycleExtension.instance();
@@ -112,6 +119,9 @@ public class DeclareLogGenerator {
 		return true;
 	}
 	
+
+
+
 
 	public static int selectRandom(int max) {
 		Random rand = new Random();
@@ -158,7 +168,11 @@ public class DeclareLogGenerator {
 			int max = Integer.parseInt(lst[1]);
 			BranchCombination.GetCombination(lst[0], max, combinedList);
 			repeatList.add(combinedList.get(combinedList.size()-1));
-		}			
+		}
+		
+		for (int i=0; i <repeatList.size(); i++){
+			System.out.println(repeatList.get(i));
+		}
 	}
 	
 	public static void SetFirstLetters(){
@@ -414,12 +428,11 @@ public class DeclareLogGenerator {
 		
 	}
 	
-	public static void Addnew(String fname, String lname, String act, String ilpcond, boolean isActivated)
+	public static void Addnew(String fname, String lname, String act, String ilpcond, boolean isActivated, String relcond)
 	{
 		Alphabet ab = new Alphabet();
 		ab.alphabetname = fname;
-		
-		ab.isActivationTrue = false;
+	
 		int val =  0;
 		if (!act.isEmpty())
 		{
@@ -441,7 +454,15 @@ public class DeclareLogGenerator {
 		ab.alphabetkey = fname;
 		ab.ilpCondition = ilpcond;
 		ab.isActivated = isActivated;
+		if (relcond.isEmpty()){
+		ab.isRetaiveTrue =false;
+		ab.relCondition = "";
+		} else {
+		ab.relCondition = relcond;
+		ab.isRetaiveTrue = true;
+		}
 		ab.secondAlphabet = lname;
+		ab.secondAlphabetKey = lname;
 		abMap.put(fname, ab);
 		abMapx.put(fname, ab);
 		
@@ -449,19 +470,24 @@ public class DeclareLogGenerator {
 	
 	public static void AddFirstLetter(AssignmentModel model) {
 		String fname = "";
+		
 		String lname="";
 		String ilpcond = "";
 		String condition ="";
 		int ind=0;
+		boolean addparent = false;
 		for (nl.tue.declare.domain.model.ConstraintDefinition cd : model
 				.getConstraintDefinitions()) {
 				condition = getLeft(cd.getCondition().toString());
+				addparent =false;
 				for (Parameter p : cd.getParameters()) {
 					for (nl.tue.declare.domain.model.ActivityDefinition ad : cd
 							.getBranches(p)) {
 						if (p.getName().equals("A")) {
 						 fname = ad.getName().toString();
+						 addparent= (checkIndex(fname) ==0);
 						 addedList.add(fname);
+						 
 						}else
 						{
 							lname= ad.getName().toString();
@@ -471,13 +497,16 @@ public class DeclareLogGenerator {
 					if (p.getName().equals("B")) {
 						
 						ilpcond =	getCondtions(model,fname,condition);
-						ind = checkIndex(fname);
+						ind = checkIndex(fname);					
 						ind = ind - 1;
-						fname = fname+(Integer.toString(ind));
 						
-					Addnew(fname,lname,condition,ilpcond,true);
-					Addnew(fname+"1",lname, BranchCombination.divertCondition(condition),ilpcond,true);
-					Addnew(lname,"","","",false);
+					/*if (addparent){
+						Addnew(fname,lname,condition,ilpcond,true,getRelCond(cd.getCondition().toString()));	
+					}	*/
+					fname = fname+(Integer.toString(ind));
+					Addnew(fname,lname,condition,ilpcond,true,getRelCond(cd.getCondition().toString()));
+					Addnew(fname+"1",lname, BranchCombination.divertCondition(condition),ilpcond,true,getRelCond(condition));
+					Addnew(lname,"","","",false,"");
 					//AssignmentModel model, String activity, String condition
 					System.out.println("A0: "+fname);
 					System.out.println("A01: "+fname+"1");
@@ -491,13 +520,14 @@ public class DeclareLogGenerator {
 	}
 
 	public static void SetCombinationCondtion() {
-		abMapx.clear();
+		
 		String key = "";
 		String codition = "";
 		String tempp = "";
 		String send = "";
 		String[] clst;
 		String b = "";
+		String combinationCond = "";
 		// Alphabet ab = new Alphabet();
 		
 		abMapx.clear();
@@ -511,17 +541,30 @@ public class DeclareLogGenerator {
 			} else {
 				codition = UpperLevel(combinedList.get(i));
 			}
+			combinationCond = codition;
 			Alphabet abX = abMap.get(key);
 			if (abX == null) {
 				Alphabet ab = new Alphabet();
-				//ab.secondAlphabet = send;
+				ab.ilpCondition = "";
 				if (!codition.isEmpty())
 					ab.ilpCondition = codition;
 				ab.conditionlist = clst;
 				ab.alphabetkey = key;
+				ab.alphabetname =  BranchCombination.getParentLetter(key);
 				if (clst.length > 1) {
-					ab.secondAlphabet = getB(clst);
-				}					
+					ab.secondAlphabet = getB(clst);					
+				}	
+				
+				String cor = getCoRel(clst);// = abMap.get(ab.alphabetname);
+				ab.secondAlphabetKey = secondkey;
+				if (cor!=null){
+					ab.relCondition = cor;
+					ab.isRetaiveTrue =true;
+				} else
+				{
+					ab.relCondition = "" ;
+					ab.isRetaiveTrue =false;
+				}
 				abMapx.put(key, ab);
 			} else {
 				if (clst.length > 1) {
@@ -532,10 +575,92 @@ public class DeclareLogGenerator {
 					abX.ilpCondition = codition;
 				abX.conditionlist = clst;
 				abX.alphabetkey = key;
+				
 				abMapx.put(key, abX);
 			}
 
 		}
+	}
+	
+	
+
+	public static void addCorrelatedConditions() {
+		String corCondtion = "";
+		for (Entry<String, Alphabet> activity : abMapx.entrySet()) {
+			String k = activity.getKey();
+			Alphabet filter = activity.getValue();
+			if (filter.isRetaiveTrue) {
+				corCondtion = getCorrlationAlphabet(k);
+				String[] corChoine = corCondtion.split(" ");
+
+				if (corChoine.length <= 1) {
+					filter.correlationlist = getZeroCor(k, filter.alphabetname,
+							filter.secondAlphabetKey);
+					filter.secondAlphabet = "";
+				} else {
+					filter.correlationlist = getUpperCor(k,
+							filter.alphabetname, filter.secondAlphabetKey);
+					String snd = filter.secondAlphabet;
+					filter.secondAlphabet = snd.replaceAll(
+							filter.secondAlphabetKey, "!@#@!");
+					/*
+					 * System.out.println("Key: " + k + " :  Upper corre: " +
+					 * getUpperCor(k,filter.alphabetname,
+					 * filter.secondAlphabetKey));
+					 */
+				}
+
+				abMapx.put(k, filter);
+			}
+		}
+	}
+	
+	public static String[] getZeroCor(String xkey, String a, String b) {
+		String aa = BranchCombination.getParentLetter(a);
+		String ret = "";
+		for (int ind = 0; ind < combinedList.size(); ind++) {
+			String  temp = combinedList.get(ind).replaceAll(" ", "");
+			if (temp.contains(xkey)) {
+				if (!ret.isEmpty()) {
+					ret = ret + "::";
+				}
+				ret = ret + combinedList.get(ind).replaceAll(aa, b).replaceAll(" ", "").trim();
+			}
+		}
+		return ret.split("::");
+	}
+	
+	public static String[] getUpperCor(String xkey, String a, String b) {
+		// Ali
+		String aa = BranchCombination.getParentLetter(a);
+		String ret = "";
+		for (int ind = 0; ind < combinedList.size(); ind++) {
+			String  temp = combinedList.get(ind).replaceAll(" ", "");
+			if(temp.length() >= xkey.length()){
+			if (temp.contains(xkey)) {
+				if (!ret.isEmpty()) {
+					ret = ret + "::";
+				}
+				ret = ret + combinedList.get(ind).replaceAll(aa, b).replaceAll(" ", "").trim();
+			}
+			}
+		}
+		return ret.split("::");
+	}
+	
+	
+	public static String getCorrlationAlphabet(String xkey) {
+		// Ali
+		String ret = "";
+		for (int ind = 0; ind < combinedList.size(); ind++) {
+			if (xkey.equals(combinedList.get(ind).replaceAll(" ", "").trim())) {
+				if (!ret.isEmpty()) {
+					ret = ret + " ";
+				}
+				ret = ret + combinedList.get(ind);
+			}
+		}
+		return ret;
 	}
 	
 	public static String getB(String[] clst){
@@ -543,10 +668,34 @@ public class DeclareLogGenerator {
 		for (int i2=0;i2< clst.length;i2++){
 			Alphabet b2 = abMap.get(clst[i2]);
 			if (b2!=null){
+				
 				if (!b.isEmpty()){
 					b=b+"::";
 				}
 				b=b+b2.secondAlphabet;
+			}
+		}
+		return b;
+	}
+	
+	
+	public static String getCoRel(String[] clst){
+		String b="";
+		secondkey ="";
+		for (int i2=0;i2< clst.length;i2++){
+			Alphabet b2 = abMap.get(clst[i2]);
+			if (b2!=null){
+				if (secondkey.isEmpty())
+				{
+					if (b2.alphabetkey.equals(clst[i2])){
+						secondkey = b2.secondAlphabetKey;	
+					}
+				}
+				
+				if (!b.isEmpty()){
+					b=b+"::";
+				}
+				b=b+b2.relCondition;
 			}
 		}
 		return b;
@@ -602,6 +751,11 @@ public class DeclareLogGenerator {
 	public static String getLeft(String s) {
 		ConstraintConditions c = ConstraintConditions.build(s);
 		return c.getActivationCondition();
+	}
+	
+	public static String getRelCond(String s) {
+		ConstraintConditions c = ConstraintConditions.build(s);
+		return c.getConstraintCondition();
 	}
 
 	public static int getRandomTrace(int min, int max) {

@@ -6,7 +6,63 @@ import java.util.LinkedList;
 import java.util.TreeMap;
 
 public class BranchCombination {
-
+	
+	
+	public static String getParentLetter(String string) {
+		StringBuilder alphabetsBuilder = new StringBuilder();
+		for (int i = 0; i < string.length(); i++) {
+			char ch = string.charAt(i);
+			if (Character.isAlphabetic(ch)) {
+				alphabetsBuilder.append(ch);
+			} else if (Character.isDigit(ch)) {
+				alphabetsBuilder.append(";");
+			}
+		}
+		return alphabetsBuilder.toString().split(";")[0];
+	}
+	
+	public static String getParentNumber(String string) {
+	    	  StringBuilder alphabetsBuilder = new StringBuilder();
+	        StringBuilder numbersBuilder = new StringBuilder();
+	        StringBuilder symbolsBuilder = new StringBuilder();
+	        for (int i = 0; i < string.length(); i++) {
+	            char ch = string.charAt(i);
+	            if (Character.isAlphabetic(ch)) {
+	                alphabetsBuilder.append(ch);
+	                if (numbersBuilder.length()>0)
+	                numbersBuilder.append(";");
+	            } else if (Character.isDigit(ch)) {
+	                numbersBuilder.append(ch);
+	                if (alphabetsBuilder.length()>0)
+	                alphabetsBuilder.append(";");
+	            } else {
+	                symbolsBuilder.append(ch);
+	            }
+	        }	
+		
+		return alphabetsBuilder.toString().split(";")[0] +
+				numbersBuilder.toString().split(";")[0];
+	}
+	
+	
+public static void separate(String string) {
+        StringBuilder alphabetsBuilder = new StringBuilder();
+        StringBuilder numbersBuilder = new StringBuilder();
+        StringBuilder symbolsBuilder = new StringBuilder();
+        for (int i = 0; i < string.length(); i++) {
+            char ch = string.charAt(i);
+            if (Character.isAlphabetic(ch)) {
+                alphabetsBuilder.append(ch);
+            } else if (Character.isDigit(ch)) {
+                numbersBuilder.append(ch);
+            } else {
+                symbolsBuilder.append(ch);
+            }
+        }
+        System.out.println("Alphabets in string: " + alphabetsBuilder.toString());
+        System.out.println("Numbers in String: " + numbersBuilder.toString());
+        System.out.println("Sysmbols in String: " + symbolsBuilder.toString()); 
+    }
 	
 	public static String divertCondition(String s) {
 		String r = "";

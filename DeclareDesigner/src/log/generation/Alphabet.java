@@ -28,10 +28,15 @@ public class Alphabet {
 	public String secondAlphabetKey;
 	public String ilpCondition;
 	public String[] conditionlist;
+	public String[] correlationlist;
 	public boolean isSingle;
 
 	public void isSingle(boolean isSingle) {
 		this.isSingle = isSingle;
+	}
+	
+	public void correlationlist(String[] correlationlist) {
+		this.correlationlist = correlationlist;
 	}
 
 	public void conditionlist(String[] conditionlist) {

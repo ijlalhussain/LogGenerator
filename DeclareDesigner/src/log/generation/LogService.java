@@ -68,8 +68,7 @@ public class LogService {
 				// abMapx.values())).get(xselect);
 				Alphabet ExeActivity = abMapx.get(combinedList.get(xselect)
 						.trim().replaceAll(" ", ""));
-				firedTransition = ExeActivity.alphabetname + "(Key:"
-						+ ExeActivity.alphabetkey + ")";// alphabets.get(xselect)
+				firedTransition =  ExeActivity.alphabetkey ;// alphabets.get(xselect)
 														// ;
 				currentDate = LogService
 						.generateRandomDateTimeForLogEvent(currentDate);
@@ -92,11 +91,34 @@ public class LogService {
 				XConceptExtension.instance()
 						.assignName(xEvent, firedTransition);
 				xTrace.add(xEvent);
-
-				if (ExeActivity.secondAlphabet != null) {
+				if (ExeActivity.isRetaiveTrue){
+				 String[] corrLiost = ExeActivity.correlationlist;
+				 int randx= selectRandom(corrLiost.length);
+					firedTransition = corrLiost[randx];// ExeActivity.secondAlphabet;
+					XEvent xEventb = xFactory.createEvent();
+					XAttribute testb = xFactory
+							.createAttributeLiteral("X", Integer
+									.toString(getRandomTrace(1000, 40000)),
+									null);
+					XAttributeMap test2b = xFactory.createAttributeMap();
+					test2b.put("X", testb);
+					xEventb = LogService.makeXEvent(xFactory, concExtino,
+							lifeExtension, timeExtension, firedTransition,
+							currentDate, test2b);
+					XTimeExtension.instance().assignTimestamp(xEventb,
+							currentDate);
+					XConceptExtension.instance().assignName(xEventb,
+							firedTransition);
+					xTrace.add(xEventb);
+				} 
+				
+				
+				if (!ExeActivity.secondAlphabet.isEmpty()) {
 					// if (1==1){
 					String[] b = ExeActivity.secondAlphabet.split("::");
 					for (int ndx=0; ndx < b.length; ndx++)
+					{
+					if (!b[ndx].equals("!@#@!"))
 					{
 					firedTransition = b[ndx];// ExeActivity.secondAlphabet;
 					XEvent xEventb = xFactory.createEvent();
@@ -115,7 +137,7 @@ public class LogService {
 							firedTransition);
 					xTrace.add(xEventb);
 					}
-				}
+				}} // if not !=null and isretiefalse
 
 			}
 			xlog.add(xTrace);
