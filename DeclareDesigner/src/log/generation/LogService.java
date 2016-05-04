@@ -35,7 +35,7 @@ public class LogService {
 	
 	public static XLog GenerateLog(AssignmentModel model,
 			LinkedHashMap<String, Alphabet> abMapx, long LogSize,
-			ArrayList<String> combinedList) {
+			ArrayList<String> combinedList, int minlength, int maxlength ) {
 		// c.getConstraintCondition();
 		XFactory xFactory = XFactoryRegistry.instance().currentDefault();
 		XLog xlog = xFactory.createLog();
@@ -57,15 +57,11 @@ public class LogService {
 
 		for (int trace = 0; trace < LogSize; trace++) {
 			String firedTransition = null;
-			int xselect = selectRandom(abMapx.size());
-			System.out.println(xselect + ":-> " + trace);
 			xTrace = xFactory.createTrace();
-			concExtino.assignName(xTrace,
-					String.format(traceNameTemplate, (trace)));
-
+			concExtino.assignName(xTrace,String.format(traceNameTemplate, (trace)));
+			int localMax = 0;
+			int xselect = selectRandom(abMapx.size());
 			if ((xselect >= 0) && (xselect <= abMapx.size())) {
-				// Alphabet ExeActivity = (new ArrayList<Alphabet>(
-				// abMapx.values())).get(xselect);
 				Alphabet ExeActivity = abMapx.get(combinedList.get(xselect)
 						.trim().replaceAll(" ", ""));
 				firedTransition =  ExeActivity.alphabetkey ;// alphabets.get(xselect)
@@ -109,6 +105,7 @@ public class LogService {
 							currentDate);
 					XConceptExtension.instance().assignName(xEventb,
 							firedTransition);
+					localMax++;
 					xTrace.add(xEventb);
 				} 
 				
@@ -122,9 +119,7 @@ public class LogService {
 					{
 					firedTransition = b[ndx];// ExeActivity.secondAlphabet;
 					XEvent xEventb = xFactory.createEvent();
-					XAttribute testb = xFactory
-							.createAttributeLiteral("X", Integer
-									.toString(getRandomTrace(1000, 40000)),
+					XAttribute testb = xFactory.createAttributeLiteral("X", Integer.toString(getRandomTrace(1000, 40000)),
 									null);
 					XAttributeMap test2b = xFactory.createAttributeMap();
 					test2b.put("X", testb);
@@ -135,9 +130,37 @@ public class LogService {
 							currentDate);
 					XConceptExtension.instance().assignName(xEventb,
 							firedTransition);
+					localMax++;
 					xTrace.add(xEventb);
 					}
-				}} // if not !=null and isretiefalse
+				}
+					
+				} // if not !=null and isretiefalse
+				
+				if (localMax < maxlength ){
+					
+					for (int k=localMax; k < maxlength; k++){
+						int xxd = selectRandom(abMapx.size());
+						Alphabet TestChar = abMapx.get(combinedList.get(xxd)
+								.trim().replaceAll(" ", ""));
+						firedTransition = TestChar.alphabetkey; // ExeActivity.secondAlphabet;
+						XEvent xEventb = xFactory.createEvent();
+						XAttribute testb = xFactory.createAttributeLiteral("X", Integer.toString(getRandomTrace(TestChar.minValue, TestChar.maxValue)),
+										null);
+						XAttributeMap test2b = xFactory.createAttributeMap();
+						test2b.put("X", testb);
+						xEventb = LogService.makeXEvent(xFactory, concExtino,
+								lifeExtension, timeExtension, firedTransition,
+								currentDate, test2b);
+						XTimeExtension.instance().assignTimestamp(xEventb,
+								currentDate);
+						XConceptExtension.instance().assignName(xEventb,
+								firedTransition);
+						localMax++;
+						xTrace.add(xEventb);
+						
+					}
+				}
 
 			}
 			xlog.add(xTrace);
@@ -146,10 +169,11 @@ public class LogService {
 		return xlog;
 	}
 
-	public static int getRandomTrace(int min, int max) {
+	public static int  getRandomTrace(int min, int max) {
 		try {
 			Random random = new Random();
-			return random.nextInt(max - min) + min;
+			//return random.nextInt(max - min) + min;
+			return  (int) (min + (random.nextDouble() * (max - min)));
 		} catch (IllegalArgumentException e) {
 			return max;
 		}

@@ -52,6 +52,8 @@ public class IlpSolver {
 
 	public static void CheckIlpConditions(ArrayList<String> combinlist,
 			LinkedHashMap<String, Alphabet> abMapx) {
+		ArrayList<String> optlist = new ArrayList();
+		boolean isGreater =false;
 		for (Entry<String, Alphabet> activity : abMapx.entrySet()) {
 			String k = activity.getKey();
 			Alphabet filter = activity.getValue();
@@ -70,7 +72,8 @@ public class IlpSolver {
 				Problem problem = new Problem();
 				Problem problem2 = new Problem();
 				String[] res = filter.ilpCondition.split("::");// "x <= 2 :: x <= 6 :: x <= 3".split("::");
-				ArrayList<Linear> lnr = new ArrayList<Linear>();
+				//ArrayList<Linear> lnr = new ArrayList<Linear>();
+				optlist.clear();
 				for (int i = 0; i < res.length; i++) {
 					String[] ops = res[i].trim().split(" ");
 					String payload = ops[0].substring(1);
@@ -80,9 +83,11 @@ public class IlpSolver {
 					if (opt.length() == 1) {
 						opt = opt + "=";
 					}
+					
+					optlist.add(opt);
 					Linear linear = new Linear();
 					linear.add(1, payload);
-					lnr.add(linear);
+					//lnr.add(linear);
 
 					problem.add(linear, opt, Integer.parseInt(payloadValue));
 					problem.setObjective(linear, OptType.MAX);
@@ -97,30 +102,66 @@ public class IlpSolver {
 												// only once for one problem
 				net.sf.javailp.Result result = solver.solve(problem);
 
-				System.out.println(filter.ilpCondition);
-				System.out.println(result);
+		 	System.out.println("Key:"+ k + " ILP Cond: " + filter.ilpCondition);
+		//		System.out.println(result);
 
 				// Solver solver2 = factory.get(); // you should use this solver
 				// only once for one problem
 				net.sf.javailp.Result result2 = solver.solve(problem2);
 
-				System.out.println(result2);
+				//System.out.println(result2);
 
+			if (AllGreater(optlist)){
+				filter.maxValue = Integer.MAX_VALUE;
+				filter.minValue = result2.getObjective().intValue();
+				filter.logGenerate = true;
+				System.out.println("All Greater: Max " + filter.maxValue + " Min : "+ result2.getObjective().intValue());
+			} 
+			else if (AllLesser(optlist)){
+				filter.maxValue = result.getObjective().intValue();
+				//Integer s = Integer.MIN_VALUE;
+				//System.out.println(s);
+				filter.minValue =  Integer.MIN_VALUE;
+				filter.maxValue = result.getObjective().intValue();
+				filter.logGenerate = true;
+				System.out.println("AllLesser: Max " + filter.maxValue + " Min : "+ filter.minValue  );
+			}
+			else {
 				if ((result == null) || (result2 == null)) {
 					filter.maxValue = 0;
 					filter.minValue = 0;
 					filter.logGenerate = false;
+					System.out.println("Result : Null");
 				} else {
 					filter.maxValue = result.getObjective().intValue();
 					filter.minValue = result2.getObjective().intValue();
 					filter.logGenerate = true;
+					System.out.println("Result: Max " + result.getObjective().intValue() + " Min : "+ result2.getObjective().intValue());
 				}
-
+			} // not all greater
 				abMapx.put(k, filter);
 
 			} // end of isemty
 		}
 
+	}
+	
+	public static boolean AllLesser(ArrayList<String> optlist){
+		for (int i = 0; i < optlist.size(); i++) {
+			if (!optlist.get(i).substring(0,1).equals("<")) {
+				return false;
+			}
+		}
+		return true;
+	}
+	
+	public static boolean AllGreater(ArrayList<String> optlist){
+		for (int i = 0; i < optlist.size(); i++) {
+			if (!optlist.get(i).substring(0,1).equals(">")) {
+				return false;
+			}
+		}
+		return true;
 	}
 
 	public static String CheckLinear(String activationCondition,

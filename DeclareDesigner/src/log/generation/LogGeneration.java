@@ -30,18 +30,24 @@ public class LogGeneration {
 		broker.readAssignmentGraphical(model, view);
 		TaskCharEncoderDecoder encdec = new TaskCharEncoderDecoder();
 
-		
 		for(ConstraintDefinition cd : model.getConstraintDefinitions()){
+		  String s = cd.getCondition().toString();
+		  if (s.isEmpty()){
+			  ret =false;  
+		  }
+		  else {
+			  return true;  
+		  }
 			System.out.println(cd.getCondition() + ""+ cd.getCondition().isTrue());
 		//	checkCondtion(cd.getCondition().toString());
-			for(Parameter p : cd.getParameters()){
+			/*for(Parameter p : cd.getParameters()){
 				System.out.println(p.getName());
 				for(ActivityDefinition ad : cd.getBranches(p)){
 					encdec.encode(new StringTaskClass(ad.getName()));
 					System.out.println(ad.getName());
 					ret =true;
 				}
-			}
+			}*/
 		}		
 		return ret;
 		
