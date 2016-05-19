@@ -31,6 +31,54 @@ import org.deckfour.xes.out.XesXmlSerializer;
 
 public class LogService {
 	
+	public static void PrintMyLog(AssignmentModel model,
+			LinkedHashMap<String, Alphabet> abMapx, long LogSize,
+			ArrayList<String> combinedList, int minlength, int maxlength ) {
+		
+		for (int trace = 0; trace < LogSize; trace++) {
+			String firedTransition = null;
+			int localMax = 0;
+			int xselect = selectRandom(abMapx.size());
+			if ((xselect >= 0) && (xselect <= abMapx.size())) {
+				Alphabet ExeActivity = abMapx.get(combinedList.get(xselect)
+						.trim().replaceAll(" ", ""));
+				firedTransition = ExeActivity.alphabetkey;// alphabets.get(xselect)
+				System.out.println("1st Alphabet : " + firedTransition); // ;
+				if (ExeActivity.isRetaiveTrue) {
+					String[] corrLiost = ExeActivity.correlationlist;
+					int randx = selectRandom(corrLiost.length);
+					firedTransition = corrLiost[randx];// ExeActivity.secondAlphabet;
+					System.out.println("2st Alphabet with : " + firedTransition);
+				}
+
+				if ((ExeActivity.isRetaiveTrue==false)&&(!ExeActivity.secondAlphabet.isEmpty())) {
+					// if (1==1){
+					String[] b = ExeActivity.secondAlphabet.split("::");
+					for (int ndx = 0; ndx < b.length; ndx++) {
+						if (!b[ndx].equals("!@#@!")) {
+							firedTransition = b[ndx];// ExeActivity.secondAlphabet;
+							System.out.println("2st Alphabet : "
+									+ firedTransition);
+
+						}
+					}
+
+				} // if not !=null and isretiefalse
+
+				if (localMax < maxlength) {
+
+					for (int k = localMax; k < maxlength; k++) {
+						int xxd = selectRandom(abMapx.size());
+						Alphabet TestChar = abMapx.get(combinedList.get(xxd)
+								.trim().replaceAll(" ", ""));
+						firedTransition = TestChar.alphabetkey; // ExeActivity.secondAlphabet;
+			//			System.out.println("Looping Max Events : "
+			//					+ firedTransition);
+					}
+				}
+			}
+		}
+	}
 	
 	
 	public static XLog GenerateLog(AssignmentModel model,

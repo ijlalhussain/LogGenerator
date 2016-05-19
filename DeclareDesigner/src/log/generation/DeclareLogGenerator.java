@@ -9,16 +9,7 @@ import java.util.LinkedHashMap;
 
 
 import java.util.Random;
-
-
-
-
-
-
-
-
-
-
+import minerful.concept.ProcessModel;
 import minerful.logmaker.MinerFulLogMaker;
 import minerful.logmaker.params.LogMakerCmdParameters;
 import minerful.logmaker.params.LogMakerCmdParameters.Encoding;
@@ -53,8 +44,13 @@ import java.util.Map.Entry;
 
 import javax.swing.JOptionPane;
 
+import org.deckfour.xes.extension.std.XConceptExtension;
 import org.deckfour.xes.extension.std.XLifecycleExtension;
+import org.deckfour.xes.extension.std.XTimeExtension;
+import org.deckfour.xes.model.XAttributeMap;
+import org.deckfour.xes.model.XEvent;
 import org.deckfour.xes.model.XLog;
+import org.deckfour.xes.model.XTrace;
 
 
 
@@ -63,11 +59,13 @@ public class DeclareLogGenerator {
 	static LinkedHashMap<String, Alphabet> abMap = new LinkedHashMap<String, Alphabet>();
 	static LinkedHashMap<String, Alphabet> abMapx = new LinkedHashMap<String, Alphabet>();
 	static LinkedHashMap<String, Alphabet> corrlationList = new LinkedHashMap<String, Alphabet>();	
+	static LinkedHashMap<String, Alphabet> abMapdata = new LinkedHashMap<String, Alphabet>();
 /*	static LinkedHashMap<String, Alphabet> abMapxx = new LinkedHashMap<String, Alphabet>();
 */	/*static LinkedHashMap<String, ArrayList<String>> abMapCombine = new LinkedHashMap<String, ArrayList<String>>();*/
 	ArrayList<WorkItemData> data;
 	static ArrayList<String> alphabets1 = new ArrayList();
 	static ArrayList<String> firstact = new ArrayList();
+	static ArrayList<String> secondact = new ArrayList();
 	static ArrayList<String> firstcont = new ArrayList();
 	static ArrayList<String> CorrelationContList = new ArrayList();
 	static ArrayList<String> addedList = new ArrayList();
@@ -77,8 +75,10 @@ public class DeclareLogGenerator {
 	static ArrayList<String> alphabetList = new ArrayList();
 	static ArrayList<String> repeatList = new ArrayList();
 	static ArrayList<String> combinedList = new ArrayList();
+	static ArrayList<String> combinedListB = new ArrayList();
 	static String secondkey ="";
 	static String actcond ="";
+	static String constrainB ="";
 	private LogMakerCmdParameters parameters;
 	public static Encoding OUTPUT_ENCODING = Encoding.xes;
 	public static final File OUTPUT_LOG = new File("");
@@ -88,6 +88,18 @@ public class DeclareLogGenerator {
 		AssignmentViewBroker broker = XMLBrokerFactory
 				.newAssignmentBroker(filename);
 		AssignmentModel model = broker.readAssignment();
+		
+		
+		LogMakerCmdParameters logMakParameters = new LogMakerCmdParameters(
+				minlength, maxlength, LogSize);
+		OUTPUT_ENCODING = Encoding.xes;
+		logMakParameters.outputEncoding = OUTPUT_ENCODING;
+
+		File OUTPUT_LOG = new File(destitionfile);
+		logMakParameters.outputLogFile = OUTPUT_LOG;
+		
+	
+		
 		// addNewData(model);
 		getAlphabets(model); // add first aphabets and condition
 		checkActivation(model); // add activation conditions
@@ -98,34 +110,39 @@ public class DeclareLogGenerator {
 		SetCombinationCondtion(); // combination without rep.
 		IlpSolver.CheckIlpConditions(combinedList, abMapx);
 		ParameterSettings2.jProgressBar1.setValue(4);
-		
+		addCorrelatedConditions();
 		IlpSolver.purifyLog(combinedList, abMapx);
-		
+	
 		
 		if (abMapx.isEmpty()) {
 			JOptionPane.showMessageDialog(null, "Unable to Generate Log!");
 			return false;
 		}
-		addCorrelatedConditions();
-		XLog xlog = LogService
+		
+		MinerFulLogMaker logMak = new MinerFulLogMaker(logMakParameters);		
+		org.processmining.plugins.declareminer.visualizing.AssignmentModel proMod = null;  
+		//proMod = MinerfulLogGenerator.fromDeclareMapToMinerfulProcessModel(model,null, combinedList, abMapx);
+	 
+		//addCorrelatedConditions();
+		DeclareModelGenerator dm = new DeclareModelGenerator(model,abMapx);
+		proMod=	dm.generateModel();
+	    XLog xlog=	logMak.createLog(proMod);	
+	  /*System.out.println("_____printing Map__________________");
+		   LogService.PrintMyLog(model, abMapx, LogSize, combinedList, minlength, maxlength);
+	 		XLog xxlog = LogService
 				.GenerateLog(model, abMapx, LogSize, combinedList,minlength,maxlength);
 		XLifecycleExtension lifeExtension = XLifecycleExtension.instance();
-		lifeExtension.assignModel(xlog, model.getName());
-		LogMakerCmdParameters logMakParameters = new LogMakerCmdParameters(
-				minlength, maxlength, LogSize);
-		OUTPUT_ENCODING = Encoding.xes;
-		logMakParameters.outputEncoding = OUTPUT_ENCODING;
-
-		File OUTPUT_LOG = new File(destitionfile);
-		logMakParameters.outputLogFile = OUTPUT_LOG;
+		lifeExtension.assignModel(xlog, model.getName());*/
+		
 		try {
-			LogService.storeLog(xlog, logMakParameters);
+			logMak.storeLog();	
+			//LogService.storeLog(xlog, logMakParameters);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return false;
 		}
-		System.out.println(lifeExtension.getName());
+		//System.out.println(lifeExtension.getName());
 		return true;
 	}
 	
@@ -175,12 +192,20 @@ public class DeclareLogGenerator {
 			System.out.println(lst[1]);
 			int max = Integer.parseInt(lst[1]);
 			combinedList.add(lst[0]);
+			
+		 int ind =	alphabetList.indexOf(lst[0]);
+		// String b = countedListB.get(ind);
+		// combinedListB.add(b);
 			if (max > 1) {
 				BranchCombination.GetCombination(lst[0], max, combinedList);
+			//	BranchCombination.GetCombination(b, max, combinedListB);
 				repeatList.add(combinedList.get(combinedList.size() - 1));
-			}
+		  } else {
+			  combinedList.add(lst[0]);
+		//	  combinedList.add(b);
+		  }
 		}
-
+		System.out.println("");
 	}
 	
 	public static void SetFirstLetters(){
@@ -283,24 +308,31 @@ public class DeclareLogGenerator {
 		countedList.clear();
 		String firstName = "";	
 		String constrain = "";
+		String lastname="";
+		String vkey = "";
+		System.out.println("-----------First Step--------------");
 		for (nl.tue.declare.domain.model.ConstraintDefinition cd : model
 				.getConstraintDefinitions()) {
 			
-			constrain= cd.getName();
 			for (Parameter p : cd.getParameters()) {
+				
 				for (nl.tue.declare.domain.model.ActivityDefinition ad : cd
-						.getBranches(p)) {
-					
-					if (constrain.equals("alternate response"))
+						.getBranches(p)) {	
+				
+				//	System.out.println(ad.getName());					
+					if (constrain.equals("precedence"))
 					{
 						if (p.getName().equals("B")) {
 							firstName = ad.getName().toString();
 							countedList.add(firstName);
 							alphabetList.add(firstName);
-							countedListB.add(firstName);
-						} else {
-							alphabetList.add(ad.getName());
+							alphabetList.add(lastname);
 							countedListB.add(ad.getName());
+							//countedListB.add(firstName);
+						} else {
+						//	alphabetList.add(ad.getName());
+							lastname = ad.getName();
+							
 						}
 					}
 					else{
@@ -308,7 +340,7 @@ public class DeclareLogGenerator {
 						firstName = ad.getName().toString();
 						countedList.add(firstName);
 						alphabetList.add(firstName);
-						countedListB.add(firstName);
+						//countedListB.add(firstName);
 					} else {
 						alphabetList.add(ad.getName());
 						countedListB.add(ad.getName());
@@ -390,16 +422,27 @@ public class DeclareLogGenerator {
 		// conditions.clear();
 		firstact.clear();
 		firstcont.clear();
+		abMapdata.clear();
+		String vkey = "";
+		int check = 0;
+	//	static LinkedHashMap<String, Alphabet> abMapdata = new LinkedHashMap<String, Alphabet>();
 		for (nl.tue.declare.domain.model.ConstraintDefinition cd : model
 				.getConstraintDefinitions()) {
 			String constrain = cd.getName().replace("-", "").replace(" ", "").toLowerCase();
+			Alphabet ab = new Alphabet();
+			ab.constrain = constrain;
+			ab.actCondition = 	getLeft(cd.getCondition().toString());
+			ab.relCondition = getRelCond(cd.getCondition().toString());
+			check=0;
 			for (Parameter p : cd.getParameters()) {
 				for (nl.tue.declare.domain.model.ActivityDefinition ad : cd
-						.getBranches(p)) {
+						.getBranches(p)) {	
+				
 					
-					if (constrain.equals("alternateresponse")){
+					if (constrain.equals("precedence")){
 						if (p.getName().equals("B")) {
 							String sname = ad.getName();
+							
 							firstact.add(sname +checkList(sname));
 							alphabets1.add(sname);
 							if (!cd.getCondition().toString().isEmpty()) {
@@ -428,7 +471,9 @@ public class DeclareLogGenerator {
 							CorrelationContList.add("");
 						}
 					} /// end of A
-					}					
+					}		
+					
+					abMapdata.put(vkey, ab);
 					
 					}					
 				}
@@ -456,7 +501,7 @@ public class DeclareLogGenerator {
 				for (nl.tue.declare.domain.model.ActivityDefinition ad1 : cd1
 						.getBranches(p1)) {
 					constrain = cd1.getName();
-					if (constrain.equals("alternate response")){
+					if (constrain.equals("precedenceX")){
 						
 						if (p1.getName().equals("B")
 								&& (ad1.getName()
@@ -503,7 +548,7 @@ public class DeclareLogGenerator {
 		
 	}
 	
-	public static void Addnew(String fname, String lname, String act, String ilpcond, boolean isActivated, String relcond,String FullCondition)
+	public static void Addnew(String fname, String lname, String act, String ilpcond, boolean isActivated, String relcond,String FullCondition,String cons)
 	{
 		Alphabet ab = new Alphabet();
 		ab.alphabetname = fname;
@@ -538,6 +583,7 @@ public class DeclareLogGenerator {
 		}
 		ab.secondAlphabet = lname;
 		ab.secondAlphabetKey = lname;
+		ab.constrain = cons;
 		ab.fullCondition = FullCondition;
 		abMap.put(fname, ab);
 		abMapx.put(fname, ab);
@@ -562,34 +608,32 @@ public class DeclareLogGenerator {
 					for (nl.tue.declare.domain.model.ActivityDefinition ad : cd
 							.getBranches(p)) {
 						
-						constrain= cd.getName();
-						if (constrain.equals("alternate response")) {
+						//constrain= cd.getName();
+						constrain = cd.getName().replace("-", "").replace(" ", "").toLowerCase();
+						if (constrain.equals("precedence")) {
 							
 							if (p.getName().equals("B")) {
-								 fname = ad.getName().toString();
+								// fname = ad.getName().toString();
 								 addparent= (checkIndex(fname) ==0);
 								 addedList.add(fname);
-								 
+								 lname =ad.getName().toString();
 								 ilpcond =	getCondtions(model,fname,condition);
 									ind = checkIndex(fname);					
 									ind = ind - 1;
 									
 								if (ind==0){
 									addparent =true;
-									Addnew(fname,lname,condition,ilpcond,true,getRelCond(FullCondition),FullCondition);	
+									Addnew(fname,lname,condition,ilpcond,true,getRelCond(FullCondition),FullCondition,constrain);	
 								}	
 								fname = fname+ (Integer.toString(ind));
-								Addnew(fname,lname,condition,ilpcond,true,getRelCond(FullCondition),FullCondition);
+								Addnew(fname,lname,condition,ilpcond,true,getRelCond(FullCondition),FullCondition,constrain);
 								if (addparent){
-								Addnew(fname+"_1",lname, BranchCombination.divertCondition(condition),ilpcond,true,getRelCond(condition),FullCondition);
+								Addnew(fname+"_1",lname, BranchCombination.divertCondition(condition),ilpcond,true,getRelCond(condition),FullCondition,constrain);
 								}
-								Addnew(lname,"","","",false,"",FullCondition);
-							
-
-								 
+								Addnew(lname,"","","",false,"",FullCondition,constrain);			 
 								}else
 								{
-									lname= ad.getName().toString();
+									fname= ad.getName().toString();
 								}	
 							
 						}
@@ -600,6 +644,23 @@ public class DeclareLogGenerator {
 						 addparent= (checkIndex(fname) ==0);
 						 addedList.add(fname);
 						 
+							if(constrain.equals("existence")){
+								ilpcond =	getCondtions(model,fname,condition);
+								ind = checkIndex(fname);					
+								ind = ind - 1;
+								lname = fname;
+							if (ind==0){
+								addparent =true;
+								Addnew(fname,lname,condition,ilpcond,true,getRelCond(FullCondition),FullCondition,constrain);	
+							}	
+							fname = fname+ (Integer.toString(ind));
+							Addnew(fname,lname,condition,ilpcond,true,getRelCond(FullCondition),FullCondition,constrain);
+							if (addparent){
+							Addnew(fname+"_1",lname, BranchCombination.divertCondition(condition),ilpcond,true,getRelCond(condition),FullCondition,constrain);
+							}
+							Addnew(lname,"","","",false,"",FullCondition,constrain);
+								}
+					
 						}else
 						{
 							lname= ad.getName().toString();
@@ -614,14 +675,14 @@ public class DeclareLogGenerator {
 						
 					if (ind==0){
 						addparent =true;
-						Addnew(fname,lname,condition,ilpcond,true,getRelCond(FullCondition),FullCondition);	
+						Addnew(fname,lname,condition,ilpcond,true,getRelCond(FullCondition),FullCondition,constrain);	
 					}	
 					fname = fname+ (Integer.toString(ind));
-					Addnew(fname,lname,condition,ilpcond,true,getRelCond(FullCondition),FullCondition);
+					Addnew(fname,lname,condition,ilpcond,true,getRelCond(FullCondition),FullCondition,constrain);
 					if (addparent){
-					Addnew(fname+"_1",lname, BranchCombination.divertCondition(condition),ilpcond,true,getRelCond(condition),FullCondition);
+					Addnew(fname+"_1",lname, BranchCombination.divertCondition(condition),ilpcond,true,getRelCond(condition),FullCondition,constrain);
 					}
-					Addnew(lname,"","","",false,"",FullCondition);
+					Addnew(lname,"","","",false,"",FullCondition,constrain);
 				
 					} 
 					// end of b response
@@ -662,13 +723,16 @@ public class DeclareLogGenerator {
 					ab.ilpCondition = codition;
 				ab.conditionlist = clst;
 				ab.alphabetkey = key;
+				ab.isSingle = false;
 				ab.alphabetname =  BranchCombination.getParentLetter(key);
 				if (clst.length > 1) {
+					ab.isSingle = true;
 					ab.secondAlphabet = getB(clst);					
 				}	
-				
+				ab.constrain = constrainB;
 				String cor = getCoRel(clst);// = abMap.get(ab.alphabetname);
 				ab.secondAlphabetKey = secondkey;
+				
 				ab.actCondition = actcond;
 				if (cor!=null){
 					ab.relCondition = cor;
@@ -680,8 +744,10 @@ public class DeclareLogGenerator {
 				}
 				abMapx.put(key, ab);
 			} else {
+				abX.isSingle = false;
 				if (clst.length > 1) {
 					abX.secondAlphabet = getB(clst);
+					abX.isSingle = true;
 				}
 								
 				if (!codition.isEmpty())
@@ -718,8 +784,8 @@ public class DeclareLogGenerator {
 					filter.correlationlist = getUpperCor(k,
 							filter.alphabetname, filter.secondAlphabetKey);
 					String snd = filter.secondAlphabet;
-					filter.secondAlphabet = snd.replaceAll(
-							filter.secondAlphabetKey, "!@#@!");
+				//xxx	filter.secondAlphabet = snd.replaceAll(
+					//		filter.secondAlphabetKey, "!@#@!");
 					/*
 					 * System.out.println("Key: " + k + " :  Upper corre: " +
 					 * getUpperCor(k,filter.alphabetname,
@@ -741,10 +807,18 @@ public class DeclareLogGenerator {
 			System.out.println("fullCondition: "+ filter.fullCondition );
 			System.out.println("ILP: "+ filter.ilpCondition );
 			System.out.println("secondAlphabetKey: "+ filter.secondAlphabet );
+			System.out.println("Constrains : "+ filter.constrain );
 			
+			
+			 
+			if (filter.correlationlist != null){
 			for (int i=0; i < filter.correlationlist.length; i++){
+				if (i>=1){
+					System.out.println("Cor : "+ filter.correlationlist[i]);
+					//System.out.println("Cor : "+  filter.correlationlist[0] +"_"+filter.correlationlist[i]);
+				}else{
 				System.out.println("Cor : "+ filter.correlationlist[i]);
-			}
+			}}}
 		
 		}
 		System.out.println("Wait");
@@ -760,27 +834,49 @@ public class DeclareLogGenerator {
 		String ret = "";
 		for (int ind = 0; ind < combinedList.size(); ind++) {
 			String  temp = combinedList.get(ind).replaceAll(" ", "");
+			String root[] =  combinedList.get(ind).split(" ");
 			if (temp.contains(xkey)) {
 				if (!ret.isEmpty()) {
 					ret = ret + "::";
 				}
-				ret = ret + combinedList.get(ind).replaceAll(aa, b).replaceAll(" ", "").trim();
+				if (ind==0)
+				{	ret = ret + combinedList.get(ind).replaceAll(aa, b).replaceAll(" ", "").trim();}
+				else {
+					String vtemp =  combinedList.get(ind).replaceAll(aa, b).replaceAll(" ", "").trim();
+					if(!vtemp.equals(root[0].replaceAll(aa, b)))
+					{ret = ret+ vtemp + "::"+ root[0].replaceAll(aa, b) + "_"+ vtemp;}
+					else{
+						{ret = ret+ vtemp;}	
+					}	
+				}
 			}
-		}
+		}	
 		return ret.split("::");
 	}
 	
 	public static String[] getUpperCor(String xkey, String a, String b) {
 		String aa = BranchCombination.getParentLetter(a);
 		String ret = "";
+		int vsize = 0;
 		for (int ind = 0; ind < combinedList.size(); ind++) {
+			String root[] =  combinedList.get(ind).split(" ");
 			String  temp = combinedList.get(ind).replaceAll(" ", "");
 			if(temp.length() >= xkey.length()){
 			if (temp.contains(xkey)) {
 				if (!ret.isEmpty()) {
 					ret = ret + "::";
 				}
-				ret = ret + combinedList.get(ind).replaceAll(aa, b).replaceAll(" ", "").trim();
+				if (root.length == 0)
+				{ret = ret + combinedList.get(ind).replaceAll(aa, b).replaceAll(" ", "").trim();}
+				else
+				{
+					String vtemp =  combinedList.get(ind).replaceAll(aa, b).replaceAll(" ", "").trim();
+					if(!vtemp.equals(root[0].replaceAll(aa, b)))
+					{ret = ret+ vtemp + "::"+ root[0].replaceAll(aa, b) + "_"+ vtemp;}
+					else{
+						{ret = ret+ vtemp;}	
+					}
+				}
 			}
 			}
 		}
@@ -804,10 +900,12 @@ public class DeclareLogGenerator {
 	
 	public static String getB(String[] clst){
 		String b="";
+		constrainB = "";
 		for (int i2=0;i2< clst.length;i2++){
 			Alphabet b2 = abMap.get(clst[i2]);
 			if (b2!=null){
-				
+				if(constrainB.isEmpty())
+					constrainB =b2.constrain;
 				if (!b.isEmpty()){
 					b=b+"::";
 				}
@@ -821,7 +919,8 @@ public class DeclareLogGenerator {
 	public static String getCoRel(String[] clst){
 		String b="";
 		String act = "";
-		secondkey ="";
+		secondkey ="??";
+		constrainB ="";
 		for (int i2=0;i2< clst.length;i2++){
 			Alphabet b2 = abMap.get(clst[i2]);
 			if (b2!=null){
@@ -829,6 +928,7 @@ public class DeclareLogGenerator {
 				{
 					if (b2.alphabetkey.equals(clst[i2])){
 						secondkey = b2.secondAlphabetKey;	
+						
 					}
 				}
 				

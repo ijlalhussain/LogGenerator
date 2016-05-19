@@ -1,0 +1,414 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- This file has been generated with the OpenXES library. It conforms -->
+<!-- to the XML serialization of the XES standard for log storage and -->
+<!-- management. -->
+<!-- XES standard version: 1.0 -->
+<!-- OpenXES library version: 1.0RC7 -->
+<!-- OpenXES is available from http://www.openxes.org/ -->
+<log xes.version="1.0" xes.features="nested-attributes" openxes.version="1.0RC7" xmlns="http://www.xes-standard.org/">
+	<extension name="Time" prefix="time" uri="http://www.xes-standard.org/time.xesext"/>
+	<extension name="Lifecycle" prefix="lifecycle" uri="http://www.xes-standard.org/lifecycle.xesext"/>
+	<extension name="Concept" prefix="concept" uri="http://www.xes-standard.org/concept.xesext"/>
+	<classifier name="Event Name" keys="concept:name"/>
+	<string key="lifecycle:model" value="Testing Model"/>
+	<trace>
+		<string key="concept:name" value="Multi-proespective trace no. 00"/>
+		<event>
+			<string key="concept:name" value="A"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2014-07-16T23:40:05.022+03:00"/>
+		</event>
+	</trace>
+	<trace>
+		<string key="concept:name" value="Multi-proespective trace no. 01"/>
+		<event>
+			<string key="concept:name" value="BNOT"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2014-07-17T14:14:33.031+03:00"/>
+		</event>
+	</trace>
+	<trace>
+		<string key="concept:name" value="Multi-proespective trace no. 02"/>
+		<event>
+			<string key="concept:name" value="A"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2014-07-17T16:07:17.534+03:00"/>
+		</event>
+	</trace>
+	<trace>
+		<string key="concept:name" value="Multi-proespective trace no. 03"/>
+		<event>
+			<string key="concept:name" value="A"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2014-07-17T23:08:29.514+03:00"/>
+		</event>
+	</trace>
+	<trace>
+		<string key="concept:name" value="Multi-proespective trace no. 04"/>
+		<event>
+			<string key="concept:name" value="A"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2014-07-18T04:51:13.966+03:00"/>
+		</event>
+	</trace>
+	<trace>
+		<string key="concept:name" value="Multi-proespective trace no. 05"/>
+		<event>
+			<string key="concept:name" value="A"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2014-07-18T19:59:26.501+03:00"/>
+		</event>
+	</trace>
+	<trace>
+		<string key="concept:name" value="Multi-proespective trace no. 06"/>
+		<event>
+			<string key="concept:name" value="ANOT"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2014-07-18T22:25:53.224+03:00"/>
+		</event>
+	</trace>
+	<trace>
+		<string key="concept:name" value="Multi-proespective trace no. 07"/>
+		<event>
+			<string key="concept:name" value="activity 4"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2014-07-19T02:06:08.971+03:00"/>
+		</event>
+	</trace>
+	<trace>
+		<string key="concept:name" value="Multi-proespective trace no. 08"/>
+		<event>
+			<string key="concept:name" value="c"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2014-07-19T06:31:48.821+03:00"/>
+		</event>
+	</trace>
+	<trace>
+		<string key="concept:name" value="Multi-proespective trace no. 09"/>
+		<event>
+			<string key="concept:name" value="ANOT"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2014-07-19T21:33:08.199+03:00"/>
+		</event>
+	</trace>
+	<trace>
+		<string key="concept:name" value="Multi-proespective trace no. 10"/>
+		<event>
+			<string key="concept:name" value="ANOT"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2014-07-20T04:51:14.560+03:00"/>
+		</event>
+	</trace>
+	<trace>
+		<string key="concept:name" value="Multi-proespective trace no. 11"/>
+		<event>
+			<string key="concept:name" value="c"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2014-07-20T20:35:16.530+03:00"/>
+		</event>
+	</trace>
+	<trace>
+		<string key="concept:name" value="Multi-proespective trace no. 12"/>
+		<event>
+			<string key="concept:name" value="ANOT"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2014-07-21T00:36:25.046+03:00"/>
+		</event>
+	</trace>
+	<trace>
+		<string key="concept:name" value="Multi-proespective trace no. 13"/>
+		<event>
+			<string key="concept:name" value="BNOT"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2014-07-21T23:47:36.660+03:00"/>
+		</event>
+	</trace>
+	<trace>
+		<string key="concept:name" value="Multi-proespective trace no. 14"/>
+		<event>
+			<string key="concept:name" value="c"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2014-07-22T06:44:33.431+03:00"/>
+		</event>
+	</trace>
+	<trace>
+		<string key="concept:name" value="Multi-proespective trace no. 15"/>
+		<event>
+			<string key="concept:name" value="ANOT"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2014-07-23T01:30:47.144+03:00"/>
+		</event>
+	</trace>
+	<trace>
+		<string key="concept:name" value="Multi-proespective trace no. 16"/>
+		<event>
+			<string key="concept:name" value="A"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2014-07-23T16:03:55.007+03:00"/>
+		</event>
+	</trace>
+	<trace>
+		<string key="concept:name" value="Multi-proespective trace no. 17"/>
+		<event>
+			<string key="concept:name" value="ANOT"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2014-07-23T22:53:30.200+03:00"/>
+		</event>
+	</trace>
+	<trace>
+		<string key="concept:name" value="Multi-proespective trace no. 18"/>
+		<event>
+			<string key="concept:name" value="ANOT"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2014-07-24T13:43:32.282+03:00"/>
+		</event>
+	</trace>
+	<trace>
+		<string key="concept:name" value="Multi-proespective trace no. 19"/>
+		<event>
+			<string key="concept:name" value="B"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2014-07-24T16:44:01.238+03:00"/>
+		</event>
+	</trace>
+	<trace>
+		<string key="concept:name" value="Multi-proespective trace no. 20"/>
+		<event>
+			<string key="concept:name" value="c"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2014-07-25T03:11:18.586+03:00"/>
+		</event>
+	</trace>
+	<trace>
+		<string key="concept:name" value="Multi-proespective trace no. 21"/>
+		<event>
+			<string key="concept:name" value="B"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2014-07-25T08:46:37.459+03:00"/>
+		</event>
+	</trace>
+	<trace>
+		<string key="concept:name" value="Multi-proespective trace no. 22"/>
+		<event>
+			<string key="concept:name" value="activity 4"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2014-07-25T19:13:05.570+03:00"/>
+		</event>
+	</trace>
+	<trace>
+		<string key="concept:name" value="Multi-proespective trace no. 23"/>
+		<event>
+			<string key="concept:name" value="B"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2014-07-25T23:48:09.700+03:00"/>
+		</event>
+	</trace>
+	<trace>
+		<string key="concept:name" value="Multi-proespective trace no. 24"/>
+		<event>
+			<string key="concept:name" value="B"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2014-07-26T01:52:26.333+03:00"/>
+		</event>
+	</trace>
+	<trace>
+		<string key="concept:name" value="Multi-proespective trace no. 25"/>
+		<event>
+			<string key="concept:name" value="ANOT"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2014-07-26T02:08:30.374+03:00"/>
+		</event>
+	</trace>
+	<trace>
+		<string key="concept:name" value="Multi-proespective trace no. 26"/>
+		<event>
+			<string key="concept:name" value="ANOT"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2014-07-26T21:53:40.200+03:00"/>
+		</event>
+	</trace>
+	<trace>
+		<string key="concept:name" value="Multi-proespective trace no. 27"/>
+		<event>
+			<string key="concept:name" value="BNOT"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2014-07-27T00:19:42.754+03:00"/>
+		</event>
+	</trace>
+	<trace>
+		<string key="concept:name" value="Multi-proespective trace no. 28"/>
+		<event>
+			<string key="concept:name" value="ANOT"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2014-07-27T22:48:56.133+03:00"/>
+		</event>
+	</trace>
+	<trace>
+		<string key="concept:name" value="Multi-proespective trace no. 29"/>
+		<event>
+			<string key="concept:name" value="BNOT"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2014-07-28T05:06:43.568+03:00"/>
+		</event>
+	</trace>
+	<trace>
+		<string key="concept:name" value="Multi-proespective trace no. 30"/>
+		<event>
+			<string key="concept:name" value="A"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2014-07-28T16:45:46.795+03:00"/>
+		</event>
+	</trace>
+	<trace>
+		<string key="concept:name" value="Multi-proespective trace no. 31"/>
+		<event>
+			<string key="concept:name" value="ANOT"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2014-07-29T16:20:51.013+03:00"/>
+		</event>
+	</trace>
+	<trace>
+		<string key="concept:name" value="Multi-proespective trace no. 32"/>
+		<event>
+			<string key="concept:name" value="BNOT"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2014-07-29T19:19:30.481+03:00"/>
+		</event>
+	</trace>
+	<trace>
+		<string key="concept:name" value="Multi-proespective trace no. 33"/>
+		<event>
+			<string key="concept:name" value="A"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2014-07-30T11:01:32.154+03:00"/>
+		</event>
+	</trace>
+	<trace>
+		<string key="concept:name" value="Multi-proespective trace no. 34"/>
+		<event>
+			<string key="concept:name" value="A"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2014-07-31T07:23:18.553+03:00"/>
+		</event>
+	</trace>
+	<trace>
+		<string key="concept:name" value="Multi-proespective trace no. 35"/>
+		<event>
+			<string key="concept:name" value="c"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2014-07-31T16:16:03.857+03:00"/>
+		</event>
+	</trace>
+	<trace>
+		<string key="concept:name" value="Multi-proespective trace no. 36"/>
+		<event>
+			<string key="concept:name" value="c"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2014-08-01T05:08:05.209+03:00"/>
+		</event>
+	</trace>
+	<trace>
+		<string key="concept:name" value="Multi-proespective trace no. 37"/>
+		<event>
+			<string key="concept:name" value="ANOT"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2014-08-01T07:26:45.557+03:00"/>
+		</event>
+	</trace>
+	<trace>
+		<string key="concept:name" value="Multi-proespective trace no. 38"/>
+		<event>
+			<string key="concept:name" value="BNOT"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2014-08-01T14:47:56.909+03:00"/>
+		</event>
+	</trace>
+	<trace>
+		<string key="concept:name" value="Multi-proespective trace no. 39"/>
+		<event>
+			<string key="concept:name" value="A"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2014-08-02T00:55:44.526+03:00"/>
+		</event>
+	</trace>
+	<trace>
+		<string key="concept:name" value="Multi-proespective trace no. 40"/>
+		<event>
+			<string key="concept:name" value="A"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2014-08-02T10:41:21.593+03:00"/>
+		</event>
+	</trace>
+	<trace>
+		<string key="concept:name" value="Multi-proespective trace no. 41"/>
+		<event>
+			<string key="concept:name" value="activity 4"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2014-08-02T12:34:57.984+03:00"/>
+		</event>
+	</trace>
+	<trace>
+		<string key="concept:name" value="Multi-proespective trace no. 42"/>
+		<event>
+			<string key="concept:name" value="ANOT"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2014-08-02T15:42:23.123+03:00"/>
+		</event>
+	</trace>
+	<trace>
+		<string key="concept:name" value="Multi-proespective trace no. 43"/>
+		<event>
+			<string key="concept:name" value="activity 4"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2014-08-03T06:09:13.151+03:00"/>
+		</event>
+	</trace>
+	<trace>
+		<string key="concept:name" value="Multi-proespective trace no. 44"/>
+		<event>
+			<string key="concept:name" value="B"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2014-08-03T10:11:52.519+03:00"/>
+		</event>
+	</trace>
+	<trace>
+		<string key="concept:name" value="Multi-proespective trace no. 45"/>
+		<event>
+			<string key="concept:name" value="B"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2014-08-03T11:39:36.671+03:00"/>
+		</event>
+	</trace>
+	<trace>
+		<string key="concept:name" value="Multi-proespective trace no. 46"/>
+		<event>
+			<string key="concept:name" value="B"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2014-08-03T23:50:52.305+03:00"/>
+		</event>
+	</trace>
+	<trace>
+		<string key="concept:name" value="Multi-proespective trace no. 47"/>
+		<event>
+			<string key="concept:name" value="B"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2014-08-04T17:50:18.202+03:00"/>
+		</event>
+	</trace>
+	<trace>
+		<string key="concept:name" value="Multi-proespective trace no. 48"/>
+		<event>
+			<string key="concept:name" value="activity 4"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2014-08-04T21:04:09.473+03:00"/>
+		</event>
+	</trace>
+	<trace>
+		<string key="concept:name" value="Multi-proespective trace no. 49"/>
+		<event>
+			<string key="concept:name" value="ANOT"/>
+			<string key="lifecycle:transition" value="complete"/>
+			<date key="time:timestamp" value="2014-08-05T01:30:07.159+03:00"/>
+		</event>
+	</trace>
+</log>
