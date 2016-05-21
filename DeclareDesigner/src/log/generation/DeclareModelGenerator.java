@@ -107,14 +107,14 @@ public class DeclareModelGenerator {
 			String constraintName = "";
 			if (!filter.constrain.isEmpty())
 				constraintName = filter.constrain.toLowerCase();
-			if (constraintName.equals("precedence")) {
+			if (constraintName.equals("precedenceX")) {
 				ActivityDefinition activitydefinition = model
 						.addActivityDefinition(i);
 				
-				String aa = BranchCombination.getParentLetter(filter.alphabetkey);
-				String bb = BranchCombination.getParentLetter(filter.secondAlphabetKey);
-				if (bb.isEmpty()) bb ="B";
-				String actName = k.replace(aa,bb);
+			//	String aa = BranchCombination.getParentLetter(filter.alphabetkey);
+		//		String bb = BranchCombination.getParentLetter(filter.secondAlphabetKey);
+		//		if (bb.isEmpty()) bb ="B";
+				String actName = k;// k.replace(aa,bb);
 				System.out.println("A: "+filter.alphabetkey);
 				System.out.println("B: "+filter.secondAlphabetKey);
 				System.out.println("CctL:" + actName);
@@ -417,33 +417,36 @@ public class DeclareModelGenerator {
 			
 // end of existen
 			else	if (constraintName.equals("precedence")){
-				String aa = BranchCombination.getParentLetter(filter.alphabetname);
-				String bb = BranchCombination.getParentLetter(filter.secondAlphabetKey);
+				//String aa = BranchCombination.getParentLetter(filter.alphabetname);
+			//	String bb = BranchCombination.getParentLetter(filter.secondAlphabetKey);
 				for (Parameter p : constraintdefinition.getParameters()) {
 					if (p.getName().equals("B")) {
-						String aaa = BranchCombination.getParentLetter(filter.alphabetkey);
-						String bbb = BranchCombination.getParentLetter(filter.secondAlphabetKey);
-						String actName = k.replace(aaa,bbb);
+				//		String aaa = BranchCombination.getParentLetter(filter.alphabetkey);
+					//	String bbb = BranchCombination.getParentLetter(filter.secondAlphabetKey);
+						String actName = filter.alphabetkey;
 						System.out.println("precedence 1st : " + actName);
 						//String actName = filter.alphabetkey;
 					//	System.out.print("B: " + actName);
 						constraintdefinition.addBranch(p,
 								activityDefinitions.get(actName));
 						//constraintdefinition.getBranches(p);
-					} else {
-								if (filter.correlationlist != null){
-						for(int j=0; j < filter.correlationlist.length ; j++){
-							ActivityDefinition activitydefinition = model.addActivityDefinition(i);
-							String actName = "A: "+ filter.correlationlist[j].replace(bb, aa); 
-							activitydefinition.setName(actName);
-							System.out.println("precedence 2nd : " + actName);
-							activityDefinitions.put(actName, activitydefinition);
+					} else{
+						if (filter.correlationlist != null){
+							for(int j=0; j < filter.correlationlist.length ; j++){
+								ActivityDefinition activitydefinition = model.addActivityDefinition(i);
+								String xnam = "1st : "+ filter.correlationlist[j]; 
+								activitydefinition.setName(xnam);
+								System.out.println("precedence 2nd : " + xnam);
+								activityDefinitions.put(xnam, activitydefinition);							
+								constraintdefinition.addBranch(p, activityDefinitions.get(xnam));
+							//	constraintdefinition.getBranches(p);
+							
+							}
+							
+							
+						}
 						
-							constraintdefinition.addBranch(p, activityDefinitions.get(actName));
-						//	constraintdefinition.getBranches(p);
-						
-						}}
-					}
+					} 
 				}
 				
 			} // end of precedence
@@ -491,35 +494,49 @@ public class DeclareModelGenerator {
 
 		}
 
-		//AssignmentModelView view = new AssignmentModelView(model);
-	//	DeclareMap outputMap = new DeclareMap(model, null, view, null, null, null);
-	//	return outputMap;
-		
-		System.out.println("Modle print_________________");
-		for(ConstraintDefinition cd : model.getConstraintDefinitions()){
+		printModel(model);		
+		return model;
+	}
+
+	
+	
+	public static void printModel(AssignmentModel model){
+	System.out.println("Modle print_________________");
+	String constrain="";	
+	for(ConstraintDefinition cd : model.getConstraintDefinitions()){
 			  String s = cd.getCondition().toString();
 			System.out.println("Constrains : " +  cd.getName());
 			
 				System.out.println(cd.getCondition() );
 			//	checkCondtion(cd.getCondition().toString());
 				for(Parameter p : cd.getParameters()){
-					
 					for(ActivityDefinition ad : cd.getBranches(p)){
+						
+						constrain = cd.getName().replace("-", "").replace(" ", "").toLowerCase();
+						
+						if (s.equals("precedence"))
+						{
+							if (p.getName().equals("B")) {
+								System.out.println("1nd: "+ ad.getName());
+							} else
+							{
+								System.out.println("2st: "+ ad.getName());
+							}
+						}
+						else {
 						if (p.getName().equals("A")) {
 							System.out.println("1st: "+ ad.getName());
 						} else
 						{
 							System.out.println("2nd: "+ ad.getName());
 						}
+						}
 					}
 				}
 				System.out.println("_________________________________");	
 			}
-		
-		
-return model;
 	}
-
+	
 	public static Map<DeclareTemplate, ConstraintTemplate> readConstraintTemplates(
 			Map<String, DeclareTemplate> templateNameStringDeclareTemplateMap) {
 		InputStream templateInputStream = ClassLoader.getSystemClassLoader()
