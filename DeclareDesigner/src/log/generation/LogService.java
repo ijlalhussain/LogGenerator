@@ -258,6 +258,7 @@ public class LogService {
 	public static void printLog(XLog xlog) {
 		try {
 
+			System.out.println("-----Printing log start -----");
 			for (XTrace xtrace : xlog) {
 				String traceName = XConceptExtension.instance().extractName(
 						xtrace);
@@ -277,15 +278,16 @@ public class LogService {
 
 					for (String key : eventAttributes.keySet()) {
 						String value = eventAttributes.get(key).toString();
-						System.out.println("key: " + key + "  value: " + value);
+						String ww = eventAttributes.get(key).getKey();
+						System.out.println(" eventAttributes key: " + key + "  value: " + value + " ww: " + ww);
 					}
 					for (String key : caseAttributes.keySet()) {
 						String value = caseAttributes.get(key).toString();
-						System.out.println("key: " + key + "  value: " + value);
+						System.out.println(" caseAttributes key: " + key + "  value: " + value);
 					}
 				}
 			}
-			System.out.println(xlog);
+		//	System.out.println(xlog);
 			System.out.println(XConceptExtension.instance().extractName(
 					xlog.get(0)));
 
@@ -293,6 +295,8 @@ public class LogService {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		
+		System.out.println("-----Printing log end -----");
 	}
 
 	public static File storeLog(XLog log, LogMakerCmdParameters parameters)

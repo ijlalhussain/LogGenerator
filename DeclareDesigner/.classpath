@@ -40,5 +40,6 @@
 	<classpathentry kind="lib" path="D:/MasterProjectNew/synthetic-log-generator/DeclareDesigner/lib/DeclareMiner.jar"/>
 	<classpathentry kind="lib" path="D:/MasterProjectNew/synthetic-log-generator/DeclareDesigner/lib/commons-lang3-3.4.jar"/>
 	<classpathentry kind="lib" path="lib/resources.jar"/>
+	<classpathentry kind="lib" path="lib/com.google.guava_1.6.0.jar"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>

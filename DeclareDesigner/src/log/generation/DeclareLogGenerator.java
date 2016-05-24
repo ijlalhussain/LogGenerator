@@ -114,7 +114,7 @@ public class DeclareLogGenerator {
 		addCorrelatedConditions();
 		
 		IlpSolver.purifyLog(combinedList, abMapx);
-		CheckforPrecendence();
+	//	CheckforPrecendence();
 		
 		if (abMapx.isEmpty()) {
 			JOptionPane.showMessageDialog(null, "Unable to Generate Log!");
@@ -128,7 +128,8 @@ public class DeclareLogGenerator {
 		//addCorrelatedConditions();
 		DeclareModelGenerator dm = new DeclareModelGenerator(model,abMapx);
 		proMod=	dm.generateModel();
-	    XLog xlog=	logMak.createLog(proMod);	
+	    XLog xlog=	logMak.createLog(proMod);
+	    LogService.printLog(xlog);
 	  /*System.out.println("_____printing Map__________________");
 		   LogService.PrintMyLog(model, abMapx, LogSize, combinedList, minlength, maxlength);
 	 		XLog xxlog = LogService
@@ -171,7 +172,7 @@ public class DeclareLogGenerator {
 				k = k.replace(aa, bb);
 				filter.alphabetkey = filter.alphabetkey.replace(aa,bb);
 				filter.alphabetname = filter.alphabetname.replace(aa,bb);
-				filter.secondAlphabetKey = filter.secondAlphabetKey.replace(bb,aa);
+				//filter.secondAlphabetKey = filter.secondAlphabetKey.replace(bb,aa);
 				String corr [] = filter.correlationlist;
 				if (corr!=null)
 				{
@@ -945,7 +946,7 @@ public class DeclareLogGenerator {
 		for (int ind = 0; ind < combinedList.size(); ind++) {
 			String root[] =  combinedList.get(ind).split(" ");
 			String  temp = combinedList.get(ind).replaceAll(" ", "");
-			if(temp.length() >= xkey.length()){
+			if(temp.length() == xkey.length()){
 			if (temp.contains(xkey)) {
 				if (!ret.isEmpty()) {
 					ret = ret + "::";
@@ -998,9 +999,10 @@ public class DeclareLogGenerator {
 				}else{
 				if(constrainB.isEmpty())
 					constrainB =b2.constrain;
+				}
 				if (!b.isEmpty()){
 					b=b+"::";
-				}}
+				}
 				b=b+b2.secondAlphabet;
 			}
 		}
