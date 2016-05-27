@@ -3,16 +3,40 @@ package log.generation;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
  
 
 
 public class Comb{
 		
-        public static void main(String[] args){
+        @SuppressWarnings("null")
+		public static void main(String[] args){
+        Map<Integer,Map<String, String>> mapAlphabet = null;
+        
+        for (int i=0; i <10; i++){
+        	Map<String, String> myMap = new HashMap<String, String>();
+        	myMap.put("A1", "C1");
+        	mapAlphabet.put(i, myMap);
+        }/*
+        mapAlphabet.put(0, mapAlphabet.put(arg0, arg1)("AO", "CO"));
+        	Map<String, String> myMap = new HashMap<String, String>();
+        	myMap.put("AO", "CO");
+        	myMap.put("AOA1", "A1CO");
+        	myMap.put("AOd", "COxxx");
+        	myMap.put("AOd", "COd");
+        	*/
+        	System.out.println(mapAlphabet);
+        	
+        	
+        	String[] arraydd = { "BO", "A0A1", "B1B2", "BOB1", "A0A1" };
+            countStringOccurences(arraydd);
+            getalldata(arraydd,"BOB");
+        	
         	ArrayList<String> ab = new ArrayList<String>(); 
         	LinkedHashMap<String, String[]> ab1 = new LinkedHashMap<String, String[]>();
         	for (int id=1; id <= 4; id++)
@@ -79,5 +103,31 @@ public class Comb{
                 Collections.sort(s);
                 System.out.println("Combination:"+ s.size());
                 return s;
+        }
+        
+        public static void countStringOccurences(String[] strArray) {
+            HashMap<String, Integer> countMap = new HashMap<String, Integer>();
+            for (String string : strArray) {
+                if (!countMap.containsKey(string)) {
+                    countMap.put(string, 1);
+                } else {
+                    Integer count = countMap.get(string);
+                    count = count + 1;
+                    countMap.put(string, count);
+                }
+            }
+            System.out.println(countMap);
+        }
+        
+        public static void getalldata(String[] strArray,String txt) {
+            HashMap<String, Integer> countMap = new HashMap<String, Integer>();
+            Integer count =0;
+            for (String string : strArray) {
+                if (string.contains(txt)) {
+                    countMap.put(string, count);
+                } 
+                count = count + 1;
+            }
+            System.out.println(countMap);
         }
 }

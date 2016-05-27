@@ -3,14 +3,27 @@ package log.generation;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 
 
+import java.util.List;
+import java.util.Map;
 import java.util.Random;
+import java.util.Set;
+import java.util.TreeSet;
 
 import minerful.concept.ProcessModel;
+import minerful.concept.TaskChar;
+import minerful.concept.TaskCharArchive;
+import minerful.concept.TaskCharSet;
+import minerful.concept.constraint.Constraint;
+import minerful.concept.constraint.ConstraintsBag;
+import minerful.concept.constraint.relation.Precedence;
+import minerful.concept.constraint.relation.Response;
+import minerful.io.encdec.TaskCharEncoderDecoder;
 import minerful.logmaker.MinerFulLogMaker;
 import minerful.logmaker.params.LogMakerCmdParameters;
 import minerful.logmaker.params.LogMakerCmdParameters.Encoding;
@@ -77,6 +90,7 @@ public class DeclareLogGenerator {
 	static ArrayList<String> repeatList = new ArrayList();
 	static ArrayList<String> combinedList = new ArrayList();
 	static ArrayList<String> combinedListB = new ArrayList();
+	static 	HashMap<String,TaskChar> newLogIndex = new HashMap<String,TaskChar>();
 	static String secondkey ="";
 	static String actcond ="";
 	static String constrainB ="";
@@ -111,7 +125,7 @@ public class DeclareLogGenerator {
 		SetCombinationCondtion(); // combination without rep.
 		IlpSolver.CheckIlpConditions(combinedList, abMapx);
 		ParameterSettings2.jProgressBar1.setValue(4);
-		addCorrelatedConditions();
+		
 		
 		IlpSolver.purifyLog(combinedList, abMapx);
 	//	CheckforPrecendence();
@@ -120,16 +134,17 @@ public class DeclareLogGenerator {
 			JOptionPane.showMessageDialog(null, "Unable to Generate Log!");
 			return false;
 		}
-		
+		addCorrelatedConditions();
 		MinerFulLogMaker logMak = new MinerFulLogMaker(logMakParameters);		
-		org.processmining.plugins.declareminer.visualizing.AssignmentModel proMod = null;  
-		//proMod = MinerfulLogGenerator.fromDeclareMapToMinerfulProcessModel(model,null, combinedList, abMapx);
+		ProcessModel proMod = null;  
+		proMod =newStyleLog();// MinerfulLogGenerator.fromDeclareMapToMinerfulProcessModel(model,null, combinedList, abMapx);
 	 
 		//addCorrelatedConditions();
-		DeclareModelGenerator dm = new DeclareModelGenerator(model,abMapx);
-		proMod=	dm.generateModel();
+		//DeclareModelGenerator dm = new DeclareModelGenerator(model,abMapx);
+		//proMod=	dm.generateModel();
+		
 	    XLog xlog=	logMak.createLog(proMod);
-	    LogService.printLog(xlog);
+	   // LogService.printLog(xlog);
 	  /*System.out.println("_____printing Map__________________");
 		   LogService.PrintMyLog(model, abMapx, LogSize, combinedList, minlength, maxlength);
 	 		XLog xxlog = LogService
@@ -138,6 +153,7 @@ public class DeclareLogGenerator {
 		lifeExtension.assignModel(xlog, model.getName());*/
 		
 		try {
+			
 			logMak.storeLog();	
 			//LogService.storeLog(xlog, logMakParameters);
 		} catch (IOException e) {
@@ -150,7 +166,143 @@ public class DeclareLogGenerator {
 	}
 	
 
+public static ProcessModel newStyleLog (){
 
+	List<TaskChar> where = new ArrayList<TaskChar>();
+	List<Constraint> lst = new ArrayList<Constraint>();
+	List<String> mylist = new  ArrayList<String>();
+	
+	
+	for (Entry<String, Alphabet> activity : abMapx.entrySet()) {
+		String key = activity.getKey();
+		Alphabet filter = activity.getValue();
+		mylist.add(key);
+		
+	/*	if (!filter.secondAlphabetKey.isEmpty()) {			
+			String alphabetname = BranchCombination.getParentLetter(key);
+			String xnam = " 1st : "+ key.replace(key,filter.secondAlphabetKey);//filter.correlationlist[j]; \
+			xnam = key.replace(alphabetname,filter.secondAlphabetKey);
+			mylist.add(xnam);		
+		} // second key
+		
+		else {*/
+			
+			if (filter.correlationlist != null) {
+				for (int j = 0; j < filter.correlationlist.length; j++) {
+					String xnam = " Correlation 1st : "
+							+ filter.correlationlist[j];
+					mylist.add(filter.correlationlist[j]);
+				}
+			}
+
+			else {
+				String alphabetname = BranchCombination.getParentLetter(key);
+				String xnam = " 1st : "
+						+ key.replace(key, filter.secondAlphabetKey);// filter.correlationlist[j];
+																		// \
+				xnam = key.replace(alphabetname, filter.secondAlphabetKey);
+				mylist.add(xnam);
+			}
+		}
+	
+	int theEnd = 65+ mylist.size();
+	for (int vchar = 65; vchar < theEnd;vchar++ ){
+		char c = (char)vchar;
+		System.out.println("Char: "+ c);
+		TaskChar cc = new TaskChar(c);
+		where.add(cc);			
+	}
+	
+	for (int i=0; i < mylist.size(); i++){
+		newLogIndex.put(mylist.get(i), where.get(i));
+		System.out.println("Mapr:  Key: "+ mylist.get(i) + " Char: "+ where.get(i));
+	}
+	
+	
+	for (Entry<String, Alphabet> activity : abMapx.entrySet()) {
+		String key = activity.getKey();
+		Alphabet filter = activity.getValue();
+		
+		TaskChar firstChar =newLogIndex.get(key);
+		
+		ArrayList<TaskChar> list = new ArrayList<TaskChar>();
+		TaskCharSet target = new TaskCharSet();
+		/*if (!filter.secondAlphabetKey.isEmpty()) {			
+			String alphabetname = BranchCombination.getParentLetter(key);
+			String xnam =  key.replace(key,filter.secondAlphabetKey);//filter.correlationlist[j]; \
+			xnam = key.replace(alphabetname,filter.secondAlphabetKey);
+			testchar[0]= newLogIndex.get(xnam);	
+			
+		} // second key
+		
+		else {
+		*/	list.clear();
+			if (filter.correlationlist != null){
+				for(int j=0; j < filter.correlationlist.length ; j++){
+					String xnam =filter.correlationlist[j];
+					int len = filter.correlationlist[j].length();
+										
+					if ((xnam.contains("_"))							
+							&& (xnam.contains(filter.secondAlphabetKey))) {
+						String sx[] = xnam.split("_");
+						String first = BranchCombination.getParentLetter(key);
+						String last = BranchCombination.getParentLetter(sx[0] );
+						first = key.replace(first, "");
+						last = sx[0].replace(last, "");
+						System.out.println("First" + first + " :Lst" + last);
+						if (first.equals(last)) {
+							list.add(newLogIndex.get(filter.correlationlist[j]));
+						}
+					} else if ((filter.correlationlist[j].length() < key
+							.length() + 3)
+							&& (xnam.contains(filter.secondAlphabetKey))) {
+						list.add(newLogIndex.get(filter.correlationlist[j]));
+					}
+				}
+				} else{
+					String alphabetname = BranchCombination.getParentLetter(key);
+					String xnam =  key.replace(key,filter.secondAlphabetKey);//filter.correlationlist[j]; \
+				  if ((xnam.length() + 3 == key.length())&&(xnam.contains(filter.secondAlphabetKey))) {
+					xnam = key.replace(alphabetname, filter.secondAlphabetKey);
+					list.add(newLogIndex.get(xnam));
+				}
+			}
+		
+			if (filter.constrain.equals("response")) {
+				Response res = new Response(new TaskCharSet(firstChar), new TaskCharSet(list));
+				lst.add(res);
+			} else if (filter.constrain.equals("precedence")) {
+				Precedence res = new Precedence( new TaskCharSet(list),new TaskCharSet(firstChar));
+				lst.add(res);
+			} 	if (filter.constrain.equals("existence")){
+				//Existence res = new Existence( new TaskCharSet(list),new TaskCharSet(firstChar));
+			//	lst.add(res);
+			
+			}
+
+		}
+	
+	 Set<TaskChar> alphabetS = new TreeSet<TaskChar>(where);
+  	int i=0;
+	
+	TaskCharEncoderDecoder taChEnDe = new TaskCharEncoderDecoder();
+	taChEnDe.encode(alphabetS);
+	TaskCharArchive taChaAr = new TaskCharArchive(taChEnDe.getTranslationMap());
+	for (TaskChar tCh : alphabetS) {
+		tCh.identifier = taChaAr.getTaskChar(tCh.taskClass).identifier;
+	}
+
+	ConstraintsBag bag = new ConstraintsBag(alphabetS);
+	for (Constraint con : lst) {
+		System.out.println(con + " :RE> " + con.getRegularExpression());
+		bag.add(con.getBase(), con);
+	}
+	ProcessModel proMod = new ProcessModel(taChaAr, bag);
+	return proMod;
+	
+}
+	
+	
 
 
 	private static void CheckforPrecendence() {

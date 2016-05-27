@@ -1,7 +1,16 @@
 package log.generation;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.PrintStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.TreeSet;
 import java.util.Map.Entry;
 import java.util.regex.Matcher;
@@ -37,10 +46,326 @@ import org.processmining.plugins.declareminer.visualizing.ActivityDefinition;
 import org.processmining.plugins.declareminer.visualizing.AssignmentModel;
 import org.processmining.plugins.declareminer.visualizing.ConstraintDefinition;
 import org.processmining.plugins.declareminer.visualizing.Parameter;
+import org.processmining.plugins.declareminer.enumtypes.DeclareTemplate;
+import org.processmining.plugins.declareminer.visualizing.ActivityDefinition;
+import org.processmining.plugins.declareminer.visualizing.AssignmentModel;
+import org.processmining.plugins.declareminer.visualizing.ConstraintDefinition;
+import org.processmining.plugins.declareminer.visualizing.ConstraintTemplate;
+import org.processmining.plugins.declareminer.visualizing.Language;
+import org.processmining.plugins.declareminer.visualizing.Parameter;
+import org.processmining.plugins.declareminer.visualizing.TemplateBroker;
+import org.processmining.plugins.declareminer.visualizing.XMLBrokerFactory;
 
 public class MinerfulLogGenerator {
 	
 	
+	public static void createmodel(AssignmentModel sourcemodel,LinkedHashMap<String, Alphabet> abMapx) {
+	/*	InputStream ir = ClassLoader.getSystemClassLoader().getResourceAsStream("resources/template.xml");
+		File language = null;
+		try {
+			language = File.createTempFile("template", ".xml");
+			BufferedReader br = new BufferedReader(new InputStreamReader(ir));
+			String line = br.readLine();
+			PrintStream out = new PrintStream(language);
+			while (line != null) {
+				out.println(line);
+				line = br.readLine();
+			}
+			out.flush();
+			out.close();
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		}
+
+		TemplateBroker templates = XMLBrokerFactory.newTemplateBroker(language.getAbsolutePath());
+		List<Language> languages = templates.readLanguages();
+		Language lang = languages.get(0);
+		AssignmentModel targetmodel = new AssignmentModel(lang);
+
+		targetmodel.setName("new model");
+		
+		Map<String, Integer> eventsWithIds = new HashMap<>(); // key = event na,e, value = idx
+		Map<String, ActivityDefinition> activityDefinitions = new HashMap<>(); // key = event name
+		int repeater=0;
+		for (Entry<String, Alphabet> activity : abMapx.entrySet()) {
+			String key = activity.getKey();
+			Alphabet filter = activity.getValue();
+				if (!eventsWithIds.containsKey(key)) {
+					eventsWithIds.put(key, repeater);
+					ActivityDefinition activitydefinition = targetmodel.addActivityDefinition(repeater);
+					activitydefinition.setName(key);
+					activityDefinitions.put(key, activitydefinition);
+					repeater++;
+				}
+				
+				if (!filter.secondAlphabetKey.isEmpty()) {
+					
+					String alphabetname = BranchCombination.getParentLetter(key);
+				
+					ActivityDefinition activitydefinition = targetmodel.addActivityDefinition(repeater);
+				//String xnam = " 1st : "+ k.replace(k,filter.secondAlphabetKey);//filter.correlationlist[j]; 
+					System.out.println(key+alphabetname + filter.secondAlphabetKey);
+					System.out.println("K "+ key.replace(alphabetname,filter.secondAlphabetKey));
+				System.out.println("RR"+  key.replace(key,filter.secondAlphabetKey));
+			//	System.out.println( k.replace(k,filter.secondAlphabetKey));
+				String xnam = " 1st : "+ key.replace(key,filter.secondAlphabetKey);//filter.correlationlist[j]; \
+				xnam = k.replace(alphabetname,filter.secondAlphabetKey);
+				activitydefinition.setName(xnam);
+				System.out.println("precedence 2nd : " + xnam);
+				activityDefinitions.put(xnam, activitydefinition);							
+				constraintdefinition.addBranch(p, activityDefinitions.get(xnam));
+					
+				} // second key
+				
+				else {
+				
+				if (filter.correlationlist != null){
+					for(int j=0; j < filter.correlationlist.length ; j++){
+						if((filter.correlationlist[j].length() == k.length()+3)
+							&&(filter.correlationlist[j].contains(b2[ndxx]))){
+							String alphabetname = BranchCombination.getParentLetter(filter.correlationlist[j]);
+							if (filter.correlationlist[j].contains(k)){
+							ActivityDefinition activitydefinition = model.addActivityDefinition(i);
+						String xnam = " Error 1st : "+ filter.correlationlist[j]; 
+						activitydefinition.setName(xnam);
+						System.out.println("precedence 2nd : " + xnam);
+						activityDefinitions.put(xnam, activitydefinition);							
+						constraintdefinition.addBranch(p, activityDefinitions.get(xnam));
+						i++;
+					//	constraintdefinition.getBranches(p);
+						}}
+					}
+					
+				}
+				}
+		}
+		
+		
+		TaskCharEncoderDecoder encdec = new TaskCharEncoderDecoder();
+		for (Entry<String, Alphabet> activity : abMapx.entrySet()) {
+			String k = activity.getKey();
+			Alphabet filter = activity.getValue();
+		
+		}
+		
+		  int constraintNo=0;
+			HashMap<String, DeclareTemplate> templateNameStringDeclareTemplateMap;
+			Map<DeclareTemplate, ConstraintTemplate> map;
+			ConstraintDefinition constraintdefinition = null;
+			String constraintName="";
+			switch (constraintName) {
+			case "absence" :
+				templateNameStringDeclareTemplateMap = new HashMap<String, DeclareTemplate>();
+				templateNameStringDeclareTemplateMap.put("absence", DeclareTemplate.Absence);
+				map = DeclareModelGenerator.readConstraintTemplates(templateNameStringDeclareTemplateMap);
+				constraintdefinition = new ConstraintDefinition(constraintNo, targetmodel,
+						map.get(DeclareTemplate.Absence));
+				break;
+			case "absence2" :
+				templateNameStringDeclareTemplateMap = new HashMap<String, DeclareTemplate>();
+				templateNameStringDeclareTemplateMap.put("absence2", DeclareTemplate.Absence2);
+				map = DeclareModelGenerator.readConstraintTemplates(templateNameStringDeclareTemplateMap);
+				constraintdefinition = new ConstraintDefinition(constraintNo, targetmodel,
+						map.get(DeclareTemplate.Absence2));
+				break;
+			case "absence3" :
+				templateNameStringDeclareTemplateMap = new HashMap<String, DeclareTemplate>();
+				templateNameStringDeclareTemplateMap.put("absence3", DeclareTemplate.Absence3);
+				map = DeclareModelGenerator.readConstraintTemplates(templateNameStringDeclareTemplateMap);
+				constraintdefinition = new ConstraintDefinition(constraintNo, targetmodel,
+						map.get(DeclareTemplate.Absence3));
+				break;
+			case "alternate_precedence" : case "alternate precedence" :
+				templateNameStringDeclareTemplateMap = new HashMap<String, DeclareTemplate>();
+				templateNameStringDeclareTemplateMap.put("alternate precedence",
+						DeclareTemplate.Alternate_Precedence);
+				map = DeclareModelGenerator.readConstraintTemplates(templateNameStringDeclareTemplateMap);
+				constraintdefinition = new ConstraintDefinition(constraintNo, targetmodel,
+						map.get(DeclareTemplate.Alternate_Precedence));
+				break;
+			case "alternate_response" : case "alternate response" :
+				templateNameStringDeclareTemplateMap = new HashMap<String, DeclareTemplate>();
+				templateNameStringDeclareTemplateMap.put("alternate response", DeclareTemplate.Alternate_Response);
+				map = DeclareModelGenerator.readConstraintTemplates(templateNameStringDeclareTemplateMap);
+				constraintdefinition = new ConstraintDefinition(constraintNo, targetmodel,
+						map.get(DeclareTemplate.Alternate_Response));
+				break;
+			case "alternate_succession" : case "alternate succession" :
+				templateNameStringDeclareTemplateMap = new HashMap<String, DeclareTemplate>();
+				templateNameStringDeclareTemplateMap.put("alternate succession",
+						DeclareTemplate.Alternate_Succession);
+				map = DeclareModelGenerator.readConstraintTemplates(templateNameStringDeclareTemplateMap);
+				constraintdefinition = new ConstraintDefinition(constraintNo, targetmodel,
+						map.get(DeclareTemplate.Alternate_Succession));
+				break;
+			case "chain_precedence" :case "chain precedence" :
+				templateNameStringDeclareTemplateMap = new HashMap<String, DeclareTemplate>();
+				templateNameStringDeclareTemplateMap.put("chain precedence", DeclareTemplate.Chain_Precedence);
+				map = DeclareModelGenerator.readConstraintTemplates(templateNameStringDeclareTemplateMap);
+				constraintdefinition = new ConstraintDefinition(constraintNo, targetmodel,
+						map.get(DeclareTemplate.Chain_Precedence));
+				break;
+			case "chain_response" : case "chain response" :
+				templateNameStringDeclareTemplateMap = new HashMap<String, DeclareTemplate>();
+
+				templateNameStringDeclareTemplateMap.put("chain response", DeclareTemplate.Chain_Response);
+				map = DeclareModelGenerator.readConstraintTemplates(templateNameStringDeclareTemplateMap);
+				constraintdefinition = new ConstraintDefinition(constraintNo, targetmodel,
+						map.get(DeclareTemplate.Chain_Response));
+				break;
+			case "chain_succession" : case "chain succession" :
+				templateNameStringDeclareTemplateMap = new HashMap<String, DeclareTemplate>();
+
+				templateNameStringDeclareTemplateMap.put("chain succession", DeclareTemplate.Chain_Succession);
+				map = DeclareModelGenerator.readConstraintTemplates(templateNameStringDeclareTemplateMap);
+				constraintdefinition = new ConstraintDefinition(constraintNo, targetmodel,
+						map.get(DeclareTemplate.Chain_Succession));
+				break;
+			case "choice" :
+				templateNameStringDeclareTemplateMap = new HashMap<String, DeclareTemplate>();
+
+				templateNameStringDeclareTemplateMap.put("choice", DeclareTemplate.Choice); //// ???? of
+				map = DeclareModelGenerator.readConstraintTemplates(templateNameStringDeclareTemplateMap);
+				constraintdefinition = new ConstraintDefinition(constraintNo, targetmodel,
+						map.get(DeclareTemplate.Choice));
+				break;
+			case "coexistence" : case "co-existence":
+				templateNameStringDeclareTemplateMap = new HashMap<String, DeclareTemplate>();
+
+				templateNameStringDeclareTemplateMap.put("co-existence", DeclareTemplate.CoExistence);
+				map = DeclareModelGenerator.readConstraintTemplates(templateNameStringDeclareTemplateMap);
+				constraintdefinition = new ConstraintDefinition(constraintNo, targetmodel,
+						map.get(DeclareTemplate.CoExistence));
+				break;
+			case "exactly1" :
+				templateNameStringDeclareTemplateMap = new HashMap<String, DeclareTemplate>();
+
+				templateNameStringDeclareTemplateMap.put("exactly1", DeclareTemplate.Exactly1);
+				map = DeclareModelGenerator.readConstraintTemplates(templateNameStringDeclareTemplateMap);
+				constraintdefinition = new ConstraintDefinition(constraintNo, targetmodel,
+						map.get(DeclareTemplate.Exactly1));
+				break;
+			case "exactly2" :
+				templateNameStringDeclareTemplateMap = new HashMap<String, DeclareTemplate>();
+
+				templateNameStringDeclareTemplateMap.put("exactly2", DeclareTemplate.Exactly2);
+				map = DeclareModelGenerator.readConstraintTemplates(templateNameStringDeclareTemplateMap);
+				constraintdefinition = new ConstraintDefinition(constraintNo, targetmodel,
+						map.get(DeclareTemplate.Exactly2));
+				break;
+			case "exclusive_choice" : case "exclusive choice" :
+				templateNameStringDeclareTemplateMap = new HashMap<String, DeclareTemplate>();
+
+				templateNameStringDeclareTemplateMap.put("exclusive choice", DeclareTemplate.Exclusive_Choice);
+				map = DeclareModelGenerator.readConstraintTemplates(templateNameStringDeclareTemplateMap);
+				constraintdefinition = new ConstraintDefinition(constraintNo, targetmodel,
+						map.get(DeclareTemplate.Exclusive_Choice));
+				break;
+			case "existence" :
+				templateNameStringDeclareTemplateMap = new HashMap<String, DeclareTemplate>();
+
+				templateNameStringDeclareTemplateMap.put("existence", DeclareTemplate.Existence);
+				map = DeclareModelGenerator.readConstraintTemplates(templateNameStringDeclareTemplateMap);
+				constraintdefinition = new ConstraintDefinition(constraintNo, targetmodel,
+						map.get(DeclareTemplate.Existence));
+				break;
+			case "existence2" :
+				templateNameStringDeclareTemplateMap = new HashMap<String, DeclareTemplate>();
+
+				templateNameStringDeclareTemplateMap.put("existence2", DeclareTemplate.Existence2);
+				map = DeclareModelGenerator.readConstraintTemplates(templateNameStringDeclareTemplateMap);
+				constraintdefinition = new ConstraintDefinition(constraintNo, targetmodel,
+						map.get(DeclareTemplate.Existence2));
+				break;
+			case "existence3" :
+				templateNameStringDeclareTemplateMap = new HashMap<String, DeclareTemplate>();
+
+				templateNameStringDeclareTemplateMap.put("existence3", DeclareTemplate.Existence3);
+				map = DeclareModelGenerator.readConstraintTemplates(templateNameStringDeclareTemplateMap);
+				constraintdefinition = new ConstraintDefinition(constraintNo, targetmodel,
+						map.get(DeclareTemplate.Existence3));
+				break;
+			case "init" :
+				templateNameStringDeclareTemplateMap = new HashMap<String, DeclareTemplate>();
+
+				templateNameStringDeclareTemplateMap.put("init", DeclareTemplate.Init);
+				map = DeclareModelGenerator.readConstraintTemplates(templateNameStringDeclareTemplateMap);
+				constraintdefinition = new ConstraintDefinition(constraintNo, targetmodel, map.get(DeclareTemplate.Init));
+				break;
+			case "not_chain_succession" : case "not chain succession" :
+				templateNameStringDeclareTemplateMap = new HashMap<String, DeclareTemplate>();
+
+				templateNameStringDeclareTemplateMap.put("not chain succession",
+						DeclareTemplate.Not_Chain_Succession);
+				map = DeclareModelGenerator.readConstraintTemplates(templateNameStringDeclareTemplateMap);
+				constraintdefinition = new ConstraintDefinition(constraintNo, targetmodel,
+						map.get(DeclareTemplate.Not_Chain_Succession));
+				break;
+			case "not_coexistence" : case "not coexistence" :
+				templateNameStringDeclareTemplateMap = new HashMap<String, DeclareTemplate>();
+
+				templateNameStringDeclareTemplateMap.put("not co-existence", DeclareTemplate.Not_CoExistence);
+				map = DeclareModelGenerator.readConstraintTemplates(templateNameStringDeclareTemplateMap);
+				constraintdefinition = new ConstraintDefinition(constraintNo, targetmodel,
+						map.get(DeclareTemplate.Not_CoExistence));
+				break;
+			case "not_succession" : case "not succession" :
+				templateNameStringDeclareTemplateMap = new HashMap<String, DeclareTemplate>();
+
+				templateNameStringDeclareTemplateMap.put("not succession", DeclareTemplate.Not_Succession);
+				map = DeclareModelGenerator.readConstraintTemplates(templateNameStringDeclareTemplateMap);
+				constraintdefinition = new ConstraintDefinition(constraintNo, targetmodel,
+						map.get(DeclareTemplate.Not_Succession));
+				break;
+			case "precedence" :
+				templateNameStringDeclareTemplateMap = new HashMap<String, DeclareTemplate>();
+
+				templateNameStringDeclareTemplateMap.put("precedence", DeclareTemplate.Precedence);
+				map = DeclareModelGenerator.readConstraintTemplates(templateNameStringDeclareTemplateMap);
+				constraintdefinition = new ConstraintDefinition(constraintNo, targetmodel,
+						map.get(DeclareTemplate.Precedence));
+				break;
+			case "response" :
+				templateNameStringDeclareTemplateMap = new HashMap<String, DeclareTemplate>();
+
+				templateNameStringDeclareTemplateMap.put("response", DeclareTemplate.Response);
+				map = DeclareModelGenerator.readConstraintTemplates(templateNameStringDeclareTemplateMap);
+				constraintdefinition = new ConstraintDefinition(constraintNo, targetmodel,
+						map.get(DeclareTemplate.Response));
+				break;
+			case "responded_existence": case "responded existence" :
+				templateNameStringDeclareTemplateMap = new HashMap<String, DeclareTemplate>();
+
+				templateNameStringDeclareTemplateMap.put("responded existence",
+						DeclareTemplate.Responded_Existence);
+				map = DeclareModelGenerator.readConstraintTemplates(templateNameStringDeclareTemplateMap);
+				constraintdefinition = new ConstraintDefinition(constraintNo, targetmodel,
+						map.get(DeclareTemplate.Responded_Existence));
+				break;
+			case "succession" :
+				templateNameStringDeclareTemplateMap = new HashMap<String, DeclareTemplate>();
+
+				templateNameStringDeclareTemplateMap.put("succession", DeclareTemplate.Succession);
+				map = DeclareModelGenerator.readConstraintTemplates(templateNameStringDeclareTemplateMap);
+				constraintdefinition = new ConstraintDefinition(constraintNo, targetmodel,
+						map.get(DeclareTemplate.Succession));
+				}
+			
+			constraintNo++;
+		
+		
+			int j = 0;
+			for (Parameter p : constraintdefinition.getParameters()) {
+				String eventName;
+		    	constraintdefinition.addBranch(p, activityDefinitions.get(eventName));
+				}
+
+				j++;
+			}
+
+			model.addConstraintDefiniton(constraintdefinition);*/
+		
+	}
 	
 	public static ProcessModel fromDeclareMapToMinerfulProcessModel(nl.tue.declare.domain.model.AssignmentModel model, 
 			TaskCharArchive taskCharArchive,ArrayList<String> combinlist,
@@ -63,14 +388,18 @@ public class MinerfulLogGenerator {
 			for (Entry<String, Alphabet> activity : abMapx.entrySet()) {
 				String k = activity.getKey();
 				Alphabet filter = activity.getValue();
+				encdec.encode(new StringTaskClass( filter.alphabetkey));
 				if (!filter.alphabetkey.isEmpty())
 				{
 					String [] jj = filter.secondAlphabet.split("::");
+					if(jj.length>=1){
 					for (int i=0; i <jj.length; i++ ){
-						encdec.encode(new StringTaskClass( filter.alphabetkey));						
+						System.out.println(jj[i]);
 						encdec.encode(new StringTaskClass( jj[i]));
-						System.out.println("Middle: "+filter.alphabetkey + "Second: " + jj[i] );	
-					}
+						System.out.println("Hello: "+filter.alphabetkey + "Second: " + jj[i] );	
+					}}
+				} else {
+					encdec.encode(new StringTaskClass(k+"test"));
 				}
 				
 			}
@@ -80,7 +409,7 @@ public class MinerfulLogGenerator {
 				System.out.println("Lower: "+ad.getName());
 			}
 			
-		
+			
 			
 			/*for (Entry<String, Alphabet> activity : abMapx.entrySet()) {
 				String k = activity.getKey();

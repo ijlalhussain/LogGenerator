@@ -262,15 +262,17 @@ public class LogService {
 			for (XTrace xtrace : xlog) {
 				String traceName = XConceptExtension.instance().extractName(
 						xtrace);
-				System.out.println("TraceName: " + traceName);
+				System.out.println("TraceName: " + traceName.substring(traceName.lastIndexOf(".",traceName.length())).trim());
 				XAttributeMap caseAttributes = xtrace.getAttributes();
 				for (XEvent event : xtrace) {
 					String activityName = XConceptExtension.instance()
 							.extractName(event);
+				
+					System.out.println("Event ID : " + event.getID());
 					System.out.println("ActivityName: " + activityName);
 					Date timestamp = XTimeExtension.instance()
 							.extractTimestamp(event);
-					System.out.println("Timestamp: " + timestamp);
+				/*	System.out.println("Timestamp: " + timestamp);
 					String eventType = XLifecycleExtension.instance()
 							.extractTransition(event);
 					System.out.println("EventType: " + eventType);
@@ -284,7 +286,7 @@ public class LogService {
 					for (String key : caseAttributes.keySet()) {
 						String value = caseAttributes.get(key).toString();
 						System.out.println(" caseAttributes key: " + key + "  value: " + value);
-					}
+					}*/
 				}
 			}
 		//	System.out.println(xlog);

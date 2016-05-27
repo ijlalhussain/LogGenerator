@@ -542,18 +542,32 @@ public class DeclareModelGenerator {
 						
 						}
 						else {			
-								
+								int check =0;
 							if (filter.correlationlist != null){
 						for (int j = 0; j < filter.correlationlist.length; j++) {
 							if (filter.correlationlist[j].length() <= k.length()+3){
-							ActivityDefinition activitydefinition = model.addActivityDefinition(i);
-							String actName =  filter.correlationlist[j];
+								String actName =  filter.correlationlist[j];
+								if (actName.contains(filter.secondAlphabetKey)){
+								ActivityDefinition activitydefinition = model.addActivityDefinition(i);
+							 actName =  filter.correlationlist[j];
 							activitydefinition.setName(actName);
 							activityDefinitions.put(actName, activitydefinition);
 							constraintdefinition.addBranch(p,activityDefinitions.get(actName));
+							check=1;
 							//i++;
 							//constraintdefinition.getBranches(p);
-						}}}
+						}}
+							} // end of cor
+						
+						if (check==0){
+							String actName =  k + "Check";
+							ActivityDefinition activitydefinition = model.addActivityDefinition(i);
+							activitydefinition.setName(actName);
+							activityDefinitions.put(actName, activitydefinition);
+							constraintdefinition.addBranch(p,activityDefinitions.get(actName));
+							i++;
+						}
+						}
 						}
 					}
 				}
