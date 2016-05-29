@@ -34,7 +34,7 @@ public class Alphabet {
 	public void isSingle(boolean isSingle) {
 		this.isSingle = isSingle;
 	}
-	
+
 	public void correlationlist(String[] correlationlist) {
 		this.correlationlist = correlationlist;
 	}

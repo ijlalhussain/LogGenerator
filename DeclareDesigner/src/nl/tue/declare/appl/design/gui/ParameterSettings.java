@@ -100,7 +100,7 @@ public class ParameterSettings extends javax.swing.JFrame {
         
         jLabel6.setText("Select Model");
 
-        jTextField5.setText("D:\\MainProj\\synthetic-log-generator\\DeclareDesigner\\ui.xml"); //Taru path
+        jTextField5.setText("D:\\MainProj\\synthetic-log-generator\\DeclareDesigner\\abD2.xml"); //Taru path
         jTextField5.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jTextField5ActionPerformed(evt);
@@ -156,7 +156,7 @@ public class ParameterSettings extends javax.swing.JFrame {
             }
         });
 
-        jTextField6.setText("10");
+        jTextField6.setText("3");
         jTextField6.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jTextField6ActionPerformed(evt);
@@ -167,7 +167,7 @@ public class ParameterSettings extends javax.swing.JFrame {
 
         jLabel9.setText("Max Size");
 
-        jTextField8.setText("10");
+        jTextField8.setText("5");
         jTextField8.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jTextField8ActionPerformed(evt);
@@ -176,7 +176,7 @@ public class ParameterSettings extends javax.swing.JFrame {
 
         jLabel11.setText("Number of Traces to generate");
 
-        jTextField9.setText("50"); //maxtrace
+        jTextField9.setText("5"); //maxtrace
         jTextField9.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jTextField9ActionPerformed(evt);

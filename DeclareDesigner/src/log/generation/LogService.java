@@ -259,6 +259,7 @@ public class LogService {
 		try {
 
 			System.out.println("-----Printing log start -----");
+			int eventnumber =0;
 			for (XTrace xtrace : xlog) {
 				String traceName = XConceptExtension.instance().extractName(
 						xtrace);
@@ -268,10 +269,12 @@ public class LogService {
 					String activityName = XConceptExtension.instance()
 							.extractName(event);
 				
-					System.out.println("Event ID : " + event.getID());
-					System.out.println("ActivityName: " + activityName);
-					Date timestamp = XTimeExtension.instance()
-							.extractTimestamp(event);
+					//System.out.println("Event ID : " + event.getID());
+					System.out.println("Char : "+ activityName+ " Key: " +	DeclareLogGenerator.getAlphabetKey(activityName)
+							+ " Event :" + eventnumber);
+					eventnumber++;
+				//	Date timestamp = XTimeExtension.instance()
+						//	.extractTimestamp(event);
 				/*	System.out.println("Timestamp: " + timestamp);
 					String eventType = XLifecycleExtension.instance()
 							.extractTransition(event);

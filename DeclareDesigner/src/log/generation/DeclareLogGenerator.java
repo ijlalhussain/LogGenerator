@@ -90,7 +90,10 @@ public class DeclareLogGenerator {
 	static ArrayList<String> repeatList = new ArrayList();
 	static ArrayList<String> combinedList = new ArrayList();
 	static ArrayList<String> combinedListB = new ArrayList();
-	static 	HashMap<String,TaskChar> newLogIndex = new HashMap<String,TaskChar>();
+	static 	HashMap<TaskChar,String> newLogIndex = new HashMap<TaskChar,String>();
+	static 	HashMap<Integer,TraceAlphabet> traceMap = new HashMap<Integer,TraceAlphabet>();
+	
+	
 	static String secondkey ="";
 	static String actcond ="";
 	static String constrainB ="";
@@ -128,13 +131,14 @@ public class DeclareLogGenerator {
 		
 		
 		IlpSolver.purifyLog(combinedList, abMapx);
-	//	CheckforPrecendence();
+	
 		
 		if (abMapx.isEmpty()) {
 			JOptionPane.showMessageDialog(null, "Unable to Generate Log!");
 			return false;
 		}
 		addCorrelatedConditions();
+	//	CheckforPrecendence();
 		MinerFulLogMaker logMak = new MinerFulLogMaker(logMakParameters);		
 		ProcessModel proMod = null;  
 		proMod =newStyleLog();// MinerfulLogGenerator.fromDeclareMapToMinerfulProcessModel(model,null, combinedList, abMapx);
@@ -144,7 +148,8 @@ public class DeclareLogGenerator {
 		//proMod=	dm.generateModel();
 		
 	    XLog xlog=	logMak.createLog(proMod);
-	   // LogService.printLog(xlog);
+	    twist(xlog);
+	    // LogService.printLog(xlog);
 	  /*System.out.println("_____printing Map__________________");
 		   LogService.PrintMyLog(model, abMapx, LogSize, combinedList, minlength, maxlength);
 	 		XLog xxlog = LogService
@@ -163,6 +168,165 @@ public class DeclareLogGenerator {
 		}
 		//System.out.println(lifeExtension.getName());
 		return true;
+	}
+	
+	
+	public static ArrayList<String> getCorr(String key){
+		ArrayList<String> targetList = new ArrayList<String>();	
+		
+		Alphabet ret = abMapx.get(key);
+		if (ret != null){
+			if(ret.correlationlist != null){
+				targetList.clear();
+				for(int i=0; i < ret.correlationlist.length; i++){
+				  targetList.add(ret.correlationlist[i]);
+			  }	
+			}
+		}
+		return  targetList;
+	}
+	
+	public static String printme(ArrayList<String> sourceList,ArrayList<String> targetList,
+ ArrayList<String> trace, String key,
+			int start, int eventnumber) {
+		
+		String ret = "";
+		ArrayList<String> trace2 = new ArrayList<String>();
+		for (int kk = start; kk < trace.size(); kk++) {
+			trace2.add(trace.get(kk));
+		}
+		int index = sourceList.indexOf(key);
+		//System.out.println("Combination : Source : " + sourceList.get(index) + "("+
+			//	eventnumber+ ")" );
+		
+	//	for (int b = 0; b < trace2.size(); b++) {
+			//System.out.println("--");
+			
+			if (index > -1) {				
+				//System.out.println("Log  A = " + sourceList.get(index));
+			
+				for (int bb = 0; bb < trace2.size(); bb++) {
+					if (targetList.indexOf(trace2.get(bb)) > -1) {
+						int ndx = trace2.indexOf(trace2.get(bb));
+						TraceAlphabet tcx = traceMap.get(eventnumber +ndx);
+						tcx.isMapped = true;
+						tcx.isFirstKey = false;
+						tcx.selectedSource = sourceList.get(index);
+						tcx.selectedTarget =  trace2.get(bb);
+						tcx.sourceIndex = eventnumber;
+						tcx.targetIndex = (eventnumber +ndx);
+						ret = trace2.get(bb);
+						traceMap.put(eventnumber +ndx, tcx);
+					//	indexList.add((eventnumber +ndx));
+					//	System.out.println("Target " + trace2.get(bb) +"("+ (eventnumber +ndx)+")" );
+						break;
+						//	System.out.println("Log B : " + trace.get(bb) + " : "+ bb + " : Event number :" + (eventnumber - b));
+					}					
+				}				
+				//break;
+		//	}
+			//return ret;
+		}
+		return ret;
+			
+	}
+	public static void twist(XLog xlog) {
+		try {
+
+			ArrayList<String> sourceList = new ArrayList<String>();
+			ArrayList<String> targetList = new ArrayList<String>();
+			ArrayList<String> traceList = new ArrayList<String>();
+			ArrayList<Integer> targetIndex = new ArrayList<Integer>();
+			int count =0;
+			for (Entry<String, Alphabet> activity : abMapx.entrySet()) {
+					sourceList.add(activity.getKey());
+				}			
+			
+			traceMap.clear();
+			System.out.println("-----Printing log start -----");
+			int eventnumber =0;
+		    int traceno =0;
+			for (XTrace xtrace : xlog) {
+				
+				String traceName = XConceptExtension.instance().extractName(
+						xtrace);
+				traceList.clear();
+				XAttributeMap caseAttributes = xtrace.getAttributes();
+				System.out.println("TraceName: " + traceName.substring(traceName.lastIndexOf(".",traceName.length())).trim());
+				for (XEvent event : xtrace) {
+					TraceAlphabet tc = new TraceAlphabet();
+					String activityName = XConceptExtension.instance()
+							.extractName(event);
+					traceList.add(DeclareLogGenerator.getAlphabetKey(activityName));
+				
+					System.out.println("Char : "+ activityName+ " Key: " +	DeclareLogGenerator.getAlphabetKey(activityName)
+							+ " Event :" + eventnumber);					
+					tc.alphabetKey = DeclareLogGenerator.getAlphabetKey(activityName);
+					tc.eventNo = eventnumber;
+					tc.traceNo = traceno;
+					//tc.isFirstKey = true;
+					traceMap.put(eventnumber, tc);					
+					eventnumber++;
+				}
+				targetIndex.clear();
+				for (int i = 0; i < traceList.size(); i++) {
+					targetList.clear();
+					int index = sourceList.indexOf(traceList.get(i));
+				//	
+					if (index > -1) {
+						targetList = getCorr(sourceList.get(index));
+						  if (!targetList.isEmpty()) {
+							  
+							  TraceAlphabet tcx = traceMap.get(count);
+						//	  System.out.println("Soucre : " + traceList.get(i) + "("+count +")");
+							  tcx.isFirstKey = true;
+							  tcx.isMapped = true;
+							  traceMap.put(count, tcx);
+							 printme(sourceList, targetList, traceList,
+									traceList.get(i), i,count);
+							  
+						} 
+					} else {
+						TraceAlphabet tcx = traceMap.get(count);
+						tcx.isMapped = false;
+						tcx.isFirstKey = false;
+						traceMap.put(count, tcx);
+					}
+					 
+					count++;
+				} // end of tracelist;
+			//	System.out.println("x-cound: " + targetIndex.size());
+				traceno++;
+			}
+			int traceNo=0;
+			for (Entry<Integer, TraceAlphabet> activity : traceMap.entrySet()) {
+				Integer k = activity.getKey();
+				
+				TraceAlphabet bb = activity.getValue();
+				if (bb.traceNo != traceNo){
+					for (int nd=0; nd < targetIndex.size(); nd++){
+						
+					}
+					traceNo = bb.traceNo;
+					System.out.println("----------new Trace----------");
+					targetIndex.clear();
+				}
+				targetIndex.add(bb.targetIndex);
+				if((bb.selectedSource != null))
+				System.out.println("Trace: "+ bb.traceNo + " Event:"+ bb.eventNo + "  : Source " +
+				bb.selectedSource +"(" + bb.sourceIndex + ")  : Target " + bb.selectedTarget 
+				+ "(" + bb.targetIndex + ")" );
+				
+			}
+		/*	System.out.println(XConceptExtension.instance().extractName(
+					xlog.get(0)));*/
+
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		System.out.println("-----Printing log end -----");
 	}
 	
 
@@ -214,8 +378,8 @@ public static ProcessModel newStyleLog (){
 	}
 	
 	for (int i=0; i < mylist.size(); i++){
-		newLogIndex.put(mylist.get(i), where.get(i));
-		System.out.println("Mapr:  Key: "+ mylist.get(i) + " Char: "+ where.get(i));
+		newLogIndex.put(where.get(i),mylist.get(i));
+		System.out.println("Map:  Key: "+ where.get(i) + " Char: "+  mylist.get(i));
 	}
 	
 	
@@ -223,7 +387,7 @@ public static ProcessModel newStyleLog (){
 		String key = activity.getKey();
 		Alphabet filter = activity.getValue();
 		
-		TaskChar firstChar =newLogIndex.get(key);
+		TaskChar firstChar = getAlphabetValue(key);//  newLogIndex.get(key);
 		
 		ArrayList<TaskChar> list = new ArrayList<TaskChar>();
 		TaskCharSet target = new TaskCharSet();
@@ -237,37 +401,67 @@ public static ProcessModel newStyleLog (){
 		
 		else {
 		*/	list.clear();
+		
+			String xKey = key.substring(key.length() - 1);
+
+			if (xKey.equals("0")) {
+				if (filter.correlationlist != null){
+					for(int j=0; j < filter.correlationlist.length ; j++){
+						String xnam =filter.correlationlist[j];
+						int len = filter.correlationlist[j].length();
+						if ((xnam.contains("_"))
+								&& (xnam.contains(filter.secondAlphabetKey))) {
+							String sx[] = xnam.split("_");
+							String first = BranchCombination.getParentLetter(key);
+							String last = BranchCombination.getParentLetter(sx[0]);
+							first = key.replace(first, "");
+							last = sx[0].replace(last, "");
+							System.out.println("First" + first + " :Lst" + last);
+							if (first.equals(last)) {
+								list.add(getAlphabetValue(filter.correlationlist[j]));								
+							}
+						} 
+					}
+				}
+				
+			} // end of zero level first part
+			else {		
 			if (filter.correlationlist != null){
 				for(int j=0; j < filter.correlationlist.length ; j++){
 					String xnam =filter.correlationlist[j];
 					int len = filter.correlationlist[j].length();
-										
-					if ((xnam.contains("_"))							
+					if ((xnam.contains("_"))
 							&& (xnam.contains(filter.secondAlphabetKey))) {
 						String sx[] = xnam.split("_");
 						String first = BranchCombination.getParentLetter(key);
-						String last = BranchCombination.getParentLetter(sx[0] );
+						String last = BranchCombination.getParentLetter(sx[0]);
 						first = key.replace(first, "");
 						last = sx[0].replace(last, "");
 						System.out.println("First" + first + " :Lst" + last);
 						if (first.equals(last)) {
-							list.add(newLogIndex.get(filter.correlationlist[j]));
+							list.add(getAlphabetValue(filter.correlationlist[j]));
+							// list.add(
+							// newLogIndex.get(filter.correlationlist[j]));
 						}
 					} else if ((filter.correlationlist[j].length() < key
 							.length() + 3)
 							&& (xnam.contains(filter.secondAlphabetKey))) {
-						list.add(newLogIndex.get(filter.correlationlist[j]));
+						list.add(getAlphabetValue(filter.correlationlist[j]));
+						// list.add(newLogIndex.get(filter.correlationlist[j]));
 					}
 				}
-				} else{
-					String alphabetname = BranchCombination.getParentLetter(key);
-					String xnam =  key.replace(key,filter.secondAlphabetKey);//filter.correlationlist[j]; \
-				  if ((xnam.length() + 3 == key.length())&&(xnam.contains(filter.secondAlphabetKey))) {
+			} else {
+				String alphabetname = BranchCombination.getParentLetter(key);
+				String xnam = key.replace(key, filter.secondAlphabetKey);// filter.correlationlist[j];
+																			// \
+				if ((xnam.length() + 3 == key.length())
+						&& (xnam.contains(filter.secondAlphabetKey))) {
 					xnam = key.replace(alphabetname, filter.secondAlphabetKey);
-					list.add(newLogIndex.get(xnam));
+					// list.add(newLogIndex.get(xnam));
+					list.add(getAlphabetValue(xnam));
 				}
-			}
-		
+			}  // end of filter empy
+			} // end of zero level check
 			if (filter.constrain.equals("response")) {
 				Response res = new Response(new TaskCharSet(firstChar), new TaskCharSet(list));
 				lst.add(res);
@@ -303,7 +497,33 @@ public static ProcessModel newStyleLog (){
 }
 	
 	
+public static TaskChar getAlphabetValue(String search){
+	TaskChar ret = null; 
+	for (Entry<TaskChar,String> entry : newLogIndex.entrySet()) {
+        String key = entry.getValue();
+        TaskChar t1 = entry.getKey();
+		 if(key.equals(search)) {
+            ret = t1;
+           // System.out.println(t1 + ": "+ key + " : " + search);
+            break;
+           }
+       }
+	return ret;	
+}
 
+public static String getAlphabetKey(String search){
+	String ret = null; 
+	for (Entry<TaskChar,String> entry : newLogIndex.entrySet()) {
+        String key = entry.getValue();
+        String t1 = entry.getKey().toString();
+		 if(t1.equals(search)) {
+            ret = key;
+           // System.out.println(t1 + ": "+ key + " : " + search);
+            break;
+           }
+       }
+	return ret;	
+}
 
 	private static void CheckforPrecendence() {
 		
@@ -319,11 +539,12 @@ public static ProcessModel newStyleLog (){
 				System.out.println("A :" + filter.alphabetkey);
 				System.out.println("B :" + filter.secondAlphabetKey);
 				
-				aa = BranchCombination.getParentLetter(filter.alphabetkey);
+				aa = BranchCombination.getParentLetter(k);
 				bb = BranchCombination.getParentLetter(filter.secondAlphabetKey);
 				k = k.replace(aa, bb);
 				filter.alphabetkey = filter.alphabetkey.replace(aa,bb);
 				filter.alphabetname = filter.alphabetname.replace(aa,bb);
+				filter.secondAlphabetKey = aa;
 				//filter.secondAlphabetKey = filter.secondAlphabetKey.replace(bb,aa);
 				String corr [] = filter.correlationlist;
 				if (corr!=null)
@@ -1078,7 +1299,7 @@ public static ProcessModel newStyleLog (){
 					String vtemp =  combinedList.get(ind).replaceAll(aa, b).replaceAll(" ", "").trim();
 					if(!vtemp.equals(root[0].replaceAll(aa, b)))
 					{
-						ret = ret+ vtemp + "::"+ root[0].replaceAll(aa, b) + "_"+ vtemp;
+						ret = ret+ /*vtemp + "::"+*/ root[0].replaceAll(aa, b) + "_"+ vtemp;
 						}
 					else{
 						{
@@ -1109,7 +1330,7 @@ public static ProcessModel newStyleLog (){
 				{
 					String vtemp =  combinedList.get(ind).replaceAll(aa, b).replaceAll(" ", "").trim();
 					if(!vtemp.equals(root[0].replaceAll(aa, b)))
-					{ret = ret+ vtemp + "::"+ root[0].replaceAll(aa, b) + "_"+ vtemp;}
+					{ret = ret+ vtemp /*+ "::"+ root[0].replaceAll(aa, b) + "_"+ vtemp*/;}
 					else{
 						{ret = ret+ vtemp;}	
 					}
@@ -1270,18 +1491,3 @@ public static ProcessModel newStyleLog (){
 	}
 
 }
-/*	public static void CheckILPCondition() {
-//getSingleCodition();
-String s = "";
-for (Entry<String, Alphabet> activity : abMapx.entrySet()) {
-	String k = activity.getKey();
-	Alphabet ddd = activity.getValue();
-	String[] ss = ddd.conditionlist;
-    System.out.println("key:"+ k + " cond: " + ddd.alphabetkey + "condition:" +  ddd.ilpCondition + "BranchB:" + ddd.secondAlphabet);
-	for (int i=0; i< ddd.conditionlist.length; i++){
-		System.out.println(ddd.conditionlist[i]);
-		
-	}
-}
-
-}*/

@@ -112,7 +112,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class Test {
     public static void main(String... args) {
      
-    	List list = Arrays.asList("A0 A1 A2 A0A1 AOA2 A0A1A2".split(" "));
+    	List list = Arrays.asList("A0 A1 A2 A0 A0A1 AOA2 A0A1A2".split(" "));
     		      System.out.println("List :"+list);
     		      List sublist = Arrays.asList("A1".split(" "));
     		      System.out.println("SubList :"+sublist);
@@ -121,7 +121,10 @@ public class Test {
     		      System.out.println("lastIndexOfSubList: "
     		      + Collections.lastIndexOfSubList(list, sublist));
     		      ArrayList arrayList = new ArrayList();
+    		   
     		      
+    		      int retval=list.indexOf("A0");
+    		      System.out.println("The element E is at index " + retval);
     		      //Add elements to Arraylist
     		      arrayList.add("1");
     		      arrayList.add("2");
