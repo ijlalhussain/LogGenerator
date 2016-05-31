@@ -77,6 +77,7 @@ public class DeclareLogGenerator {
 	
 	static LinkedHashMap<String, Alphabet> abMap = new LinkedHashMap<String, Alphabet>();
 	static LinkedHashMap<String, Alphabet> abMap2 = new LinkedHashMap<String, Alphabet>();
+	static LinkedHashMap<String, Alphabet> abMapAll = new LinkedHashMap<String, Alphabet>();
 	static LinkedHashMap<String, Alphabet> abMapx = new LinkedHashMap<String, Alphabet>();
 	static LinkedHashMap<String, Alphabet> corrlationList = new LinkedHashMap<String, Alphabet>();	
 	static LinkedHashMap<String, Alphabet> abMapdata = new LinkedHashMap<String, Alphabet>();
@@ -155,11 +156,13 @@ public class DeclareLogGenerator {
 	    XLog xlog=	logMak.createLog(proMod);
 	    twist(xlog);
 	  
-	    twistcopy();
+	    //twistcopy();
 	    //twistRandomSelection();
-	    addCorrelationtoArray();
-	    RestoreKeys(xlog);
+	    addCorrelationtoArray();	    
 	    IlpSolver.CheckIlpConditions(abMap2);
+	    mergeLists();
+	    RestoreKeys(xlog);
+	   
 	    // LogService.printLog(xlog);
 	  /*System.out.println("_____printing Map__________________");
 		   LogService.PrintMyLog(model, abMapx, LogSize, combinedList, minlength, maxlength);
@@ -181,6 +184,23 @@ public class DeclareLogGenerator {
 	}
 	
 	
+	private static void mergeLists() {
+		for (Entry<String, Alphabet> activity : abMapx.entrySet()) {
+			String k = activity.getKey();
+			Alphabet ret = activity.getValue();
+			abMapAll.put(k, ret);
+			System.out.println(" Key " + k + " Condition : "+ ret.actCondition);
+		}	
+		for (Entry<String, Alphabet> activity : abMap2.entrySet()) {
+			String k = activity.getKey();
+			Alphabet ret = activity.getValue();
+			abMapAll.put(k, ret);
+			System.out.println(" Key " + k + " Condition : "+ ret.actCondition);
+		}
+		
+	}
+
+
 	private static void RestoreKeys(XLog xlog) {
 	int count =0;
 	int check =0;
@@ -203,11 +223,21 @@ public class DeclareLogGenerator {
 						local++;
 					}
 										
-					XConceptExtension.instance().assignName(event,getAlphabetKey(name));
+					String keyName = 	getAlphabetKey(name);
+					String paylaodName = "Data";
+					int keyValue = 444;
+					Alphabet ExeActivity = abMapAll.get(keyName);
+					if (ExeActivity !=null){
+						paylaodName	 = ExeActivity.payLoadName;
+						keyValue= getRandomTrace(ExeActivity.minValue,ExeActivity.maxValue);
+					}
+					
+					 paylaodName="Data : "+ paylaodName;
+					XConceptExtension.instance().assignName(event,keyName);
 					 XFactory xFactory = XFactoryRegistry.instance().currentDefault();
-						XAttribute test = xFactory.createAttributeLiteral("X",Integer.toString(eventnumber), null);
+						XAttribute test = xFactory.createAttributeLiteral(paylaodName,Integer.toString(keyValue), null);
 						XAttributeMap test2 = event.getAttributes();
-						test2.put("X", test);
+						test2.put(paylaodName, test);
 						event.setAttributes(test2);
 						//xtrace.set(check, event);
 						//check++;
@@ -244,18 +274,11 @@ public class DeclareLogGenerator {
 				  }	
 				}
 			}
-		}	
-		
-		for (Entry<String, Alphabet> activity : abMap2.entrySet()) {
-			String k = activity.getKey();
-			Alphabet ret = activity.getValue();
-			System.out.println(" Key " + k + " Condition : "+ ret.actCondition);
-		}	
-		
+		}		
 	}
 
 
-	public static ArrayList<String> getCorr(String key){
+	public static ArrayList<String> getCorrelationCondition(String key){
 		ArrayList<String> targetList = new ArrayList<String>();	
 		
 		Alphabet ret = abMapx.get(key);
@@ -264,9 +287,9 @@ public class DeclareLogGenerator {
 				targetList.clear();
 				for(int i=0; i < ret.correlationlist.length; i++){
 				  targetList.add(ret.correlationlist[i]);
-				  String alphabetname = BranchCombination.getParentLetter(ret.correlationlist[i]);
-					String blist[] = ret.secondAlphabet.split("::");
-				if (blist.length>1){
+				/*  String alphabetname = BranchCombination.getParentLetter(ret.correlationlist[i]);
+					String blist[] = ret.secondAlphabet.split("::");*/
+			/*	if (blist.length>1){
 					for (int ndm =0; ndm <blist.length; ndm++){
 						if (!alphabetname.equals("")){
 						if(!blist[ndm].equals(alphabetname)){
@@ -274,9 +297,11 @@ public class DeclareLogGenerator {
 							targetList.add(ret.correlationlist[i].replace(alphabetname, blist[ndm]));							
 						}			}
 					}
-					}
+					}*/
 			  }	
 			}
+		}else if (ret.secondAlphabetKey != null){
+			targetList.add(ret.secondAlphabetKey);	
 		}
 		return  targetList;
 	}
@@ -327,7 +352,7 @@ public class DeclareLogGenerator {
 			
 	}
 	public static void twist(XLog xlog) {
-		try {
+		/*try {*/
 
 			ArrayList<String> sourceList = new ArrayList<String>();
 			ArrayList<String> targetList = new ArrayList<String>();
@@ -414,7 +439,7 @@ public class DeclareLogGenerator {
 						traceEvent.traceNo = traceNo;
 						traceEvent.alphabetKey  =traceList.get(i);
 						traceEvent.sourceIndex = traceIndex.get(i);
-						targetList=  getCorr(traceList.get(i));
+						targetList=  getCorrelationCondition(traceList.get(i));
 						
 						temp = getmatchList(traceList,targetList, i,traceIndex,traceList.get(i));
 				//		System.out.println("Source : " + traceList.get(i) + "(" +traceIndex.get(i) +")");
@@ -457,10 +482,10 @@ public class DeclareLogGenerator {
 				TraceAlphabet traceEvent = new TraceAlphabet();
 				traceEvent.traceNo = traceNo;
 				traceEvent.alphabetKey  =traceList.get(iX);
-				targetList=  getCorr(traceList.get(iX));
+				targetList=  getCorrelationCondition(traceList.get(iX));
 
 				temp = getmatchList(traceList,targetList, iX,traceIndex,traceList.get(iX));
-			//	System.out.println("Source : " + traceList.get(iX) + "(" +traceIndex.get(iX) +")");
+				System.out.println("Source : " + traceList.get(iX) + "(" +traceIndex.get(iX) +")");
 				if (!temp.isEmpty()) {
 					temp2.clear();
 					traceEvent.targetList=	getmatchList(traceList,targetList, iX,traceIndex,traceList.get(iX));
@@ -473,17 +498,17 @@ public class DeclareLogGenerator {
 				tc.add(traceEvent);
 				}
 			}
-			if (!tc.isEmpty())
+/*			if (!tc.isEmpty())
 			traceDuplicates.put(traceNo, tc);
 			System.out.println("Last Trace: " + traceNo);
 			
 			for (int i = 0; i < traceDuplicates.size(); i++) {
-				System.out.println("Fileration in Trace : " + i);
+				//System.out.println("Fileration in Trace : " + i);
 				List<TraceAlphabet> tx = traceDuplicates.get(i);
 				if (!tx.isEmpty()) {
 					for (int j = 0; j < tx.size(); j++) {
-						System.out.println("Map (A): " + tx.get(j).alphabetKey + ":" + tx.get(j).sourceIndex);
-						if (!tx.get(j).targetList.isEmpty()) {
+						System.out.println("DP->Tarce : " + i+ " Map (A): " + tx.get(j).alphabetKey + ":" + tx.get(j).sourceIndex);
+						if ((tx.get(j).targetList !=null)||(!tx.get(j).targetList.isEmpty())) {
 							for (int m = 0; m < tx.get(j).targetList.size(); m++) {
 								System.out.println("Map (B):" + tx.get(j).targetList.get(m) + " : "+tx.get(j).targetListIndex.get(m) );
 							}
@@ -492,13 +517,13 @@ public class DeclareLogGenerator {
 
 				}
 
-			}
-			
-		
+			}*/
+				
+	/*	
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
+		}*/
 		
 		System.out.println("-----Printing log end -----");
 	}
@@ -552,7 +577,7 @@ public class DeclareLogGenerator {
 				   String jx= secondact.get(i);
 				    String jj[] = jx.split(":");
 					
-				    targetList=  getCorr(jj[0]);
+				    targetList=  getCorrelationCondition(jj[0]);
 				    String found = jj[jj.length -1];
 				    
 				    /*for (int x = i + 1; x < secondact.size(); x++) {
@@ -605,7 +630,7 @@ public class DeclareLogGenerator {
 				if (trace.get(i).equals(target.get(j))) {
 					foundSwitch = true;
 					temp.add(target.get(j));
-					//System.out.println("Target:(" + target.get(j)+") : " + +(indx.get(i)));
+					System.out.println("Target:(" + target.get(j)+") : " + +(indx.get(i)));
 				}
 			}			
 			foundSwitch = false;
@@ -696,7 +721,7 @@ public class DeclareLogGenerator {
 			int index = sourceList.indexOf(traceListName.get(i));
 		//	
 			if (index > -1) {
-				targetList = getCorr(sourceList.get(index));
+				targetList = getCorrelationCondition(sourceList.get(index));
 			//	getmatchList(traceListName,targetList,null,""); 
 				
 				if (!targetList.isEmpty()) {
@@ -743,14 +768,17 @@ public static ProcessModel newStyleLog (){
 		} // second key
 		
 		else {*/
-			System.out.println("Keu" + key + ":"+ filter.secondAlphabet);
+			System.out.println("New Style : " + key + ":"+ filter.secondAlphabet);
 			System.out.println(filter.secondAlphabet);
 			if (filter.correlationlist != null) {
 				for (int j = 0; j < filter.correlationlist.length; j++) {
 					String xnam = " Correlation 1st : "
 							+ filter.correlationlist[j];
-					mylist.add(filter.correlationlist[j]);
-					String alphabetname = BranchCombination.getParentLetter(filter.correlationlist[j]);
+					//if(mylist.indexOf(filter.correlationlist[j]) != -1){
+						mylist.add(filter.correlationlist[j]);	
+				//	}
+					
+				/*	String alphabetname = BranchCombination.getParentLetter(filter.correlationlist[j]);
 					String blist[] = filter.secondAlphabet.split("::");
 				if (blist.length>1){
 					for (int ndm =0; ndm <blist.length; ndm++){
@@ -760,7 +788,7 @@ public static ProcessModel newStyleLog (){
 							mylist.add(filter.correlationlist[j].replace(alphabetname, blist[ndm]));							
 						}			}
 					}
-					}
+					}*/
 				}
 			}
 
@@ -874,16 +902,22 @@ public static ProcessModel newStyleLog (){
 			if (filter.constrain.equals("response")) {
 				Response res = new Response(new TaskCharSet(firstChar), new TaskCharSet(list));
 				lst.add(res);
-			list.clear();
+			
 				if (filter.correlationlist != null) {
-					for (int j = 0; j < filter.correlationlist.length; j++) {
+					for (int j = 1; j < filter.correlationlist.length; j++) {
+						list.clear();
 						String xnam = " Correlation 1st : "
 								+ filter.correlationlist[j];
 						mylist.add(filter.correlationlist[j]);
-						String alphabetname = BranchCombination.getParentLetter(filter.correlationlist[j]);
-						String blist[] = filter.secondAlphabet.split("::");
+						
+						
+					//	String alphabetname = BranchCombination.getParentLetter(filter.correlationlist[j]);
+					//	String blist[] = filter.secondAlphabet.split("::");
 					if (filter.isRoot==false){
-						if (blist.length>1){
+						list.add(getAlphabetValue(filter.correlationlist[j]));
+						Response res2 = new Response(new TaskCharSet(firstChar), new TaskCharSet(list));
+						lst.add(res2);
+						/*if (blist.length>1){
 						for (int ndm =0; ndm <blist.length; ndm++){
 							if (!alphabetname.equals("")){
 							if(!blist[ndm].equals(alphabetname)){
@@ -897,7 +931,7 @@ public static ProcessModel newStyleLog (){
 							Response res2 = new Response(new TaskCharSet(firstChar), new TaskCharSet(list));
 							lst.add(res2);	
 						}
-						}// blenth
+						}*/// blenth
 					}// false
 					}
 					
@@ -906,6 +940,26 @@ public static ProcessModel newStyleLog (){
 			} else if (filter.constrain.equals("precedence")) {
 				Precedence res = new Precedence( new TaskCharSet(list),new TaskCharSet(firstChar));
 				lst.add(res);
+				
+				if (filter.correlationlist != null) {
+					for (int j = 1; j < filter.correlationlist.length; j++) {
+						list.clear();
+						String xnam = " Correlation 1st : "
+								+ filter.correlationlist[j];
+						mylist.add(filter.correlationlist[j]);
+					if (filter.isRoot==false){
+						list.add(getAlphabetValue(filter.correlationlist[j]));
+						//Response res2 = new Response(new TaskCharSet(firstChar), new TaskCharSet(list));
+						Precedence res2 = new Precedence( new TaskCharSet(list),new TaskCharSet(firstChar));
+						lst.add(res2);
+					
+					}// false
+					}
+					
+				}
+				
+				
+				//end
 			} 	if (filter.constrain.equals("existence")){
 				//Existence res = new Existence( new TaskCharSet(list),new TaskCharSet(firstChar));
 			//	lst.add(res);
@@ -1469,6 +1523,10 @@ public static String getAlphabetKey(String search){
 		ab.secondAlphabetKey = lname;
 		ab.constrain = cons;
 		ab.fullCondition = FullCondition;
+		if (!FullCondition.isEmpty())
+		{
+		ab.payLoadName=	getPayload(FullCondition);
+		}
 		ab.isRoot = isroot;
 		abMap.put(fname, ab);
 		abMapx.put(fname, ab);
@@ -1677,7 +1735,7 @@ public static String getAlphabetKey(String search){
 					
 				} else {
 					filter.correlationlist = getUpperCor(k,
-							filter.alphabetname, filter.secondAlphabetKey);
+							filter.alphabetname, filter.secondAlphabetKey,filter.secondAlphabet);
 					String snd = filter.secondAlphabet;
 				//xxx	filter.secondAlphabet = snd.replaceAll(
 					//		filter.secondAlphabetKey, "!@#@!");
@@ -1755,35 +1813,57 @@ public static String getAlphabetKey(String search){
 		return ret.split("::");
 	}
 	
-	public static String[] getUpperCor(String xkey, String a, String b) {
+	public static String[] getUpperCor(String xkey, String a, String b, String sendlist) {
 		String aa = BranchCombination.getParentLetter(a);
 		String ret = "";
 		int vsize = 0;
-		for (int ind = 0; ind < combinedList.size(); ind++) {
-			String root[] =  combinedList.get(ind).split(" ");
-			String  temp = combinedList.get(ind).replaceAll(" ", "");
-			if(temp.length() == xkey.length()){
-			if (temp.contains(xkey)) {
-				if (!ret.isEmpty()) {
-					ret = ret + "::";
-				}
-				if (root.length == 0)
-				{ret = ret + combinedList.get(ind).replaceAll(aa, b).replaceAll(" ", "").trim();}
-				else
-				{
-					String vtemp =  combinedList.get(ind).replaceAll(aa, b).replaceAll(" ", "").trim();
-					if(!vtemp.equals(root[0].replaceAll(aa, b)))
-					{ret = ret+ vtemp /*+ "::"+ root[0].replaceAll(aa, b) + "_"+ vtemp*/;}
-					else{
-						{ret = ret+ vtemp;}	
+		String sblist[] = sendlist.split("::");
+		
+		for (int q=0; q < sblist.length; q++){
+			b = sblist[q];
+			for (int ind = 0; ind < combinedList.size(); ind++) {
+				String root[] =  combinedList.get(ind).split(" ");
+				String  temp = combinedList.get(ind).replaceAll(" ", "");
+				if(temp.length() == xkey.length()){
+				if (temp.contains(xkey)) {
+					if (!ret.isEmpty()) {
+						ret = ret + "::";
+					}
+					if (root.length == 0)
+					{ret = ret + combinedList.get(ind).replaceAll(aa, b).replaceAll(" ", "").trim();}
+					else
+					{
+						String vtemp =  combinedList.get(ind).replaceAll(aa, b).replaceAll(" ", "").trim();
+						if(!vtemp.equals(root[0].replaceAll(aa, b)))
+						{
+							ret = ret+ vtemp /*+ "::"+ root[0].replaceAll(aa, b) + "_"+ vtemp*/;}
+						else{
+							/*{ret = ret+ vtemp;}	*/
+							if (sblist.length>0){
+								 for(int j=0; j<sblist.length; j++)
+									{if (!ret.isEmpty()) {
+										ret = ret + "::";
+									}
+									ret = ret + vtemp.replace(aa, sblist[j]);
+								}
+								}
+						}
+					
+					
+						
+						
+						
 					}
 				}
-			}
-			}
+				}
+			}	
+			
 		}
+		
+		
+		
 		return ret.split("::");
 	}
-	
 	
 	public static String getCorrlationAlphabet(String xkey) {
 		// Ali
