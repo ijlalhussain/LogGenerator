@@ -110,7 +110,41 @@ import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class Test {
-    public static void main(String... args) {
+   // public static void main(String... args) {
+    	
+    	
+    	public static void main(String[] args) {
+            String arrayA[]= {"A0","A01","B0","B0_B1"};
+            String arrayB[] ={"B0","B0_B1"};
+            
+            
+            boolean foundSwitch = false;
+
+          //outer loop for all the elements in arrayA[i]
+          for(int i = 0; i < arrayA.length; i++)
+          {
+          //inner loop for all the elements in arrayB[j]
+          for (int j = 0; j < arrayB.length;j++)
+          {
+          //compare arrayA to arrayB and output results
+          if( arrayA[i].equals(arrayB[j]))
+          {
+          foundSwitch = true;
+          System.out.println( "FOUND" + arrayB[j]);
+          }
+          }
+          if (foundSwitch == false)
+          {
+        	  System.out.println( "nOTFOUND");
+          }
+          //set foundSwitch bool back to false
+          foundSwitch = false;
+          }
+          
+            
+            
+            
+          
      
     	List list = Arrays.asList("A0 A1 A2 A0 A0A1 AOA2 A0A1A2".split(" "));
     		      System.out.println("List :"+list);

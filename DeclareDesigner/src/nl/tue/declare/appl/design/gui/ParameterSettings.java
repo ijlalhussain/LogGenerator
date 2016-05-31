@@ -100,7 +100,7 @@ public class ParameterSettings extends javax.swing.JFrame {
         
         jLabel6.setText("Select Model");
 
-        jTextField5.setText("D:\\MainProj\\synthetic-log-generator\\DeclareDesigner\\abD2.xml"); //Taru path
+        jTextField5.setText("D:\\MainProj\\synthetic-log-generator\\DeclareDesigner\\UI.xml"); //Taru path
         jTextField5.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jTextField5ActionPerformed(evt);

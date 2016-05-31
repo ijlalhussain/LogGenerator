@@ -50,8 +50,7 @@ public class IlpSolver {
 		
 	}
 
-	public static void CheckIlpConditions(ArrayList<String> combinlist,
-			LinkedHashMap<String, Alphabet> abMapx) {
+	public static void CheckIlpConditions(LinkedHashMap<String, Alphabet> abMapx) {
 		ArrayList<String> optlist = new ArrayList();
 		boolean isGreater =false;
 		for (Entry<String, Alphabet> activity : abMapx.entrySet()) {
@@ -131,12 +130,12 @@ public class IlpSolver {
 					filter.maxValue = 0;
 					filter.minValue = 0;
 					filter.logGenerate = false;
-					System.out.println("Result : Null");
+					System.out.println("Key: "+ k+ " : Result : Null");
 				} else {
 					filter.maxValue = result.getObjective().intValue();
 					filter.minValue = result2.getObjective().intValue();
 					filter.logGenerate = true;
-					System.out.println("Result: Max " + result.getObjective().intValue() + " Min : "+ result2.getObjective().intValue());
+					System.out.println("Key: "+ k+ " Result: Max " + result.getObjective().intValue() + " Min : "+ result2.getObjective().intValue());
 				}
 			} // not all greater
 				abMapx.put(k, filter);

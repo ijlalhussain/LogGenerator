@@ -30,7 +30,12 @@ public class Alphabet {
 	public String[] conditionlist;
 	public String[] correlationlist;
 	public boolean isSingle;
+	public boolean isRoot;
 
+	public void isRoot(boolean isRoot) {
+		this.isRoot = isRoot;
+	}
+	
 	public void isSingle(boolean isSingle) {
 		this.isSingle = isSingle;
 	}
