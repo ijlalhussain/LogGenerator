@@ -114,8 +114,8 @@ public class Test {
     	
     	
     	public static void main(String[] args) {
-            String arrayA[]= {"A0","A01","B0","B0_B1"};
-            String arrayB[] ={"B0","B0_B1"};
+            String arrayA[]= {"A0","A01","B0B1","B0_B1","D0D1"};
+            String arrayB[] ={"B0","B0_B1","D0D1"};
             
             
             boolean foundSwitch = false;

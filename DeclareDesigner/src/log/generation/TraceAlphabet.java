@@ -18,7 +18,7 @@ public class TraceAlphabet {
 	public boolean isMapped;
 	public ArrayList<String> sourceList;
 	public ArrayList<String> targetList;
-
+	public ArrayList<Integer> targetListIndex;
 	public void traceNo(int traceNo) {
 		this.traceNo = traceNo;
 	}
@@ -77,5 +77,11 @@ public class TraceAlphabet {
 	public void targetList(ArrayList<String> targetList) {
 		this.targetList = targetList;
 	}
+	
+	public void targetListIndex(ArrayList<Integer> targetListIndex) {
+		this.targetListIndex = targetListIndex;
+	}
+	
+	
 
 }
