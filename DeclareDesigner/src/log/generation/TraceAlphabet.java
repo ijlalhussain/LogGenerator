@@ -19,6 +19,20 @@ public class TraceAlphabet {
 	public ArrayList<String> sourceList;
 	public ArrayList<String> targetList;
 	public ArrayList<Integer> targetListIndex;
+	public ArrayList<String> targetListKey;
+	
+	
+	public void targetListIndex(ArrayList<Integer> targetListIndex) {
+		this.targetListIndex = targetListIndex;
+	}
+	
+	
+	
+	public void targetListKey(ArrayList<String> targetListKey) {
+		this.targetListKey = targetListKey;
+	}
+	
+	
 	public void traceNo(int traceNo) {
 		this.traceNo = traceNo;
 	}
@@ -78,9 +92,7 @@ public class TraceAlphabet {
 		this.targetList = targetList;
 	}
 	
-	public void targetListIndex(ArrayList<Integer> targetListIndex) {
-		this.targetListIndex = targetListIndex;
-	}
+	
 	
 	
 

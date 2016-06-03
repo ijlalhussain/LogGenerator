@@ -107,6 +107,7 @@ public static	ArrayList<String> lst = new ArrayList<String>();
 */
 
 import java.util.*;
+import java.util.Map.Entry;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class Test {
@@ -114,8 +115,70 @@ public class Test {
     	
     	
     	public static void main(String[] args) {
-            String arrayA[]= {"A0","A01","B0B1","B0_B1","D0D1"};
+           
+    		ArrayList arrayList = new ArrayList();
+ 		   
+		      
+		      arrayList.add("1");
+		      arrayList.add("2");
+		      arrayList.add("3");
+		      arrayList.add("4");
+		      arrayList.add("5");
+		      
+		  	ArrayList arrayList2 = new ArrayList();
+	 		   
+		      
+		      arrayList.add("1a1");
+		      arrayList.add("2b2");
+		      arrayList.add("3c3");
+		      arrayList.add("4d4");
+		      arrayList.add("5e5");
+    		
+    		
+    		
+    			HashMap<Integer,TraceAlphabet> traceMap = new HashMap<Integer,TraceAlphabet>();
+    		
+    		String arrayA[]= {"A0","A01","B0B1","B0_B1","D0D1"};
             String arrayB[] ={"B0","B0_B1","D0D1"};
+       
+            
+            
+            
+            for (int i =0 ; i <3; i++){
+            	TraceAlphabet tb = new TraceAlphabet();
+            	//arrayList.add(i+"aas");
+            	tb.sourceList = arrayList;
+              tb.targetListIndex = arrayList;
+            tb.targetListKey = arrayList2;
+            traceMap.put(i, tb);
+            }
+            
+            for (Entry<Integer, TraceAlphabet> activity : traceMap.entrySet()) {
+				Integer k = activity.getKey();
+				TraceAlphabet tx = activity.getValue();
+		//	for (int i = 0; i < traceMap.size(); i++) {
+				//System.out.println("Fileration in Trace : " + i);
+			//	TraceAlphabet tx = traceMap.get(i);
+				//if (!tx.isEmpty()) {
+					//for (int j = 0; j < tx.size(); j++) {
+						System.out.println("KEY  List");//Eevent : " + k + " Map (A): " + tx.selectedSource + ":" + tx.sourceIndex);
+						if ((tx.targetListKey !=null)) {
+							System.out.println(tx.targetListKey.toString());
+							for (int m = 0; m < tx.targetListKey.size(); m++) {
+							//for (int m = 0; m < tx.targetListKey.size(); m++) {
+								System.out.println("xxx :" + tx.targetListKey.get(m) + " : "+tx.targetListKey.get(m) );
+							}
+						}
+						System.out.println("iNDEX PRINT List");
+						if (tx.targetListIndex !=null){
+							for (int mx = 0; mx < tx.targetListIndex.size(); mx++) {
+								System.out.println("tyyyy:" + tx.targetListIndex.get(mx) + " : "+tx.targetListIndex.get(mx) );
+							}
+						}
+				//	}
+
+				}
+            
             
             
             boolean foundSwitch = false;
@@ -154,7 +217,7 @@ public class Test {
     		      + Collections.indexOfSubList(list, sublist));
     		      System.out.println("lastIndexOfSubList: "
     		      + Collections.lastIndexOfSubList(list, sublist));
-    		      ArrayList arrayList = new ArrayList();
+    		      ArrayList arrayList23 = new ArrayList();
     		   
     		      
     		      int retval=list.indexOf("A0");

@@ -97,7 +97,8 @@ public class DeclareLogGenerator {
 	static ArrayList<String> constrainList = new ArrayList<String>();
 	static 	HashMap<TaskChar,String> newLogIndex = new HashMap<TaskChar,String>();
 	static 	HashMap<Integer,TraceAlphabet> traceMap = new HashMap<Integer,TraceAlphabet>();
-	static 	HashMap<Integer,List<TraceAlphabet>> traceDuplicates = new HashMap<Integer,List<TraceAlphabet>>();
+	static 	HashMap<Integer,TraceAlphabet> traceMap2 = new HashMap<Integer,TraceAlphabet>();
+//	static 	HashMap<Integer,List<TraceAlphabet>> traceDuplicates = new HashMap<Integer,List<TraceAlphabet>>();
 	
 	
 	static String secondkey ="";
@@ -232,7 +233,8 @@ public class DeclareLogGenerator {
 						keyValue= getRandomTrace(ExeActivity.minValue,ExeActivity.maxValue);
 					}
 					
-					 paylaodName="Data : "+ paylaodName;
+					if (paylaodName ==null || paylaodName.isEmpty())
+					{ paylaodName="Data";}
 					XConceptExtension.instance().assignName(event,keyName);
 					 XFactory xFactory = XFactoryRegistry.instance().currentDefault();
 						XAttribute test = xFactory.createAttributeLiteral(paylaodName,Integer.toString(keyValue), null);
@@ -264,7 +266,7 @@ public class DeclareLogGenerator {
 					for(int i=0; i < ret.correlationlist.length; i++){
 					  String key = ret.correlationlist[i];
 					  ret.isActivated = false;
-					  System.out.println("----------------------------");
+					  System.out.println("-----------:( "+key+ " ):-----------------");
 					  String condition = ret.actCondition + "::" + ret.relCondition;
 					  System.out.println("actCondition: "+ ret.actCondition );
 					  System.out.println("Corelation: "+ ret.relCondition );
@@ -278,7 +280,7 @@ public class DeclareLogGenerator {
 	}
 
 
-	public static ArrayList<String> getCorrelationCondition(String key){
+	public static ArrayList<String> getCorr(String key){
 		ArrayList<String> targetList = new ArrayList<String>();	
 		
 		Alphabet ret = abMapx.get(key);
@@ -300,8 +302,6 @@ public class DeclareLogGenerator {
 					}*/
 			  }	
 			}
-		}else if (ret.secondAlphabetKey != null){
-			targetList.add(ret.secondAlphabetKey);	
 		}
 		return  targetList;
 	}
@@ -357,7 +357,7 @@ public class DeclareLogGenerator {
 			ArrayList<String> sourceList = new ArrayList<String>();
 			ArrayList<String> targetList = new ArrayList<String>();
 			ArrayList<String> traceList = new ArrayList<String>();
-			ArrayList<Integer> targetIndex = new ArrayList<Integer>();
+		//	ArrayList<Integer> targetIndex = new ArrayList<Integer>();
 			
 			int count =0;
 			CheckforPrecendence();
@@ -380,15 +380,6 @@ public class DeclareLogGenerator {
 				
 				System.out.println("TraceName: " + traceName.substring(traceName.lastIndexOf(".",traceName.length())).trim());
 				for (XEvent event : xtrace) {
-					int xval = eventnumber;
-				/*	 XFactory xFactory = XFactoryRegistry.instance().currentDefault();
-					XAttribute test = xFactory.createAttributeLiteral("X",Integer.toString(xval), null);
-					XAttributeMap test2 = event.getAttributes();
-					test2.put("X", test);
-					event.setAttributes(test2);
-					xtrace.set(check, event);
-					check++;*/
-					//xtrace.setAttributes(test2);
 					TraceAlphabet tc = new TraceAlphabet();
 					String activityName = XConceptExtension.instance()
 							.extractName(event);
@@ -400,6 +391,7 @@ public class DeclareLogGenerator {
 					tc.eventNo = eventnumber;
 					tc.traceNo = traceno;
 					tc.isFirstKey = true;
+					tc.isMapped =false;
 					int indx = sourceList.indexOf(newKey);
 					if (indx > -1)
 					tc.constrain =  constrainList.get(indx);
@@ -416,9 +408,9 @@ public class DeclareLogGenerator {
 			ArrayList<String> traceName= new ArrayList<String>();
 			ArrayList<String> temp = new ArrayList<String>();
 			ArrayList<Integer> temp2 = new ArrayList<Integer>();
-			List<TraceAlphabet> tc = new ArrayList<TraceAlphabet>();
-			TraceAlphabet xx = new TraceAlphabet();
-			tc.add(xx);	
+		//	List<TraceAlphabet> tc = new ArrayList<TraceAlphabet>();
+		//	TraceAlphabet xx = new TraceAlphabet();
+	//		tc.add(xx);	
 			//	traceDuplicates
 			System.out.println("...Log Processing....");
 			int traceNo=0;
@@ -428,81 +420,118 @@ public class DeclareLogGenerator {
 				TraceAlphabet bb = activity.getValue();
 			//	System.out.println("event: "+bb.eventNo + " key :" +  bb.alphabetKey + ":" + bb.constrain);
 				if (traceNo != bb.traceNo){
-					
 					System.out.println("Duplication in Trace:  " + (traceNo));
-									
 					for (int i=0; i <traceList.size();i++ )
 					{
 						if (sourceList.indexOf(traceList.get(i)) != -1){
 						targetList.clear();
-						TraceAlphabet traceEvent = new TraceAlphabet();
-						traceEvent.traceNo = traceNo;
+						TraceAlphabet traceEvent = traceMap.get(traceIndex.get(i));
+					//	traceEvent.traceNo = traceNo;
 						traceEvent.alphabetKey  =traceList.get(i);
+						traceEvent.selectedSource =traceList.get(i); 
 						traceEvent.sourceIndex = traceIndex.get(i);
-						targetList=  getCorrelationCondition(traceList.get(i));
-						
-						temp = getmatchList(traceList,targetList, i,traceIndex,traceList.get(i));
+						traceEvent.isMapped =true;
+						targetList=  getCorr(traceList.get(i));
+						temp2.clear();temp.clear();
+						temp = getmatchList(traceList,targetList, i,traceIndex,traceList.get(i),temp2);
 				//		System.out.println("Source : " + traceList.get(i) + "(" +traceIndex.get(i) +")");
 						if (!temp.isEmpty()) {
-							temp2.clear();
-							traceEvent.targetList=	getmatchList(traceList,targetList, i,traceIndex,traceList.get(i));
+							traceEvent.targetList=	temp;
+							/*traceEvent.targetList=	getmatchList(traceList,targetList, i,traceIndex,traceList.get(i));
 							for (int w=0; w < temp.size(); w++){
 								temp2.add(traceIndex.get(w));
-							}
+							}*/
 						traceEvent.targetListIndex = temp2;	
 						}
 						
-						tc.add(traceEvent);
+		//				tc.add(traceEvent);
+					System.out.println("Duplicates: " +traceIndex.get(i) + ":" + traceList.get(i) + temp2.toString() + temp.toString());
+					traceMap2.put(traceIndex.get(i), traceEvent);	
+					//traceMap.put(traceIndex.get(i), traceEvent);
 						}
 					}
-					if (!tc.isEmpty())
-					traceDuplicates.put(traceNo, tc);
-					tc.clear();
+					//if (!tc.isEmpty())
+				//	traceDuplicates.put(traceNo, tc);
+			//		tc.clear();
 					//getEventList(traceIndex,sourceList,traceList,traceNo);
 				//	traceNo = k;
 					traceNo = bb.traceNo;
-					targetIndex.clear();
+//					targetIndex.clear();
 					traceIndex.clear();
 					traceList.clear();
 					
 					//traceNo ;
 				}
-				targetIndex.add(bb.targetIndex);
+	//			targetIndex.add(bb.targetIndex);
 				traceIndex.add(k);
 				traceList.add(bb.alphabetKey);			
 			}	
 			//getEventList(traceIndex,sourceList,traceList,traceNo);
 			traceNo--;
-			System.out.println("Duplication in Last Trace:  " + (traceNo));
-			tc.clear();
+	//		System.out.println("Duplication in Last Trace:  " + (traceNo));
+			//tc.clear();
 			for (int iX=0; iX <traceList.size();iX++ )
 			{
 				if (sourceList.indexOf(traceList.get(iX)) != -1){
 				targetList.clear();
-				TraceAlphabet traceEvent = new TraceAlphabet();
-				traceEvent.traceNo = traceNo;
-				traceEvent.alphabetKey  =traceList.get(iX);
-				targetList=  getCorrelationCondition(traceList.get(iX));
-
-				temp = getmatchList(traceList,targetList, iX,traceIndex,traceList.get(iX));
-				System.out.println("Source : " + traceList.get(iX) + "(" +traceIndex.get(iX) +")");
+				TraceAlphabet traceEvent = traceMap.get(traceIndex.get(iX));
+				//	traceEvent.traceNo = traceNo;
+					traceEvent.alphabetKey  =traceList.get(iX);
+					traceEvent.selectedSource =traceList.get(iX); 
+					traceEvent.sourceIndex = traceIndex.get(iX);
+					traceEvent.isMapped =true;
+				targetList=  getCorr(traceList.get(iX));
+				temp2.clear();temp.clear();
+				temp = getmatchList(traceList,targetList, iX,traceIndex,traceList.get(iX),temp2);
+		//		System.out.println("Source : " + traceList.get(iX) + "(" +traceIndex.get(iX) +")");
 				if (!temp.isEmpty()) {
-					temp2.clear();
-					traceEvent.targetList=	getmatchList(traceList,targetList, iX,traceIndex,traceList.get(iX));
+					traceEvent.targetList=	temp;
+					/*traceEvent.targetList=	getmatchList(traceList,targetList, iX,traceIndex,traceList.get(iX));
 					for (int w=0; w < temp.size(); w++){
 						temp2.add(traceIndex.get(w));
-					}
+					}*/
 				traceEvent.targetListIndex = temp2;	
 				}
 				
-				tc.add(traceEvent);
+				//tc.add(traceEvent);
+				//System.out.println("SSSX" +traceIndex.get(iX));
+				System.out.println("Duplicates: " +traceIndex.get(iX) + ":" + traceList.get(iX)
+						+ temp2.toString() + temp.toString());
+				traceMap2.put(traceIndex.get(iX), traceEvent);
 				}
 			}
-/*			if (!tc.isEmpty())
-			traceDuplicates.put(traceNo, tc);
-			System.out.println("Last Trace: " + traceNo);
+			/*if (!tc.isEmpty())
+			traceDuplicates.put(traceNo, tc);*/
 			
-			for (int i = 0; i < traceDuplicates.size(); i++) {
+			
+			System.out.println("TraceMap000000000000000000000000000000000000");
+			for (Entry<Integer, TraceAlphabet> activity : traceMap2.entrySet()) {
+				Integer k = activity.getKey();
+				TraceAlphabet tx = activity.getValue();
+		//	for (int i = 0; i < traceMap.size(); i++) {
+				//System.out.println("Fileration in Trace : " + i);
+			//	TraceAlphabet tx = traceMap.get(i);
+				//if (!tx.isEmpty()) {
+					//for (int j = 0; j < tx.size(); j++) {
+						System.out.println("Eevent : " + k + " Map (A): " + tx.selectedSource + ":" + tx.sourceIndex);
+						if ((tx.targetList !=null)) {
+							for (int m = 0; m < tx.targetList.size(); m++) {
+								System.out.println("targetList (B):" + tx.targetList.get(m) + " : "+tx.targetList.get(m) );
+							}
+						}
+						
+						if (tx.targetListIndex !=null){
+							for (int mx = 0; mx < tx.targetListIndex.size(); mx++) {
+								System.out.println("targetListIndex (B):" + tx.targetListIndex.get(mx) + " : "+tx.targetListIndex.get(mx) );
+							}
+						}
+				//	}
+
+				}
+			
+		//	System.out.println("Last Trace: " + traceNo);
+			
+			/*for (int i = 0; i < traceDuplicates.size(); i++) {
 				//System.out.println("Fileration in Trace : " + i);
 				List<TraceAlphabet> tx = traceDuplicates.get(i);
 				if (!tx.isEmpty()) {
@@ -577,7 +606,7 @@ public class DeclareLogGenerator {
 				   String jx= secondact.get(i);
 				    String jj[] = jx.split(":");
 					
-				    targetList=  getCorrelationCondition(jj[0]);
+				    targetList=  getCorr(jj[0]);
 				    String found = jj[jj.length -1];
 				    
 				    /*for (int x = i + 1; x < secondact.size(); x++) {
@@ -619,7 +648,8 @@ public class DeclareLogGenerator {
 	
 	}
 	
-	public static ArrayList<String> getmatchList(ArrayList<String> trace,ArrayList<String> target, int start,ArrayList<Integer> indx,String source){
+	public static ArrayList<String> getmatchList(ArrayList<String> trace,ArrayList<String> target,
+			int start,ArrayList<Integer> indx,String source,ArrayList<Integer> eventIndex){
 		boolean foundSwitch = false;  
 		ArrayList<String> temp =  new ArrayList<String>();
 	          //outer loop for all the elements in arrayA[i]
@@ -630,12 +660,34 @@ public class DeclareLogGenerator {
 				if (trace.get(i).equals(target.get(j))) {
 					foundSwitch = true;
 					temp.add(target.get(j));
-					System.out.println("Target:(" + target.get(j)+") : " + +(indx.get(i)));
+					eventIndex.add(indx.get(i));
+					//System.out.println("Target:(" + target.get(j)+") : " + +(indx.get(i)));
 				}
 			}			
 			foundSwitch = false;
 		}		
 		return temp;
+	}
+	
+	public static int SelectRandomIndex(ArrayList<Integer> names) {
+		int ret = -1;
+		ArrayList<Integer> temp = new ArrayList<Integer>();
+		for (int i = 0; i < names.size(); i++) {
+			for (int j = i + 1; j < names.size(); j++) {
+				if (names.get(i).equals(names.get(j))) {
+					temp.add(names.get(j));
+				}				
+			}
+		}
+
+		if (!temp.isEmpty()) {
+			if (temp.size() > 0) {
+				ret = names.get(selectRandom(names.size()));
+			} else {
+				ret = names.get(0);
+			}
+		}
+		return ret;
 	}
 	
 	public static String setRandomTrace(ArrayList<String> eventKey,ArrayList<Integer> eventNo,int traceNo){
@@ -721,7 +773,7 @@ public class DeclareLogGenerator {
 			int index = sourceList.indexOf(traceListName.get(i));
 		//	
 			if (index > -1) {
-				targetList = getCorrelationCondition(sourceList.get(index));
+				targetList = getCorr(sourceList.get(index));
 			//	getmatchList(traceListName,targetList,null,""); 
 				
 				if (!targetList.isEmpty()) {
@@ -1523,10 +1575,6 @@ public static String getAlphabetKey(String search){
 		ab.secondAlphabetKey = lname;
 		ab.constrain = cons;
 		ab.fullCondition = FullCondition;
-		if (!FullCondition.isEmpty())
-		{
-		ab.payLoadName=	getPayload(FullCondition);
-		}
 		ab.isRoot = isroot;
 		abMap.put(fname, ab);
 		abMapx.put(fname, ab);
