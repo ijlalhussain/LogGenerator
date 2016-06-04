@@ -191,25 +191,49 @@ public class DeclareLogGenerator {
 	public static void ChangeXog(XLog xlog) {
 		// TODO Auto-generated method stub
 		System.out.println("Hello");
+		
+		ArrayList<Integer> MappedIndex = new ArrayList<Integer>();
+		ArrayList<String> MappedKey = new ArrayList<String>();
+		ArrayList<String> TraceIndex = new ArrayList<String>();
 		for (Entry<Integer, TraceAlphabet> activity : traceMap2.entrySet()) {
 			
 			TraceAlphabet tc = activity.getValue();
 			
 			 Map<String, Map<String, ArrayList<Integer>>> targetedListwithIndex = tc.targetedListwithIndex;
-			 
+			 System.out.println("Start");
+			 TraceIndex.clear();
 			for (String key : targetedListwithIndex.keySet()) {
 				Map<String, ArrayList<Integer>> abc = targetedListwithIndex
 						.get(key);
-				System.out.println("source " +  key +" Targets") ;
+				System.out.println("source " +  key + ":" + tc.eventNo +" Targets") ;
+				
 				for (String key2 : abc.keySet()) {
 					ArrayList<Integer> ind = abc.get(key2);
-				 
-					for (int j = 0; j < ind.size(); j++) {							
-						System.out.print(" " +  key2  + ":" + ind.get(j).toString());
+					ArrayList<String> temp = new ArrayList<String>();
+					ArrayList<Integer> tempind = new ArrayList<Integer>();
+					temp.clear();
+					tempind.clear();
+					//System.out.println("Key2:" + key2);
+					for (int j = 0; j < ind.size(); j++) {
+						
+					 TraceAlphabet tc2 =	traceMap.get(ind.get(j));
+						temp.add(tc2.alphabetKey );
+						tempind.add(ind.get(j));
+						
+						System.out.println("j " + j+":" + tc2.alphabetKey  + ":" + ind.get(j).toString());
+					}
+
+					if (!temp.isEmpty()) {
+						int random = selectRandom(temp.size());
+						System.out.println("Random :" + temp.get(random) + ":" + tempind.get(random));
+
+					}else{
+					System.out.println("XX: "+ key2);	
 					}
 				}
 				System.out.println(""); 
 			}
+			//System.out.println("Stop");
 		}
 		
 		
@@ -325,7 +349,21 @@ public class DeclareLogGenerator {
 								if (isAdded.indexOf(key) == -1) {
 									isAdded.add(key);
 									for (int t = i + 1; t < traceList.size(); t++) {
-										if (key.contains("_")) {
+										if (traceList.get(t).contains("_")) {
+											if (key.equals(traceList.get(t))) {
+												traces.add(traceIndex.get(t));
+											} else {
+												String keys[] = traceList.get(t).split("_");
+												if (key.equals(keys[0])
+														|| key.equals(keys[1])) {
+													traces.add(traceIndex
+															.get(t));
+												}
+
+											}
+										}
+										else
+									/*	if (key.contains("_")) {
 											String keys[] = key.split("_");
 											for (int ky = 0; ky < keys.length; ky++) {
 												if (keys[ky].equals(traceList
@@ -335,12 +373,12 @@ public class DeclareLogGenerator {
 												}
 											}
 
-										} else {
+										} else {*/
 
 											if (key.equals(traceList.get(t))) {
 												traces.add(traceIndex.get(t));
 											}
-										}
+									//	}
 									}
 									targetMap.put(key, traces);
 								}
@@ -377,7 +415,7 @@ public class DeclareLogGenerator {
 								 traceEvent.targetedListwithIndex =targetedListwithIndex;
 							//	 traceEvent.ilpList = dfs;
 							//	traceEvent.ilpSelectedList = ilp;
-								System.out.println("checking for " 	+ traceIndex.get(i));
+							//	System.out.println("checking for " 	+ traceIndex.get(i));
 								System.out.println(g.DFS(traceIndex.get(i)));
 								//System.out.println(ilp.toString());
 								
@@ -439,7 +477,21 @@ public class DeclareLogGenerator {
 						if (isAdded.indexOf(key) == -1) {
 							isAdded.add(key);
 							for (int t = iX+1; t < traceList.size(); t++) {
-								if (key.contains("_")) {
+								if (traceList.get(t).contains("_")) {
+									if (key.equals(traceList.get(t))) {
+										traces.add(traceIndex.get(t));
+									} else {
+										String keys[] = traceList.get(t).split("_");
+										if (key.equals(keys[0])
+												|| key.equals(keys[1])) {
+											traces.add(traceIndex
+													.get(t));
+										}
+
+									}
+								}
+								else
+/*								if (key.contains("_")) {
 									String keys[] = key.split("_");
 									for (int ky = 0; ky < keys.length; ky++) {
 										if (keys[ky].equals(traceList
@@ -449,12 +501,12 @@ public class DeclareLogGenerator {
 										}
 									}
 
-								} else {
+								} else {*/
 
 									if (key.equals(traceList.get(t))) {
 										traces.add(traceIndex.get(t));
 									}
-								}
+								//}
 
 							}
 							targetMap.put(key, traces);
