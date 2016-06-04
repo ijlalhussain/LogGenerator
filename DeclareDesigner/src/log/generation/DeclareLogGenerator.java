@@ -56,9 +56,11 @@ import java.io.ObjectInputStream.GetField;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Map.Entry;
+import java.util.stream.Collectors;
 
 import javax.swing.JOptionPane;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.deckfour.xes.extension.std.XConceptExtension;
 import org.deckfour.xes.extension.std.XLifecycleExtension;
 import org.deckfour.xes.extension.std.XTimeExtension;
@@ -155,8 +157,9 @@ public class DeclareLogGenerator {
 		//proMod=	dm.generateModel();
 		
 	    XLog xlog=	logMak.createLog(proMod);
-	    twist(xlog);
-	  
+	   // twist(xlog);
+	   twistDFS(xlog);
+	  ChangeXog(xlog);
 	    //twistcopy();
 	    //twistRandomSelection();
 	    addCorrelationtoArray();	    
@@ -185,18 +188,365 @@ public class DeclareLogGenerator {
 	}
 	
 	
+	public static void ChangeXog(XLog xlog) {
+		// TODO Auto-generated method stub
+		System.out.println("Hello");
+		for (Entry<Integer, TraceAlphabet> activity : traceMap2.entrySet()) {
+			
+			TraceAlphabet tc = activity.getValue();
+			
+			 Map<String, Map<String, ArrayList<Integer>>> targetedListwithIndex = tc.targetedListwithIndex;
+			 
+			for (String key : targetedListwithIndex.keySet()) {
+				Map<String, ArrayList<Integer>> abc = targetedListwithIndex
+						.get(key);
+				System.out.println("source " +  key +" Targets") ;
+				for (String key2 : abc.keySet()) {
+					ArrayList<Integer> ind = abc.get(key2);
+				 
+					for (int j = 0; j < ind.size(); j++) {							
+						System.out.print(" " +  key2  + ":" + ind.get(j).toString());
+					}
+				}
+				System.out.println(""); 
+			}
+		}
+		
+		
+	}
+
+
+	private static void twistDFS(XLog xlog) {
+	
+		/*try {*/
+
+		ArrayList<String> sourceList = new ArrayList<String>();
+		ArrayList<String> targetList = new ArrayList<String>();
+		ArrayList<String> traceList = new ArrayList<String>();
+	//	ArrayList<Integer> targetIndex = new ArrayList<Integer>();
+		
+		int count =0;
+		CheckforPrecendence();
+		for (Entry<String, Alphabet> activity : abMapx.entrySet()) {
+				sourceList.add(activity.getKey());
+				constrainList.add(activity.getValue().constrain);
+				System.out.println("Constrain : " + activity.getValue().constrain);
+			}			
+		
+		traceMap.clear();
+	//	System.out.println("-----Printing log start -----");
+		int eventnumber =0;
+	    int traceno =0;
+	    int check =0;
+	    for (XTrace xtrace : xlog) {
+			
+			String traceName = XConceptExtension.instance().extractName(
+					xtrace);
+			traceList.clear();
+			
+			System.out.println("TraceName: " + traceName.substring(traceName.lastIndexOf(".",traceName.length())).trim());
+			for (XEvent event : xtrace) {
+				TraceAlphabet tc = new TraceAlphabet();
+				String activityName = XConceptExtension.instance()
+						.extractName(event);
+				traceList.add(DeclareLogGenerator.getAlphabetKey(activityName));				
+				System.out.println("Char : "+ activityName+ " Key: " +	DeclareLogGenerator.getAlphabetKey(activityName)+ " Event :" + eventnumber);					
+				String newKey = DeclareLogGenerator.getAlphabetKey(activityName);
+				tc.alphabetKey = newKey;
+				tc.alphabetKey = DeclareLogGenerator.getAlphabetKey(activityName);
+				tc.eventNo = eventnumber;
+				tc.traceNo = traceno;
+				tc.isFirstKey = true;
+				tc.isMapped =false;
+				int indx = sourceList.indexOf(newKey);
+				if (indx > -1)
+				tc.constrain =  constrainList.get(indx);
+				traceMap.put(eventnumber, tc);									
+				eventnumber++;
+			}
+			check=0;
+			traceno++;
+		}
+			
+		// processing log ....
+		
+		ArrayList<Integer> traceIndex = new ArrayList<Integer>();
+		ArrayList<String> traceName= new ArrayList<String>();
+	
+		ArrayList<String> isAdded = new ArrayList<String>();
+	//	List<TraceAlphabet> tc = new ArrayList<TraceAlphabet>();
+	//	TraceAlphabet xx = new TraceAlphabet();
+//		tc.add(xx);	
+		//	traceDuplicates
+	//	System.out.println("...Log Processing....");
+		int traceNo=0;
+		traceList.clear();
+		for (Entry<Integer, TraceAlphabet> activity : traceMap.entrySet()) {
+			Integer k = activity.getKey();
+			TraceAlphabet bb = activity.getValue();
+		//	System.out.println("event: "+bb.eventNo + " key :" +  bb.alphabetKey + ":" + bb.constrain);
+			if (traceNo != bb.traceNo){
+				System.out.println("Trace No:  " + (traceNo));
+				for (int i=0; i <traceList.size();i++ )
+				{
+					
+					if (sourceList.indexOf(traceList.get(i)) != -1){
+					targetList.clear();
+					TraceAlphabet traceEvent = traceMap.get(traceIndex.get(i));
+					Graph g = new Graph(600);
+				//	traceEvent.traceNo = traceNo;
+					traceEvent.alphabetKey  =traceList.get(i);
+					traceEvent.selectedSource =traceList.get(i); 
+					traceEvent.sourceIndex = traceIndex.get(i);
+					traceEvent.isMapped =true;
+					targetList=  getCorr(traceList.get(i));
+					ArrayList<String> temp = new ArrayList<String>();
+					ArrayList<Integer> temp2 = new ArrayList<Integer>();
+					temp2.clear();temp.clear();
+					temp = getmatchList(traceList,targetList, i,traceIndex,traceList.get(i),temp2);
+			//		System.out.println("Source : " + traceList.get(i) + "(" +traceIndex.get(i) +")");
+					if (!temp.isEmpty()) {
+						traceEvent.targetList=	temp;
+						/*traceEvent.targetList=	getmatchList(traceList,targetList, i,traceIndex,traceList.get(i));
+						for (int w=0; w < temp.size(); w++){
+							temp2.add(traceIndex.get(w));
+						}*/
+					traceEvent.targetListIndex = temp2;	
+					
+					
+			 Map<String, Map<String, ArrayList<Integer>>> targetedListwithIndex =new  HashMap<String, Map<String, ArrayList<Integer>>>(); ;
+			 Map<String, ArrayList<Integer>>  targetMap = new HashMap<String, ArrayList<Integer>>();
+						//	if (isAdded.indexOf(traceList.get(i)) == -1) {
+								isAdded.add(traceList.get(i));
+								isAdded.clear();
+								for (int ww = 0; ww < temp.size(); ww++) {
+									String key =  temp.get(ww);
+									ArrayList<Integer> traces =  new ArrayList<Integer>();
+								if (isAdded.indexOf(key) == -1) {
+									isAdded.add(key);
+									for (int t = i + 1; t < traceList.size(); t++) {
+										if (key.contains("_")) {
+											String keys[] = key.split("_");
+											for (int ky = 0; ky < keys.length; ky++) {
+												if (keys[ky].equals(traceList
+														.get(t))) {
+													traces.add(traceIndex
+															.get(t)); break;
+												}
+											}
+
+										} else {
+
+											if (key.equals(traceList.get(t))) {
+												traces.add(traceIndex.get(t));
+											}
+										}
+									}
+									targetMap.put(key, traces);
+								}
+							}
+								/*
+								for (int jk = 0; jk < temp2.size(); jk++) {
+									 ArrayList<Integer> test =  new ArrayList<Integer>();
+									g.addEdge(traceIndex.get(i), temp2.get(jk));
+									g.addEdge(temp2.get(jk), traceIndex.get(i));
+									test.add(temp2.get(jk));
+									for (int lc=i; lc <traceList.size(); lc++){
+										if(traceList.get(lc).equals(temp2.get(jk))){
+											g.addEdge(traceIndex.get(lc), temp2.get(jk));
+											g.addEdge(temp2.get(jk), traceIndex.get(lc));
+											test.add(traceIndex.get(lc));
+										}
+									}
+									targetMap.put(temp.get(jk),test);	
+								}
+								ArrayList<Integer> dfs = new ArrayList<Integer>();
+								ArrayList<Integer> ilp = new ArrayList<Integer>();
+								dfs = g.DFS(traceIndex.get(i));
+								
+								for (int df=0;df< dfs.size(); df++){
+									int srch = traceIndex.indexOf(dfs.get(df));
+									if (sourceList.indexOf(traceList.get(srch)) == -1){
+										ilp.add(dfs.get(df));
+									}	
+									
+								}*/
+								
+							//	CheckforRando(dfs,traceIndex,traceList);
+								 targetedListwithIndex.put(traceList.get(i), targetMap);
+								 traceEvent.targetedListwithIndex =targetedListwithIndex;
+							//	 traceEvent.ilpList = dfs;
+							//	traceEvent.ilpSelectedList = ilp;
+								System.out.println("checking for " 	+ traceIndex.get(i));
+								System.out.println(g.DFS(traceIndex.get(i)));
+								//System.out.println(ilp.toString());
+								
+						//	}
+						}
+	//				tc.add(traceEvent);
+			//	System.out.println("Duplicates: " +traceIndex.get(i) + ":" + traceList.get(i) + temp2.toString() + temp.toString());
+				traceMap2.put(traceIndex.get(i), traceEvent);	
+				//traceMap.put(traceIndex.get(i), traceEvent);
+					}
+				}
+				//if (!tc.isEmpty())
+			//	traceDuplicates.put(traceNo, tc);
+		//		tc.clear();
+				//getEventList(traceIndex,sourceList,traceList,traceNo);
+			//	traceNo = k;
+				traceNo = bb.traceNo;
+//				targetIndex.clear();
+				traceIndex.clear();
+				traceList.clear();
+				isAdded.clear();
+				//traceNo ;
+			}
+//			targetIndex.add(bb.targetIndex);
+			traceIndex.add(k);
+			traceList.add(bb.alphabetKey);			
+		}	
+
+
+		for (int iX=0; iX <traceList.size();iX++ )
+		{
+			if (sourceList.indexOf(traceList.get(iX)) != -1){
+			targetList.clear();
+			TraceAlphabet traceEvent = traceMap.get(traceIndex.get(iX));
+			Graph g = new Graph(600);
+			//	traceEvent.traceNo = traceNo;
+				traceEvent.alphabetKey  =traceList.get(iX);
+				traceEvent.selectedSource =traceList.get(iX); 
+				traceEvent.sourceIndex = traceIndex.get(iX);
+				traceEvent.isMapped =true;
+			targetList=  getCorr(traceList.get(iX));
+			ArrayList<String> temp = new ArrayList<String>();
+			ArrayList<Integer> temp2 = new ArrayList<Integer>();
+			temp2.clear();temp.clear();
+			temp = getmatchList(traceList,targetList, iX,traceIndex,traceList.get(iX),temp2);
+	//		System.out.println("Source : " + traceList.get(iX) + "(" +traceIndex.get(iX) +")");
+			if (!temp.isEmpty()) {
+				traceEvent.targetList=	temp;
+				traceEvent.targetListIndex = temp2;	
+					Map<String, Map<String, ArrayList<Integer>>> targetedListwithIndex = new HashMap<String, Map<String, ArrayList<Integer>>>();
+					;
+					Map<String, ArrayList<Integer>> targetMap = new HashMap<String, ArrayList<Integer>>();
+					// if (isAdded.indexOf(traceList.get(i)) == -1) {
+					//isAdded.add(traceList.get(i));
+					isAdded.clear();
+					for (int ww = 0; ww < temp.size(); ww++) {
+						String key = temp.get(ww);
+						ArrayList<Integer> traces = new ArrayList<Integer>();
+						if (isAdded.indexOf(key) == -1) {
+							isAdded.add(key);
+							for (int t = iX+1; t < traceList.size(); t++) {
+								if (key.contains("_")) {
+									String keys[] = key.split("_");
+									for (int ky = 0; ky < keys.length; ky++) {
+										if (keys[ky].equals(traceList
+												.get(t))) {
+											traces.add(traceIndex
+													.get(t)); break;
+										}
+									}
+
+								} else {
+
+									if (key.equals(traceList.get(t))) {
+										traces.add(traceIndex.get(t));
+									}
+								}
+
+							}
+							targetMap.put(key, traces);
+						}
+					}
+
+/*					//if (isAdded.indexOf(traceList.get(iX)) == -1) {
+						isAdded.add(traceList.get(iX));
+						for (int jk = 0; jk < temp2.size(); jk++) {
+							g.addEdge(traceIndex.get(iX), temp2.get(jk));
+							g.addEdge(temp2.get(jk), traceIndex.get(iX));
+							
+							for (int lc=iX; lc <traceList.size(); lc++){
+								if(traceList.get(lc).equals(traceList.get(iX))){
+									g.addEdge(traceIndex.get(lc), temp2.get(jk));
+									g.addEdge(temp2.get(jk), traceIndex.get(lc));
+								}
+							}
+						}
+						
+						ArrayList<Integer> dfs = new ArrayList<Integer>();
+						ArrayList<Integer> ilp = new ArrayList<Integer>();
+						dfs = g.DFS(traceIndex.get(iX));
+						
+						for (int df=0;df< dfs.size(); df++){
+							int srch = traceIndex.indexOf(dfs.get(df));
+							System.out.println(traceList.get(srch) + ":"+dfs.get(df));
+							if (sourceList.indexOf(traceList.get(srch)) == -1){
+								ilp.add(dfs.get(df));
+							}	
+							
+						}
+*/					//	System.out.println("checking for " + traceIndex.get(iX));
+					//	System.out.println(g.DFS(traceIndex.get(iX)));
+						 targetedListwithIndex.put(traceList.get(iX), targetMap);
+						 traceEvent.targetedListwithIndex =targetedListwithIndex;
+//						System.out.println(ilp.toString());
+					}
+			traceMap2.put(traceIndex.get(iX), traceEvent);
+				}
+			//}
+		}
+
+	
+		
+	}
+
+
+	private static void CheckforRando(ArrayList<Integer> dfs,
+			ArrayList<Integer> traceIndex, ArrayList<String> traceList) {
+		// TODO Auto-generated method stub
+		ArrayList<String> Added = new ArrayList<String>();
+		ArrayList<Integer> AddedIndex = new ArrayList<Integer>();
+		ArrayList<Integer> ret = new ArrayList<Integer>();
+
+		  
+		for (int i = 0; i < dfs.size(); i++) {
+			int ser = traceIndex.get(dfs.get(i));
+			String srch = traceList.get(ser);
+			if (!Arrays.asList(Added).contains(srch)) {
+				Added.add(srch);
+			for (int j = i ; j < dfs.size(); j++) {				
+				if (!Arrays.asList(Added).contains("c")) {
+					
+					AddedIndex.add(ser);
+				}
+			}
+			
+
+			if (Added.size() > 0) {
+				int random = selectRandom(Added.size());
+				ret.add(dfs.get(random));
+			}
+			}
+		}
+		
+		System.out.println("" +ret);
+	}
+
+
 	private static void mergeLists() {
 		for (Entry<String, Alphabet> activity : abMapx.entrySet()) {
 			String k = activity.getKey();
 			Alphabet ret = activity.getValue();
 			abMapAll.put(k, ret);
-			System.out.println(" Key " + k + " Condition : "+ ret.actCondition);
+			//System.out.println(" Key " + k + " Condition : "+ ret.actCondition);
 		}	
 		for (Entry<String, Alphabet> activity : abMap2.entrySet()) {
 			String k = activity.getKey();
 			Alphabet ret = activity.getValue();
 			abMapAll.put(k, ret);
-			System.out.println(" Key " + k + " Condition : "+ ret.actCondition);
+		//	System.out.println(" Key " + k + " Condition : "+ ret.actCondition);
 		}
 		
 	}
@@ -266,11 +616,12 @@ public class DeclareLogGenerator {
 					for(int i=0; i < ret.correlationlist.length; i++){
 					  String key = ret.correlationlist[i];
 					  ret.isActivated = false;
-					  System.out.println("-----------:( "+key+ " ):-----------------");
 					  String condition = ret.actCondition + "::" + ret.relCondition;
+					  /*  System.out.println("-----------:( "+key+ " ):-----------------");
+					  
 					  System.out.println("actCondition: "+ ret.actCondition );
 					  System.out.println("Corelation: "+ ret.relCondition );
-					  System.out.println("Key: "+ key + " Codition : " + condition );
+					  System.out.println("Key: "+ key + " Codition : " + condition );*/
 					  ret.actCondition = condition;
 					  abMap2.put(key, ret);
 				  }	
@@ -406,8 +757,7 @@ public class DeclareLogGenerator {
 			
 			ArrayList<Integer> traceIndex = new ArrayList<Integer>();
 			ArrayList<String> traceName= new ArrayList<String>();
-			ArrayList<String> temp = new ArrayList<String>();
-			ArrayList<Integer> temp2 = new ArrayList<Integer>();
+			
 		//	List<TraceAlphabet> tc = new ArrayList<TraceAlphabet>();
 		//	TraceAlphabet xx = new TraceAlphabet();
 	//		tc.add(xx);	
@@ -425,28 +775,35 @@ public class DeclareLogGenerator {
 					{
 						if (sourceList.indexOf(traceList.get(i)) != -1){
 						targetList.clear();
-						TraceAlphabet traceEvent = traceMap.get(traceIndex.get(i));
-					//	traceEvent.traceNo = traceNo;
-						traceEvent.alphabetKey  =traceList.get(i);
-						traceEvent.selectedSource =traceList.get(i); 
-						traceEvent.sourceIndex = traceIndex.get(i);
-						traceEvent.isMapped =true;
+						TraceAlphabet eEvent = new TraceAlphabet();
+						eEvent.traceNo = traceNo;
+						eEvent.alphabetKey  =traceList.get(i);
+						eEvent.selectedSource =traceList.get(i); 
+						eEvent.sourceIndex = traceIndex.get(i);
+						eEvent.isMapped =true;
 						targetList=  getCorr(traceList.get(i));
+						ArrayList<String> temp = new ArrayList<String>();
+						ArrayList<Integer> temp2 = new ArrayList<Integer>();
 						temp2.clear();temp.clear();
 						temp = getmatchList(traceList,targetList, i,traceIndex,traceList.get(i),temp2);
 				//		System.out.println("Source : " + traceList.get(i) + "(" +traceIndex.get(i) +")");
 						if (!temp.isEmpty()) {
-							traceEvent.targetList=	temp;
+							eEvent.targetList=	temp;
 							/*traceEvent.targetList=	getmatchList(traceList,targetList, i,traceIndex,traceList.get(i));
 							for (int w=0; w < temp.size(); w++){
 								temp2.add(traceIndex.get(w));
 							}*/
-						traceEvent.targetListIndex = temp2;	
+							eEvent.targetListIndex = temp2;	
+							
+							
+							
+							
+							
 						}
 						
 		//				tc.add(traceEvent);
-					System.out.println("Duplicates: " +traceIndex.get(i) + ":" + traceList.get(i) + temp2.toString() + temp.toString());
-					traceMap2.put(traceIndex.get(i), traceEvent);	
+				//	System.out.println("Duplicates: " +traceIndex.get(i) + ":" + traceList.get(i) + temp2.toString() + temp.toString());
+					traceMap2.put(traceIndex.get(i), eEvent);	
 					//traceMap.put(traceIndex.get(i), traceEvent);
 						}
 					}
@@ -467,86 +824,55 @@ public class DeclareLogGenerator {
 				traceList.add(bb.alphabetKey);			
 			}	
 			//getEventList(traceIndex,sourceList,traceList,traceNo);
-			traceNo--;
+		//traceNo++;
 	//		System.out.println("Duplication in Last Trace:  " + (traceNo));
 			//tc.clear();
 			for (int iX=0; iX <traceList.size();iX++ )
 			{
 				if (sourceList.indexOf(traceList.get(iX)) != -1){
 				targetList.clear();
-				TraceAlphabet traceEvent = traceMap.get(traceIndex.get(iX));
-				//	traceEvent.traceNo = traceNo;
+				TraceAlphabet traceEvent = new TraceAlphabet();// traceMap.get(traceIndex.get(iX));
+					traceEvent.traceNo = traceNo;
 					traceEvent.alphabetKey  =traceList.get(iX);
 					traceEvent.selectedSource =traceList.get(iX); 
 					traceEvent.sourceIndex = traceIndex.get(iX);
 					traceEvent.isMapped =true;
 				targetList=  getCorr(traceList.get(iX));
+				ArrayList<String> temp = new ArrayList<String>();
+				ArrayList<Integer> temp2 = new ArrayList<Integer>();
 				temp2.clear();temp.clear();
 				temp = getmatchList(traceList,targetList, iX,traceIndex,traceList.get(iX),temp2);
 		//		System.out.println("Source : " + traceList.get(iX) + "(" +traceIndex.get(iX) +")");
 				if (!temp.isEmpty()) {
 					traceEvent.targetList=	temp;
-					/*traceEvent.targetList=	getmatchList(traceList,targetList, iX,traceIndex,traceList.get(iX));
-					for (int w=0; w < temp.size(); w++){
-						temp2.add(traceIndex.get(w));
-					}*/
-				traceEvent.targetListIndex = temp2;	
+					traceEvent.targetListIndex = temp2;	
 				}
-				
-				//tc.add(traceEvent);
-				//System.out.println("SSSX" +traceIndex.get(iX));
-				System.out.println("Duplicates: " +traceIndex.get(iX) + ":" + traceList.get(iX)
-						+ temp2.toString() + temp.toString());
 				traceMap2.put(traceIndex.get(iX), traceEvent);
 				}
 			}
-			/*if (!tc.isEmpty())
-			traceDuplicates.put(traceNo, tc);*/
 			
 			
-			System.out.println("TraceMap000000000000000000000000000000000000");
+			System.out.println("....Mapped Trace...");
 			for (Entry<Integer, TraceAlphabet> activity : traceMap2.entrySet()) {
 				Integer k = activity.getKey();
 				TraceAlphabet tx = activity.getValue();
-		//	for (int i = 0; i < traceMap.size(); i++) {
-				//System.out.println("Fileration in Trace : " + i);
-			//	TraceAlphabet tx = traceMap.get(i);
-				//if (!tx.isEmpty()) {
-					//for (int j = 0; j < tx.size(); j++) {
-						System.out.println("Eevent : " + k + " Map (A): " + tx.selectedSource + ":" + tx.sourceIndex);
-						if ((tx.targetList !=null)) {
-							for (int m = 0; m < tx.targetList.size(); m++) {
-								System.out.println("targetList (B):" + tx.targetList.get(m) + " : "+tx.targetList.get(m) );
-							}
-						}
-						
-						if (tx.targetListIndex !=null){
-							for (int mx = 0; mx < tx.targetListIndex.size(); mx++) {
-								System.out.println("targetListIndex (B):" + tx.targetListIndex.get(mx) + " : "+tx.targetListIndex.get(mx) );
-							}
-						}
-				//	}
-
-				}
-			
-		//	System.out.println("Last Trace: " + traceNo);
-			
-			/*for (int i = 0; i < traceDuplicates.size(); i++) {
-				//System.out.println("Fileration in Trace : " + i);
-				List<TraceAlphabet> tx = traceDuplicates.get(i);
-				if (!tx.isEmpty()) {
-					for (int j = 0; j < tx.size(); j++) {
-						System.out.println("DP->Tarce : " + i+ " Map (A): " + tx.get(j).alphabetKey + ":" + tx.get(j).sourceIndex);
-						if ((tx.get(j).targetList !=null)||(!tx.get(j).targetList.isEmpty())) {
-							for (int m = 0; m < tx.get(j).targetList.size(); m++) {
-								System.out.println("Map (B):" + tx.get(j).targetList.get(m) + " : "+tx.get(j).targetListIndex.get(m) );
-							}
-						}
-					}
-
+			System.out.println("Eevent : " + k + " Map (A): " + tx.selectedSource + ":" + tx.sourceIndex);
+			if ((tx.targetList != null)) {
+				for (int m = 0; m < tx.targetList.size(); m++) {
+					System.out.println("Trace : " +tx.traceNo + " event :" +k + " source : "
+							+ tx.selectedSource + ":" + tx.sourceIndex
+							+ " target:" + tx.targetList.get(m)
+							+ " : Index : (" + tx.targetListIndex.get(m) + ")");
 				}
 
-			}*/
+				
+				System.out.println("---Hello---Random: "
+						+ SelectRandomName(tx.targetList));
+				System.out.println("");
+			}
+
+		}
+
 				
 	/*	
 		} catch (Exception e) {
@@ -665,7 +991,17 @@ public class DeclareLogGenerator {
 				}
 			}			
 			foundSwitch = false;
-		}		
+		}	
+		
+		if (!temp.isEmpty()){
+			Set<Object> strSet = Arrays.stream(temp.toArray()).collect(Collectors.toSet());
+    		temp.clear();
+    		
+    		for(Object s: strSet){
+    			temp.add((String) s);
+    		}
+		}
+		
 		return temp;
 	}
 	
@@ -687,6 +1023,39 @@ public class DeclareLogGenerator {
 				ret = names.get(0);
 			}
 		}
+		return ret;
+	}
+
+	
+	public static int SelectRandomName(ArrayList<String> names) {
+		int ret = -1;
+		ArrayList<String> temp = new ArrayList<String>();
+		ArrayList<String> temp2 = new ArrayList<String>();
+		ArrayList<String> added = new ArrayList<String>();
+		for (int i = 0; i < names.size(); i++) {
+			if (!added.contains(names.get(i))){
+				added.add(names.get(i));
+			
+			temp.clear();
+			for (int j = 0; j < names.size(); j++) {
+				if (names.get(i).equals(names.get(j))) {
+					temp.add(names.get(j));
+				}				
+			}
+			
+			if (!temp.isEmpty()) {
+				if (temp.size() > 0) {
+					ret = selectRandom(names.size());
+				} else {
+					ret = 0;
+				}
+			}
+			temp2.add(names.get(i) + "." + ret);
+		
+			}
+		}
+
+	
 		return ret;
 	}
 	

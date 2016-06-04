@@ -60,6 +60,10 @@ public class VariableStoreExample implements VariableStore {
 		linear = new Linear();
 		linear.add(120, "x");
 		linear.add(210, "y");
+		// int B0 = 10
+		// linear.add(B0, "x");
+		// linear.add(-A0, "x"); // if the variable is y just replace "x" by "y"
+		// problem.add(linear, ">=", 1)
 
 		problem.add(linear, "<=", 15000);
 

@@ -109,70 +109,213 @@ public static	ArrayList<String> lst = new ArrayList<String>();
 import java.util.*;
 import java.util.Map.Entry;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
+
+import net.sf.javailp.Linear;
+import net.sf.javailp.OptType;
+import net.sf.javailp.Problem;
+import net.sf.javailp.Result;
+import net.sf.javailp.Solver;
+import net.sf.javailp.SolverFactory;
+import net.sf.javailp.SolverFactoryLpSolve;
 
 public class Test {
    // public static void main(String... args) {
     	
     	
     	public static void main(String[] args) {
+    		
+    		
+    		
+    		SolverFactory factory = new SolverFactoryLpSolve(); // use lp_solve
+    		factory.setParameter(Solver.VERBOSE, 0); 
+    		factory.setParameter(Solver.TIMEOUT, 100); // set timeout to 100 seconds
+
+    		/**
+    		* Constructing a Problem: 
+    		* Maximize: 143x+60y 
+    		* Subject to: 
+    		* 120x+210y <= 15000 
+    		* 110x+30y <= 4000 
+    		* x+y <= 75
+    		* 
+    		* With x,y being integers
+    		* 
+    		*/
+    		Problem problem = new Problem();
+
+			
+			Problem problem2 = new Problem();
+			
+			
+			Linear linear = new Linear();
+			linear.add(1, "x");
+			//lnr.add(linear);
+
+			problem.add(linear, ">=", 5);
+			problem.setObjective(linear, OptType.MAX);
+			problem.setVarType("x", Integer.class);
+
+			Linear linear2 = new Linear();
+			linear2.add(1, "Y");
+			linear2.add(-1, "x");
+			problem.add(linear2, ">=", 0);
+			problem.setObjective(linear, OptType.MIN);
+			problem.setVarType("Y", Integer.class);
+			
+			Solver solver = factory.get(); // you should use this solver
+			// only once for one problem
+net.sf.javailp.Result result = solver.solve(problem);
+
+System.out.println("Key:");
+//		System.out.println(result);
+
+// Solver solver2 = factory.get(); // you should use this solver
+// only once for one problem
+net.sf.javailp.Result result2 = solver.solve(problem2);
+
+//System.out.println(" Min : "+ result2.getObjective().intValue());
+System.out.println(" Min : "+ result.getObjective().intValue());
+    		/*
+    		linear = new Linear();
+    		linear.add(110, "x");
+    		linear.add(30, "y");
+
+    		problem.add(linear, "<=", 4000);
+
+    		linear = new Linear();
+    		linear.add(1, "x");
+    		linear.add(1, "y");*/
+
+    		problem.add(linear, "<=", 75);
+
+    		problem.setVarType("x", Integer.class);
+    		problem.setVarType("y", Integer.class);
+
+    		/*Solver solver = factory.get(); // you should use this solver only once for one problem
+    		Result result = solver.solve(problem);*/
+
+    		System.out.println(result);
+
+    		/**
+    		* Extend the problem with x <= 16 and solve it again
+    		*/
+    		problem.setVarUpperBound("x", 16);
+
+    		solver = factory.get();
+    		result = solver.solve(problem);
+
+    		System.out.println(result);	
+    		System.out.println("ILP=Result");
+    		System.out.println(result);
            
-    		ArrayList arrayList = new ArrayList();
- 		   
+    		String[] strArray = {"123", "B0B1", "aa", "aa"};
+
+    		 String string1 = "B0B1!";
+    	        String string2 = "B0";
+
+    	        if (string1 != null && string2 != null & string2.length() <= string1.length() & string1.contains(string2)) {
+    	            System.out.println("string1 contains string2");
+    	        }
+
+    		
+    		
+    		Set<Object> strSet = Arrays.stream(strArray).collect(Collectors.toSet());
+    		System.out.println(strSet);
+    		
+    		for(Object s: strSet){
+    			// printing the contents of our array
+    			System.out.println(s +"s");
+    		}
+    		
+    			HashMap<Integer,NewTarget> traceMap = new HashMap<Integer,NewTarget>();
+    			int count = 0;
+    	        int cursor = 0;
+    		String a[]= {"B0","D0D1","B0"};
+            String b[] ={"B0","D0D1","B0"};
+            
+            for(int i=0; i<a.length; i++){
+                for(int j=cursor; j<b.length; i++){
+                    if(a[i].equals(b[i])){
+                        count++;
+                        cursor = j;
+                        System.out.println(b[i]);
+                        break;
+                    }
+                }
+            }
+            
+            
+            String arrayA[]= {"A0","A01","B0B1","B0_B1","D0D1"};
+            String arrayB[] ={"B0","B0_B1","D0D1"};
+            
+           
+            ArrayList arrayList = new ArrayList();
+  		   
 		      
-		      arrayList.add("1");
-		      arrayList.add("2");
-		      arrayList.add("3");
-		      arrayList.add("4");
-		      arrayList.add("5");
+		      arrayList.add("A0");
+		      arrayList.add("A0A1");
+		     /* arrayList.add("B0B1");
+		      arrayList.add("C1");
+		      arrayList.add("A1");*/
 		      
 		  	ArrayList arrayList2 = new ArrayList();
 	 		   
 		      
-		      arrayList.add("1a1");
-		      arrayList.add("2b2");
-		      arrayList.add("3c3");
-		      arrayList.add("4d4");
-		      arrayList.add("5e5");
-    		
-    		
-    		
-    			HashMap<Integer,TraceAlphabet> traceMap = new HashMap<Integer,TraceAlphabet>();
-    		
-    		String arrayA[]= {"A0","A01","B0B1","B0_B1","D0D1"};
-            String arrayB[] ={"B0","B0_B1","D0D1"};
-       
+		  	arrayList2.add("B0B01");
+		  	arrayList2.add("A0A1");
+		  /*	arrayList2.add("A1");
+		  	arrayList2.add("d");
+		  	arrayList2.add("e");*/
             
-            
-            
-            for (int i =0 ; i <3; i++){
-            	TraceAlphabet tb = new TraceAlphabet();
+		 	ArrayList arrayList22 = new ArrayList();
+		 	ArrayList<String> Added = new ArrayList<String>();
+		 	ArrayList<String> Added1 = new ArrayList<String>();
+		 	ArrayList<String> Added2 = new ArrayList<String>();
+		 	arrayList.retainAll(arrayList2);
+            System.out.println("added " + arrayList2.toString());
+          //  for (int i =0 ; i <3; i++){
+            	NewTarget tb = new NewTarget();
             	//arrayList.add(i+"aas");
-            	tb.sourceList = arrayList;
-              tb.targetListIndex = arrayList;
-            tb.targetListKey = arrayList2;
-            traceMap.put(i, tb);
-            }
+            	tb.SelectedTargetList = arrayList;
+                tb.SouceList = arrayList2;
+            traceMap.put(0, tb);
+            //}
             
-            for (Entry<Integer, TraceAlphabet> activity : traceMap.entrySet()) {
+            
+            arrayList.add("dd");
+		      arrayList.add("ee");
+		      arrayList.add("44");
+		      arrayList.add("55");
+		      
+		      //  for (int i =0 ; i <3; i++){
+          	NewTarget tb2 = new NewTarget();
+          	//arrayList.add(i+"aas");
+          	tb2.SelectedTargetList = arrayList;
+              tb2.SouceList = arrayList2;
+          traceMap.put(1, tb2);
+		      
+		      
+            for (Entry<Integer, NewTarget> activity : traceMap.entrySet()) {
 				Integer k = activity.getKey();
-				TraceAlphabet tx = activity.getValue();
+				NewTarget tx = activity.getValue();
 		//	for (int i = 0; i < traceMap.size(); i++) {
 				//System.out.println("Fileration in Trace : " + i);
 			//	TraceAlphabet tx = traceMap.get(i);
 				//if (!tx.isEmpty()) {
 					//for (int j = 0; j < tx.size(); j++) {
 						System.out.println("KEY  List");//Eevent : " + k + " Map (A): " + tx.selectedSource + ":" + tx.sourceIndex);
-						if ((tx.targetListKey !=null)) {
-							System.out.println(tx.targetListKey.toString());
-							for (int m = 0; m < tx.targetListKey.size(); m++) {
+						if ((tx.SouceList !=null)) {
+							System.out.println(tx.SouceList.toString());
+							for (int m = 0; m < tx.SouceList.size(); m++) {
 							//for (int m = 0; m < tx.targetListKey.size(); m++) {
-								System.out.println("xxx :" + tx.targetListKey.get(m) + " : "+tx.targetListKey.get(m) );
+								System.out.println("targetList :" + tx.SouceList.get(m) + " : "+tx.SouceList.get(m) );
 							}
 						}
 						System.out.println("iNDEX PRINT List");
-						if (tx.targetListIndex !=null){
-							for (int mx = 0; mx < tx.targetListIndex.size(); mx++) {
-								System.out.println("tyyyy:" + tx.targetListIndex.get(mx) + " : "+tx.targetListIndex.get(mx) );
+						if (tx.SelectedTargetList !=null){
+							for (int mx = 0; mx < tx.SelectedTargetList.size(); mx++) {
+								System.out.println("SelectedTargetList:" + tx.SelectedTargetList.get(mx) + " : "+tx.SelectedTargetList.get(mx) );
 							}
 						}
 				//	}

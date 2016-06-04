@@ -1,6 +1,8 @@
 package log.generation;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 public class TraceAlphabet {
 
@@ -20,10 +22,30 @@ public class TraceAlphabet {
 	public ArrayList<String> targetList;
 	public ArrayList<Integer> targetListIndex;
 	public ArrayList<String> targetListKey;
+	public ArrayList<Integer> targetSelectedIndex;
+	public ArrayList<Integer> ilpList;
+	public ArrayList<Integer> ilpSelectedList;
+	public Map<String, Map<String, ArrayList<Integer>>> targetedListwithIndex ;
 	
 	
+	
+	public void targetedListwithIndex(Map<String, Map<String, ArrayList<Integer>>>  targetedListwithIndex) {
+		this.targetedListwithIndex = targetedListwithIndex;
+	}
+	
+	public void ilpList(ArrayList<Integer> ilpList) {
+		this.ilpList = ilpList;
+	}
+	
+	public void ilpSelectedList(ArrayList<Integer> ilpSelectedList) {
+		this.ilpSelectedList = ilpSelectedList;
+	}
 	public void targetListIndex(ArrayList<Integer> targetListIndex) {
 		this.targetListIndex = targetListIndex;
+	}
+	
+	public void targetSelectedIndex(ArrayList<Integer> targetSelectedIndex) {
+		this.targetSelectedIndex = targetSelectedIndex;
 	}
 	
 	
