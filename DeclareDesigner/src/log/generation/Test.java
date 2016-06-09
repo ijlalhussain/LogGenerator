@@ -124,8 +124,30 @@ public class Test {
     	
     	
     	public static void main(String[] args) {
+    		ArrayList<Integer> temp1 = new ArrayList<Integer>();
+    		ArrayList<Integer> temp11 = new ArrayList<Integer>();
+    		temp1.add(1);
+    		temp1.add(3);
+    		temp1.add(5);
+
+    		temp11.add(1);
+    		temp11.add(5);
+    		temp11.add(3);
     		
+    		 Collections.sort(temp1);
+    		    Collections.sort(temp11); 
     		
+    		int aa [] = {0,2,8,9};
+    		int bb [] = {0,8,2,9};
+    		Arrays.sort(temp1.toArray());
+    		Arrays.sort(temp11.toArray());
+    	/*	if (temp1.equals(temp11)) {
+    			System.out.println("great");
+    		}else {
+    			System.out.println("greatgreat");
+    		}
+    		
+    		IlpSolver.CheckIkpValue("(A.X > 2)::(A.X < 6)");*/
     		
     		SolverFactory factory = new SolverFactoryLpSolve(); // use lp_solve
     		factory.setParameter(Solver.VERBOSE, 0); 
@@ -144,10 +166,57 @@ public class Test {
     		*/
     		Problem problem = new Problem();
 
+    	/*//	Problem problem = new Problem();
+    		Linear linear3 = new Linear();
+    		linear3.add(1, "X");
+    		//linear2.add(1, "Y");
+    		//problem.add(linear3, "<=",4);
+    		problem.setObjective(linear3, OptType.MAX);
+    		
+    		
+    		Linear linear4 = new Linear();
+    		linear4.add(1, "Y");
+    		//linear2.add(1, "Y");
+    		//problem.add(linear3, "<=",4);
+    		problem.setObjective(linear4, OptType.MIN);*/
+    		
+    		int B0 = 4;
+    		int A0 = 8;
+    		Linear linear = new Linear();
+    		linear.add(B0, "X");
+    		linear.add(-A0, "Y");
+
+    		// int B0 = 10
+    		// linear.add(B0, "x");
+    		// linear.add(-A0, "x"); // if the variable is y just replace "x" by "y"
+    		// problem.add(linear, ">=", 1)
+    		
+    		
+    		/*linear = new Linear();
+    		linear.add(120, "x");
+    		linear.add(210, "y");*/
+    		
+    		problem.add(linear, ">=",1);	
+    		problem.setObjective(linear, OptType.MAX);
+    		//Problem problem2 = new Problem();
+    		Linear linear2 = new Linear();
+    		linear2.add(1, "X");
+    		linear2.add(1, "Y");
+    		//problem.add(linear2, "<=",4);
+    	//	problem.setObjective(linear2, OptType.MAX);
+    		
+    		/*linear = new Linear();
+    		linear.add(120, "x");
+    		linear.add(210, "y");*/
+    		//problem2.setObjective(linear, OptType.MAX);
+    	//	problem2.add(linear, "<=",0);
+    		
+    		
+    		
+    		
+			//Problem problem2 = new Problem();
 			
-			Problem problem2 = new Problem();
-			
-			
+			/*
 			Linear linear = new Linear();
 			linear.add(1, "x");
 			//lnr.add(linear);
@@ -160,54 +229,15 @@ public class Test {
 			linear2.add(1, "Y");
 			linear2.add(-1, "x");
 			problem.add(linear2, ">=", 0);
-			problem.setObjective(linear, OptType.MIN);
-			problem.setVarType("Y", Integer.class);
+*/		/*	problem.setObjective(linear, OptType.MIN);
+			problem.setVarType("Y", Integer.class);*/
 			
-			Solver solver = factory.get(); // you should use this solver
-			// only once for one problem
-net.sf.javailp.Result result = solver.solve(problem);
+			Solver solver = factory.get(); // you should use this solver only once for one problem
+			Result result = solver.solve(problem);
 
-System.out.println("Key:");
-//		System.out.println(result);
+			System.out.println("ilP: " + result);
+			System.out.println("ilP:  "  +result.getObjective().intValue());
 
-// Solver solver2 = factory.get(); // you should use this solver
-// only once for one problem
-net.sf.javailp.Result result2 = solver.solve(problem2);
-
-//System.out.println(" Min : "+ result2.getObjective().intValue());
-System.out.println(" Min : "+ result.getObjective().intValue());
-    		/*
-    		linear = new Linear();
-    		linear.add(110, "x");
-    		linear.add(30, "y");
-
-    		problem.add(linear, "<=", 4000);
-
-    		linear = new Linear();
-    		linear.add(1, "x");
-    		linear.add(1, "y");*/
-
-    		problem.add(linear, "<=", 75);
-
-    		problem.setVarType("x", Integer.class);
-    		problem.setVarType("y", Integer.class);
-
-    		/*Solver solver = factory.get(); // you should use this solver only once for one problem
-    		Result result = solver.solve(problem);*/
-
-    		System.out.println(result);
-
-    		/**
-    		* Extend the problem with x <= 16 and solve it again
-    		*/
-    		problem.setVarUpperBound("x", 16);
-
-    		solver = factory.get();
-    		result = solver.solve(problem);
-
-    		System.out.println(result);	
-    		System.out.println("ILP=Result");
-    		System.out.println(result);
            
     		String[] strArray = {"123", "B0B1", "aa", "aa"};
 
@@ -228,7 +258,7 @@ System.out.println(" Min : "+ result.getObjective().intValue());
     			System.out.println(s +"s");
     		}
     		
-    			HashMap<Integer,NewTarget> traceMap = new HashMap<Integer,NewTarget>();
+    			//HashMap<Integer,NewTarget> traceMap = new HashMap<Integer,NewTarget>();
     			int count = 0;
     	        int cursor = 0;
     		String a[]= {"B0","D0D1","B0"};
@@ -275,11 +305,11 @@ System.out.println(" Min : "+ result.getObjective().intValue());
 		 	arrayList.retainAll(arrayList2);
             System.out.println("added " + arrayList2.toString());
           //  for (int i =0 ; i <3; i++){
-            	NewTarget tb = new NewTarget();
+            	/*NewTarget tb = new NewTarget();
             	//arrayList.add(i+"aas");
             	tb.SelectedTargetList = arrayList;
                 tb.SouceList = arrayList2;
-            traceMap.put(0, tb);
+            traceMap.put(0, tb);*/
             //}
             
             
@@ -289,7 +319,7 @@ System.out.println(" Min : "+ result.getObjective().intValue());
 		      arrayList.add("55");
 		      
 		      //  for (int i =0 ; i <3; i++){
-          	NewTarget tb2 = new NewTarget();
+         /* 	NewTarget tb2 = new NewTarget();
           	//arrayList.add(i+"aas");
           	tb2.SelectedTargetList = arrayList;
               tb2.SouceList = arrayList2;
@@ -320,7 +350,7 @@ System.out.println(" Min : "+ result.getObjective().intValue());
 						}
 				//	}
 
-				}
+				}*/
             
             
             

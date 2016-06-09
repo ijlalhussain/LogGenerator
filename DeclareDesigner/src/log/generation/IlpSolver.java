@@ -49,6 +49,118 @@ public class IlpSolver {
 		}
 		
 	}
+	
+	
+	public static void CheckIkpValue(String condition){
+		
+		ArrayList<String> optlist = new ArrayList();
+		int MaxValue = 0;
+		int MinValue = 0;
+		boolean isGreater =false;
+				SolverFactory factory = new SolverFactoryLpSolve(); // use
+																	// lp_solve
+				factory.setParameter(Solver.VERBOSE, 0);
+				factory.setParameter(Solver.TIMEOUT, 100); // set timeout to 100
+															// seconds
+
+				Problem problem = new Problem();
+				Problem problem2 = new Problem();
+				String[] res = condition.split("::");// "x <= 2 :: x <= 6 :: x <= 3".split("::");
+				//ArrayList<Linear> lnr = new ArrayList<Linear>();
+				optlist.clear();
+				String xplayload = "";
+				int XplayloadValue =0;
+				for (int i = 0; i < res.length; i++) {
+					String[] ops = res[i].trim().split(" ");
+					String payload = ops[0].substring(1);
+					String payloadValue = ops[2].substring(0,ops[2].length() - 1);
+					String opt = ops[1];
+					if (opt.length() == 1) {
+						opt = opt + "=";
+					}
+					
+					if (payloadValue.isEmpty()){
+						payloadValue ="1000";
+					}
+					optlist.add(opt);
+					Linear linear = new Linear();
+					if (i==0){
+						xplayload = payload;
+						XplayloadValue = Integer.parseInt(payloadValue);
+						/*	linear.add(1, payload);
+						problem.add(linear, opt, Integer.parseInt(payloadValue));
+						problem.setObjective(linear, OptType.MAX);
+						problem.setVarType(payload, Integer.class);
+
+						problem2.add(linear, opt, Integer.parseInt(payloadValue));
+						problem2.setObjective(linear, OptType.MIN);
+						problem2.setVarType(payload, Integer.class);*/
+					}else
+					{
+						linear.add(XplayloadValue, xplayload);
+						linear.add(-XplayloadValue, payload);
+						problem.add(linear, opt, XplayloadValue);
+						problem.setObjective(linear, OptType.MAX);
+						problem.setVarType(payload, Integer.class);
+
+						problem2.add(linear, opt, XplayloadValue);
+						problem2.setObjective(linear, OptType.MIN);
+						problem2.setVarType(payload, Integer.class);
+					}			
+					
+					
+					//lnr.add(linear);
+
+				
+				}
+
+				Solver solver = factory.get(); // you should use this solver
+												// only once for one problem
+				net.sf.javailp.Result result = solver.solve(problem);
+
+		 	//System.out.println("Key:"+ k + " ILP Cond: " + filter.ilpCondition);
+		//		System.out.println(result);
+
+				// Solver solver2 = factory.get(); // you should use this solver
+				// only once for one problem
+				net.sf.javailp.Result result2 = solver.solve(problem2);
+
+				//System.out.println(result2);
+
+			if (AllGreater(optlist)){
+				MaxValue = Integer.MAX_VALUE;
+				MinValue = result2.getObjective().intValue();
+			//	filter.logGenerate = true;
+				System.out.println("All Greater: Max " + MaxValue + " Min : "+ result2.getObjective().intValue());
+			} 
+			else if (AllLesser(optlist)){
+				//filter.maxValue = result.getObjective().intValue();
+				//Integer s = Integer.MIN_VALUE;
+				//System.out.println(s);
+				MinValue =  Integer.MIN_VALUE;
+				MaxValue = result.getObjective().intValue();
+			//	filter.logGenerate = true;
+				System.out.println("AllLesser: Max " + MaxValue + " Min : "+ MinValue  );
+			}
+			else {
+				if ((result == null) || (result2 == null)) {
+				MaxValue = 0;
+				MinValue =0;
+				System.out.println("Key:  Result: Max " + result.getObjective().intValue() + " Min : "+ result2.getObjective().intValue());
+				System.out.println("NullNull: Max " + MaxValue + " Min : "+ MinValue  );
+				} else {
+					MaxValue = result.getObjective().intValue();
+					MinValue = result2.getObjective().intValue();
+					//filter.logGenerate = true;
+					System.out.println(" Result: Max " + result.getObjective().intValue() + " Min : "+ result2.getObjective().intValue());
+				}
+			} // not all greater
+			//	abMapx.put(k, filter);
+
+		//	} // end of isemty
+	//	}
+		
+	}
 
 	public static void CheckIlpConditions(LinkedHashMap<String, Alphabet> abMapx) {
 		ArrayList<String> optlist = new ArrayList();

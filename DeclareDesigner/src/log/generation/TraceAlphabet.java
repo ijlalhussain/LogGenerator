@@ -25,36 +25,49 @@ public class TraceAlphabet {
 	public ArrayList<Integer> targetSelectedIndex;
 	public ArrayList<Integer> ilpList;
 	public ArrayList<Integer> ilpSelectedList;
-	public Map<String, Map<String, ArrayList<Integer>>> targetedListwithIndex ;
-	
-	
-	
-	public void targetedListwithIndex(Map<String, Map<String, ArrayList<Integer>>>  targetedListwithIndex) {
+	public Map<String, Map<String, ArrayList<Integer>>> targetedListwithIndex;
+
+	public ArrayList<String> Mappedkeys;
+	public ArrayList<Integer> MappedKeysIndex;
+	public Map<Integer, List<Integer>> ilpIndex;
+
+	public void ilpIndex(Map<Integer, List<Integer>> ilpIndex) {
+		this.ilpIndex = ilpIndex;
+	}
+
+	public void Mappedkeys(ArrayList<String> Mappedkeys) {
+		this.Mappedkeys = Mappedkeys;
+	}
+
+	public void MappedKeysIndex(ArrayList<Integer> MappedKeysIndex) {
+		this.MappedKeysIndex = MappedKeysIndex;
+	}
+
+	public void targetedListwithIndex(
+			Map<String, Map<String, ArrayList<Integer>>> targetedListwithIndex) {
 		this.targetedListwithIndex = targetedListwithIndex;
 	}
-	
+
 	public void ilpList(ArrayList<Integer> ilpList) {
 		this.ilpList = ilpList;
 	}
-	
+
 	public void ilpSelectedList(ArrayList<Integer> ilpSelectedList) {
 		this.ilpSelectedList = ilpSelectedList;
 	}
+
 	public void targetListIndex(ArrayList<Integer> targetListIndex) {
 		this.targetListIndex = targetListIndex;
 	}
-	
+
 	public void targetSelectedIndex(ArrayList<Integer> targetSelectedIndex) {
 		this.targetSelectedIndex = targetSelectedIndex;
 	}
-	
-	
-	
+
 	public void targetListKey(ArrayList<String> targetListKey) {
 		this.targetListKey = targetListKey;
 	}
-	
-	
+
 	public void traceNo(int traceNo) {
 		this.traceNo = traceNo;
 	}
@@ -62,11 +75,10 @@ public class TraceAlphabet {
 	public void eventNo(int eventNo) {
 		this.eventNo = eventNo;
 	}
-	
+
 	public void selectedSource(String selectedSource) {
 		this.selectedSource = selectedSource;
 	}
-
 
 	public void constrain(String constrain) {
 		this.constrain = constrain;
@@ -104,8 +116,6 @@ public class TraceAlphabet {
 		this.isMapped = isMapped;
 	}
 
-	
-	
 	public void sourceList(ArrayList<String> sourceList) {
 		this.sourceList = sourceList;
 	}
@@ -113,9 +123,5 @@ public class TraceAlphabet {
 	public void targetList(ArrayList<String> targetList) {
 		this.targetList = targetList;
 	}
-	
-	
-	
-	
 
 }

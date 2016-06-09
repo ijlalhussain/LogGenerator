@@ -35,7 +35,7 @@ public class Alphabet {
 	public void isRoot(boolean isRoot) {
 		this.isRoot = isRoot;
 	}
-	
+
 	public void isSingle(boolean isSingle) {
 		this.isSingle = isSingle;
 	}
