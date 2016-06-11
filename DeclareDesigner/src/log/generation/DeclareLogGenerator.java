@@ -24,7 +24,15 @@ import minerful.concept.TaskCharArchive;
 import minerful.concept.TaskCharSet;
 import minerful.concept.constraint.Constraint;
 import minerful.concept.constraint.ConstraintsBag;
+import minerful.concept.constraint.relation.AlternateResponse;
+import minerful.concept.constraint.existence.Participation; //EXISTENCE;
+import minerful.concept.constraint.relation.AlternatePrecedence;
+import minerful.concept.constraint.relation.ChainPrecedence;
+import minerful.concept.constraint.relation.NotChainSuccession;
+import minerful.concept.constraint.relation.NotCoExistence;
+import minerful.concept.constraint.relation.NotSuccession;
 import minerful.concept.constraint.relation.Precedence;
+import minerful.concept.constraint.relation.RespondedExistence;
 import minerful.concept.constraint.relation.Response;
 import minerful.io.encdec.TaskCharEncoderDecoder;
 import minerful.logmaker.MinerFulLogMaker;
@@ -157,6 +165,7 @@ public class DeclareLogGenerator {
 	//	CheckforPrecendence();
 		MinerFulLogMaker logMak = new MinerFulLogMaker(logMakParameters);		
 		ProcessModel proMod = null;  
+		//CheckforPrecendence();
 		proMod =newStyleLog();// MinerfulLogGenerator.fromDeclareMapToMinerfulProcessModel(model,null, combinedList, abMapx);
 	 
 		//addCorrelatedConditions();
@@ -165,14 +174,14 @@ public class DeclareLogGenerator {
 		
 	    XLog xlog=	logMak.createLog(proMod);
 	   // twist(xlog);
-	   ProcessLog(xlog);
-	   GetRandomSelection(xlog);
+	    ProcessLog(xlog);
+	    /* GetRandomSelection(xlog);
 	   CreateGraphofLog(xlog);
-	   CombineSelectedLog();
+	   CombineSelectedLog();*/
 	   addCorrelationtoArray();
 	   mergeLists();
-	   CheckForSameList(xlog);
-	   SetMappedILPCondition();
+	  // CheckForSameList(xlog);
+	   //SetMappedILPCondition();
 	   
 	    //twistcopy();
 	    //twistRandomSelection();
@@ -590,7 +599,9 @@ public class DeclareLogGenerator {
 
 	private static void ProcessLog(XLog xlog) {
 	
-		/*try {*/
+		try {
+
+
 
 		ArrayList<String> sourceList = new ArrayList<String>();
 		ArrayList<String> targetList = new ArrayList<String>();
@@ -602,7 +613,7 @@ public class DeclareLogGenerator {
 		for (Entry<String, Alphabet> activity : abMapx.entrySet()) {
 				sourceList.add(activity.getKey());
 				constrainList.add(activity.getValue().constrain);
-				System.out.println("Constrain : " + activity.getValue().constrain);
+			//	System.out.println("Constrain : " + activity.getValue().constrain);
 			}			
 		
 		traceMap.clear();
@@ -899,7 +910,12 @@ public class DeclareLogGenerator {
 				}
 			//}
 		}
+		} catch (Exception e){
 
+		    // Deal with e as you please.
+		    //e may be any type of exception at all.
+
+		}
 	
 		
 	}
@@ -978,7 +994,7 @@ public class DeclareLogGenerator {
 										
 					String keyName = 	getAlphabetKey(name);
 					String paylaodName = "Data";
-					int keyValue = 444;
+					int keyValue = (int) Math.random();
 					Alphabet ExeActivity = abMapAll.get(keyName);
 					if (ExeActivity !=null){
 						paylaodName	 = ExeActivity.payLoadName;
@@ -1625,6 +1641,17 @@ public static ProcessModel newStyleLog (){
 			}
 		}
 	
+	
+	if (!mylist.isEmpty()){
+		Set<Object> strSet = Arrays.stream(mylist.toArray()).collect(Collectors.toSet());
+		mylist.clear();
+		
+		for(Object s: strSet){
+			mylist.add((String) s);
+		}
+	}
+	
+	Collections.sort(mylist);
 	int theEnd = 65+ mylist.size();
 	for (int vchar = 65; vchar < theEnd;vchar++ ){
 		char c = (char)vchar;
@@ -1664,6 +1691,7 @@ public static ProcessModel newStyleLog (){
 				if (filter.correlationlist != null){
 					for(int j=0; j < filter.correlationlist.length ; j++){
 						String xnam =filter.correlationlist[j];
+						list.add(getAlphabetValue(filter.correlationlist[j]));
 						int len = filter.correlationlist[j].length();
 						if ((xnam.contains("_"))
 								&& (xnam.contains(filter.secondAlphabetKey))) {
@@ -1722,6 +1750,9 @@ public static ProcessModel newStyleLog (){
 				}
 			}  // end of filter empy
 			} // end of zero level check
+			
+		
+			
 			if (filter.constrain.equals("response")) {
 				Response res = new Response(new TaskCharSet(firstChar), new TaskCharSet(list));
 				lst.add(res);
@@ -1729,33 +1760,13 @@ public static ProcessModel newStyleLog (){
 				if (filter.correlationlist != null) {
 					for (int j = 1; j < filter.correlationlist.length; j++) {
 						list.clear();
-						String xnam = " Correlation 1st : "
-								+ filter.correlationlist[j];
+						String xnam = " Correlation 1st : "	+ filter.correlationlist[j];
 						mylist.add(filter.correlationlist[j]);
-						
-						
-					//	String alphabetname = BranchCombination.getParentLetter(filter.correlationlist[j]);
-					//	String blist[] = filter.secondAlphabet.split("::");
-					if (filter.isRoot==false){
-						list.add(getAlphabetValue(filter.correlationlist[j]));
-						Response res2 = new Response(new TaskCharSet(firstChar), new TaskCharSet(list));
-						lst.add(res2);
-						/*if (blist.length>1){
-						for (int ndm =0; ndm <blist.length; ndm++){
-							if (!alphabetname.equals("")){
-							if(!blist[ndm].equals(alphabetname)){
-						//		System.out.println(filter.correlationlist[j].replace(alphabetname, blist[ndm]));
-								//mylist.add();							
-								list.add(getAlphabetValue(filter.correlationlist[j].replace(alphabetname, blist[ndm])));
-							}		
-							}
-						}
-						if(!list.isEmpty()){
+						if (filter.isRoot==false){
+							list.add(getAlphabetValue(filter.correlationlist[j]));
 							Response res2 = new Response(new TaskCharSet(firstChar), new TaskCharSet(list));
-							lst.add(res2);	
-						}
-						}*/// blenth
-					}// false
+							lst.add(res2);
+						}// false
 					}
 					
 				}
@@ -1782,14 +1793,209 @@ public static ProcessModel newStyleLog (){
 				}
 				
 				
-				//end
-			} 	if (filter.constrain.equals("existence")){
-				//Existence res = new Existence( new TaskCharSet(list),new TaskCharSet(firstChar));
-			//	lst.add(res);
+				//START OF RESPONCE EXIS
+			} 	if (filter.constrain.equals("respondedexistence")){
+				RespondedExistence res = new RespondedExistence(new TaskCharSet(firstChar), new TaskCharSet(list)); 
+				//Response res = new Response(new TaskCharSet(firstChar), new TaskCharSet(list));
+				lst.add(res);
 			
+				if (filter.correlationlist != null) {
+					for (int j = 1; j < filter.correlationlist.length; j++) {
+						list.clear();
+						String xnam = " Correlation 1st : "
+								+ filter.correlationlist[j];
+						mylist.add(filter.correlationlist[j]);
+				
+					if (filter.isRoot==false){
+						list.add(getAlphabetValue(filter.correlationlist[j]));
+						//Response res2 = new Response(new TaskCharSet(firstChar), new TaskCharSet(list));
+						RespondedExistence res2 = new RespondedExistence(new TaskCharSet(firstChar), new TaskCharSet(list));
+						lst.add(res2);
+					
+					}// false
+					}
+					
+				}
+			
+			} 	if (filter.constrain.equals("alternateresponse")){
+				
+				AlternateResponse res = new AlternateResponse(new TaskCharSet(firstChar), new TaskCharSet(list)); 
+				lst.add(res);			
+				if (filter.correlationlist != null) {
+					for (int j = 1; j < filter.correlationlist.length; j++) {
+						list.clear();
+						String xnam = " Correlation 1st : "
+								+ filter.correlationlist[j];
+						mylist.add(filter.correlationlist[j]);
+				
+					if (filter.isRoot==false){
+						list.add(getAlphabetValue(filter.correlationlist[j]));
+						AlternateResponse res2 = new AlternateResponse(new TaskCharSet(firstChar), new TaskCharSet(list));
+						lst.add(res2);
+					
+					}// false
+					}
+					
+				}
+				
+			} else	if (filter.constrain.equals("notresponse")){
+				
+				NotSuccession res = new NotSuccession(new TaskCharSet(firstChar), new TaskCharSet(list)); 
+				lst.add(res);			
+				if (filter.correlationlist != null) {
+					for (int j = 1; j < filter.correlationlist.length; j++) {
+						list.clear();
+						String xnam = " Correlation 1st : "
+								+ filter.correlationlist[j];
+						mylist.add(filter.correlationlist[j]);
+				
+					if (filter.isRoot==false){
+						list.add(getAlphabetValue(filter.correlationlist[j]));
+						NotSuccession res2 = new NotSuccession(new TaskCharSet(firstChar), new TaskCharSet(list));
+						lst.add(res2);
+					
+					}// false
+					}					
+				}
+
+				} else	if (filter.constrain.equals("notchainresponse")){
+				
+					NotChainSuccession res = new NotChainSuccession(new TaskCharSet(firstChar), new TaskCharSet(list)); 
+				lst.add(res);			
+				if (filter.correlationlist != null) {
+					for (int j = 1; j < filter.correlationlist.length; j++) {
+						list.clear();
+						String xnam = " Correlation 1st : "
+								+ filter.correlationlist[j];
+						mylist.add(filter.correlationlist[j]);
+				
+					if (filter.isRoot==false){
+						list.add(getAlphabetValue(filter.correlationlist[j]));
+						NotChainSuccession res2 = new NotChainSuccession(new TaskCharSet(firstChar), new TaskCharSet(list));
+						lst.add(res2);
+					
+					}// false
+					}					
+				}
+
+			} 
+			
+			
+			
+			
+			else if (filter.constrain.equals("notrespondedexistence")) {
+				
+				
+				NotCoExistence res = new NotCoExistence(
+						new TaskCharSet(firstChar), new TaskCharSet(list));
+				lst.add(res);
+				if (filter.correlationlist != null) {
+					for (int j = 1; j < filter.correlationlist.length; j++) {
+						list.clear();
+						String xnam = " Correlation 1st : "
+								+ filter.correlationlist[j];
+						mylist.add(filter.correlationlist[j]);
+
+						if (filter.isRoot == false) {
+							list.add(getAlphabetValue(filter.correlationlist[j]));
+							NotCoExistence res2 = new NotCoExistence(
+									new TaskCharSet(firstChar),
+									new TaskCharSet(list));
+							lst.add(res2);
+
+						}// false
+					}
+				}
+
 			}
 
+			else if (filter.constrain.equals("alternateprecedence")) {
+				
+				AlternatePrecedence res = new AlternatePrecedence( new TaskCharSet(list),new TaskCharSet(firstChar));
+				lst.add(res);
+				
+				if (filter.correlationlist != null) {
+					for (int j = 1; j < filter.correlationlist.length; j++) {
+						list.clear();
+						String xnam = " Correlation 1st : "
+								+ filter.correlationlist[j];
+						mylist.add(filter.correlationlist[j]);
+					if (filter.isRoot==false){
+						list.add(getAlphabetValue(filter.correlationlist[j]));
+						AlternatePrecedence res2 = new AlternatePrecedence( new TaskCharSet(list),new TaskCharSet(firstChar));
+						lst.add(res2);					
+					}// false
+					}
+					
+				}
+			}
+
+			else if (filter.constrain.equals("existence")) {
+				//list.clear();
+				if (filter.correlationlist != null) {
+					for (int j = 0; j < filter.correlationlist.length; j++) {
+						//list.clear();
+						String xnam = " Correlation 1st : "
+								+ filter.correlationlist[j];
+						mylist.add(filter.correlationlist[j]);
+					
+						if (filter.isRoot == false) {
+							list.add(getAlphabetValue(filter.correlationlist[j]));
+							/*Participation res2 = new Participation(new TaskCharSet(list));
+							lst.add(res2);*/
+						}// false
+					}
+
+				}
+ 			
+ 			
+ 			Participation res = new Participation(new TaskCharSet(list));
+			lst.add(res);
+			}else if (filter.constrain.equals("chainprecedence")) {
+				ChainPrecedence res = new ChainPrecedence( new TaskCharSet(list),new TaskCharSet(firstChar));
+				lst.add(res);
+				
+				if (filter.correlationlist != null) {
+					for (int j = 1; j < filter.correlationlist.length; j++) {
+						list.clear();
+						String xnam = " Correlation 1st : "
+								+ filter.correlationlist[j];
+						mylist.add(filter.correlationlist[j]);
+					if (filter.isRoot==false){
+						list.add(getAlphabetValue(filter.correlationlist[j]));						
+						ChainPrecedence res2 = new ChainPrecedence( new TaskCharSet(list),new TaskCharSet(firstChar));
+						lst.add(res2);
+					
+					}// false
+					}
+					
+				}
+			}	else if (filter.constrain.equals("notprecedence")) {
+				
+				NotSuccession res = new NotSuccession( new TaskCharSet(list),new TaskCharSet(firstChar));
+				lst.add(res);
+				
+				if (filter.correlationlist != null) {
+					for (int j = 1; j < filter.correlationlist.length; j++) {
+						list.clear();
+						String xnam = " Correlation 1st : "
+								+ filter.correlationlist[j];
+						mylist.add(filter.correlationlist[j]);
+					if (filter.isRoot==false){
+						list.add(getAlphabetValue(filter.correlationlist[j]));						
+						NotSuccession res2 = new NotSuccession( new TaskCharSet(list),new TaskCharSet(firstChar));
+						lst.add(res2);
+					
+					}// false
+					}
+					
+				}
+			}
+		//--END OF ALTERNATE PRESE	
+		
+
 		}
+	
 	
 	 Set<TaskChar> alphabetS = new TreeSet<TaskChar>(where);
   	int i=0;
@@ -1849,7 +2055,7 @@ public static String getAlphabetKey(String search){
 			String k = activity.getKey();
 			Alphabet filter = activity.getValue();
 			aa="";bb="";
-			if (filter.constrain.equals("precedence")){
+			if (filter.constrain.contains("precedence")){
 				
 				System.out.println("A :" + filter.alphabetkey);
 				System.out.println("B :" + filter.secondAlphabetKey);
@@ -1875,7 +2081,7 @@ public static String getAlphabetKey(String search){
 		}
 		abMapx.clear();
 		abMapx=abMaptemp;
-		System.out.println("-------Precendece Checking-----------");
+	/*	System.out.println("-------Precendece Checking-----------");
 		
 		for (Entry<String, Alphabet> activity : abMapx.entrySet()) {
 			String k = activity.getKey();
@@ -1901,7 +2107,7 @@ public static String getAlphabetKey(String search){
 			}}}
 		
 		}
-		System.out.println("Wait");
+		System.out.println("Wait");*/
 	}
 
 
@@ -2078,7 +2284,7 @@ public static String getAlphabetKey(String search){
 						.getBranches(p)) {	
 				
 				//	System.out.println(ad.getName());					
-					if (constrain.equals("precedence"))
+					if (constrain.contains("precedence"))
 					{
 						if (p.getName().equals("B")) {
 							firstName = ad.getName().toString();
@@ -2199,7 +2405,7 @@ public static String getAlphabetKey(String search){
 						.getBranches(p)) {	
 				
 					
-					if (constrain.equals("precedence")){
+					if (constrain.contains("precedence")){
 						if (p.getName().equals("B")) {
 							String sname = ad.getName();
 							
@@ -2261,7 +2467,7 @@ public static String getAlphabetKey(String search){
 				for (nl.tue.declare.domain.model.ActivityDefinition ad1 : cd1
 						.getBranches(p1)) {
 					constrain = cd1.getName();
-					if (constrain.equals("precedence")){
+					if (constrain.contains("precedence")){
 						
 						if (p1.getName().equals("B")
 								&& (ad1.getName()
@@ -2374,7 +2580,7 @@ public static String getAlphabetKey(String search){
 						constrain = cd.getName().replace("-", "").replace(" ", "").toLowerCase();
 						
 						
-						if (constrain.equals("precedence")) {
+						if (constrain.contains("precedence")) {
 
 							if (p.getName().equals("B")) {
 								 fname = ad.getName().toString();
@@ -2553,27 +2759,64 @@ public static String getAlphabetKey(String search){
 				corCondtion = getCorrlationAlphabet(k);
 				String[] corChoine = corCondtion.split(" ");
 
-				if (corChoine.length <= 1) {
-					String[] cor = getZeroCor(k, filter.alphabetname,
-							filter.secondAlphabetKey,filter);
-					filter.correlationlist = cor;
-					filter.secondAlphabet = "";
-				/*	SetSecondList(filter.alphabetname,
-							filter.secondAlphabetKey,cor);*/
-					
-				} else {
-					filter.correlationlist = getUpperCor(k,
-							filter.alphabetname, filter.secondAlphabetKey,filter.secondAlphabet);
-					String snd = filter.secondAlphabet;
-				//xxx	filter.secondAlphabet = snd.replaceAll(
-					//		filter.secondAlphabetKey, "!@#@!");
-					/*
-					 * System.out.println("Key: " + k + " :  Upper corre: " +
-					 * getUpperCor(k,filter.alphabetname,
-					 * filter.secondAlphabetKey));
-					 */
-				}
+				if (filter.constrain.equals("existence")) {
+					if (corChoine.length <= 1) {
+						String[] cor = getZeroCor(k, filter.alphabetname,
+								filter.secondAlphabetKey, filter);
+						filter.correlationlist = cor;
+						filter.secondAlphabet = "";
+						/*
+						 * SetSecondList(filter.alphabetname,
+						 * filter.secondAlphabetKey,cor);
+						 */
 
+					} else {
+						filter.correlationlist = getUpperCor(k,
+								filter.alphabetname, filter.secondAlphabetKey,
+								filter.secondAlphabet);
+
+					}
+
+				} else {
+				
+					if (corChoine.length <= 1) {
+
+						String[] cor = getZeroCor(k, filter.alphabetname,
+								filter.secondAlphabetKey, filter);
+						// filter.correlationlist = cor;
+						String test = filter.secondAlphabetKey;
+
+						System.out.println("xxx" + filter.constrain);
+						if (test.isEmpty()) {
+							test = "XX";
+						}
+						test = test + "::";
+
+						String[] corx = test.split("::");
+
+						filter.correlationlist = corx;
+						filter.secondAlphabet = "";
+						/*
+						 * SetSecondList(filter.alphabetname,
+						 * filter.secondAlphabetKey,cor);
+						 */
+					
+					} else {
+						// filter.correlationlist = getUpperCor(k,
+						// filter.alphabetname,
+						// filter.secondAlphabetKey,filter.secondAlphabet);
+						filter.correlationlist = filter.secondAlphabet
+								.split("::");
+						String snd = filter.secondAlphabet;
+						// xxx filter.secondAlphabet = snd.replaceAll(
+						// filter.secondAlphabetKey, "!@#@!");
+						/*
+						 * System.out.println("Key: " + k + " :  Upper corre: "
+						 * + getUpperCor(k,filter.alphabetname,
+						 * filter.secondAlphabetKey));
+						 */
+					}
+				}
 				abMapx.put(k, filter);
 			}
 		}
@@ -2614,27 +2857,26 @@ public static String getAlphabetKey(String search){
 		String aa = BranchCombination.getParentLetter(a);
 		String ret = "";
 		for (int ind = 0; ind < combinedList.size(); ind++) {
-			String  temp = combinedList.get(ind).replaceAll(" ", "");
-			String root[] =  combinedList.get(ind).split(" ");
+			String temp = combinedList.get(ind).replaceAll(" ", "");
+			String root[] = combinedList.get(ind).split(" ");
 			if (temp.contains(xkey)) {
 				if (!ret.isEmpty()) {
 					ret = ret + "::";
 				}
-				if (ind==0)
-				{	
-					ret = ret + combinedList.get(ind).replaceAll(aa, b).replaceAll(" ", "").trim();
-					}
-				else {
-					String vtemp =  combinedList.get(ind).replaceAll(aa, b).replaceAll(" ", "").trim();
-					if(!vtemp.equals(root[0].replaceAll(aa, b)))
-					{
-						ret = ret+ /*vtemp + "::"+*/ xkey.replace(aa, b) + "_"+ vtemp;
-						}
-					else{
+				if (ind == 0) {
+					ret = ret
+							+ combinedList.get(ind).replaceAll(aa, b)
+									.replaceAll(" ", "").trim();
+				} else {
+					String vtemp = combinedList.get(ind).replaceAll(aa, b)
+							.replaceAll(" ", "").trim();
+					if (!vtemp.equals(root[0].replaceAll(aa, b))) {
+						ret = ret + /* vtemp + "::"+ */vtemp;
+					} else {
 						{
-							ret = ret+ vtemp;
-							}	
-					}	
+							ret = ret + vtemp;
+						}
+					}
 				}
 			}
 		}	
@@ -2715,7 +2957,7 @@ public static String getAlphabetKey(String search){
 			Alphabet b2 = abMap.get(clst[i2]);
 			if (b2!=null){
 				
-				if(b2.constrain.equals("precedence")){
+				if(b2.constrain.contains("precedence")){
 					secondkey = b2.secondAlphabetKey;
 					if(constrainB.isEmpty())
 						constrainB =b2.constrain;
