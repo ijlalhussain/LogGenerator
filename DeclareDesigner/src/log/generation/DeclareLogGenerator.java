@@ -25,6 +25,9 @@ import minerful.concept.TaskCharSet;
 import minerful.concept.constraint.Constraint;
 import minerful.concept.constraint.ConstraintsBag;
 import minerful.concept.constraint.relation.AlternateResponse;
+import minerful.concept.constraint.existence.AtMostOne;
+import minerful.concept.constraint.existence.End;
+import minerful.concept.constraint.existence.Init;
 import minerful.concept.constraint.existence.Participation; //EXISTENCE;
 import minerful.concept.constraint.relation.AlternatePrecedence;
 import minerful.concept.constraint.relation.ChainPrecedence;
@@ -1878,8 +1881,30 @@ public static ProcessModel newStyleLog (){
 					}					
 				}
 
-			} 
-			
+			}	 else if (filter.constrain.equals("precedence")) {
+				Precedence res = new Precedence( new TaskCharSet(list),new TaskCharSet(firstChar));
+				lst.add(res);
+				
+				if (filter.correlationlist != null) {
+					for (int j = 1; j < filter.correlationlist.length; j++) {
+						list.clear();
+						String xnam = " Correlation 1st : "
+								+ filter.correlationlist[j];
+						mylist.add(filter.correlationlist[j]);
+					if (filter.isRoot==false){
+						list.add(getAlphabetValue(filter.correlationlist[j]));
+						//Response res2 = new Response(new TaskCharSet(firstChar), new TaskCharSet(list));
+						Precedence res2 = new Precedence( new TaskCharSet(list),new TaskCharSet(firstChar));
+						lst.add(res2);
+					
+					}// false
+					}
+					
+				}
+				
+				
+				 
+			}
 			
 			
 			
@@ -1946,10 +1971,10 @@ public static ProcessModel newStyleLog (){
 						}// false
 					}
 
-				}
- 			
+				} 			
  			
  			Participation res = new Participation(new TaskCharSet(list));
+ 			
 			lst.add(res);
 			}else if (filter.constrain.equals("chainprecedence")) {
 				ChainPrecedence res = new ChainPrecedence( new TaskCharSet(list),new TaskCharSet(firstChar));
@@ -1990,6 +2015,72 @@ public static ProcessModel newStyleLog (){
 					}
 					
 				}
+			}
+			
+			else if (filter.constrain.equals("init")) {
+				//list.clear();
+				if (filter.correlationlist != null) {
+					for (int j = 0; j < filter.correlationlist.length; j++) {
+						//list.clear();
+						String xnam = " Correlation 1st : "
+								+ filter.correlationlist[j];
+						mylist.add(filter.correlationlist[j]);
+					
+						if (filter.isRoot == false) {
+							list.add(getAlphabetValue(filter.correlationlist[j]));
+							/*Participation res2 = new Participation(new TaskCharSet(list));
+							lst.add(res2);*/
+						}// false
+					}
+
+				} 			
+ 			
+				Init res = new Init(new TaskCharSet(list));
+				lst.add(res);
+			}
+			
+			else if (filter.constrain.equals("end")) {
+				//list.clear();
+				if (filter.correlationlist != null) {
+					for (int j = 0; j < filter.correlationlist.length; j++) {
+						//list.clear();
+						String xnam = " Correlation 1st : "
+								+ filter.correlationlist[j];
+						mylist.add(filter.correlationlist[j]);
+					
+						if (filter.isRoot == false) {
+							list.add(getAlphabetValue(filter.correlationlist[j]));
+							/*Participation res2 = new Participation(new TaskCharSet(list));
+							lst.add(res2);*/
+						}// false
+					}
+
+				} 			
+ 			
+				End res = new End(new TaskCharSet(list));
+				lst.add(res);
+			}
+			
+			else if (filter.constrain.equals("absence")) {
+				//list.clear();
+				if (filter.correlationlist != null) {
+					for (int j = 0; j < filter.correlationlist.length; j++) {
+						//list.clear();
+						String xnam = " Correlation 1st : "
+								+ filter.correlationlist[j];
+						mylist.add(filter.correlationlist[j]);
+					
+						if (filter.isRoot == false) {
+							list.add(getAlphabetValue(filter.correlationlist[j]));
+							/*Participation res2 = new Participation(new TaskCharSet(list));
+							lst.add(res2);*/
+						}// false
+					}
+
+				} 			
+ 			 
+				AtMostOne res = new AtMostOne(new TaskCharSet(list));
+				lst.add(res);
 			}
 		//--END OF ALTERNATE PRESE	
 		
@@ -2614,7 +2705,8 @@ public static String getAlphabetKey(String search){
 						 addparent= (checkIndex(fname) ==0);
 						 addedList.add(fname);
 						 
-							if(constrain.equals("existence")){
+							if ((constrain.equals("existence")||(constrain.equals("init")))
+									||(constrain.equals("end"))||(constrain.equals("absence"))){
 								ilpcond =	getCondtions(model,fname,condition);
 								ind = checkIndex(fname);					
 								ind = ind - 1;
@@ -2759,7 +2851,8 @@ public static String getAlphabetKey(String search){
 				corCondtion = getCorrlationAlphabet(k);
 				String[] corChoine = corCondtion.split(" ");
 
-				if (filter.constrain.equals("existence")) {
+				if ((filter.constrain.equals("existence")) || ((filter.constrain.equals("init")))
+						|| ((filter.constrain.equals("end")))|| ((filter.constrain.equals("absence")))) {
 					if (corChoine.length <= 1) {
 						String[] cor = getZeroCor(k, filter.alphabetname,
 								filter.secondAlphabetKey, filter);
