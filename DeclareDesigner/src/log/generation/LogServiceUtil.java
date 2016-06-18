@@ -29,7 +29,7 @@ import org.deckfour.xes.model.XLog;
 import org.deckfour.xes.model.XTrace;
 import org.deckfour.xes.out.XesXmlSerializer;
 
-public class LogService {
+public class LogServiceUtil {
 	
 	public static void PrintMyLog(AssignmentModel model,
 			LinkedHashMap<String, Alphabet> abMapx, long LogSize,
@@ -114,7 +114,7 @@ public class LogService {
 						.trim().replaceAll(" ", ""));
 				firedTransition =  ExeActivity.alphabetkey ;// alphabets.get(xselect)
 														// ;
-				currentDate = LogService
+				currentDate = LogServiceUtil
 						.generateRandomDateTimeForLogEvent(currentDate);
 				int xval = ExeActivity.randomValue;
 				if (xval == 0) {
@@ -127,7 +127,7 @@ public class LogService {
 						Integer.toString(xval), null);
 				XAttributeMap test2 = xFactory.createAttributeMap();
 				test2.put("X", test);
-				xEvent = LogService.makeXEvent(xFactory, concExtino,
+				xEvent = LogServiceUtil.makeXEvent(xFactory, concExtino,
 						lifeExtension, timeExtension, firedTransition,
 						currentDate, test2);
 
@@ -146,7 +146,7 @@ public class LogService {
 									null);
 					XAttributeMap test2b = xFactory.createAttributeMap();
 					test2b.put("X", testb);
-					xEventb = LogService.makeXEvent(xFactory, concExtino,
+					xEventb = LogServiceUtil.makeXEvent(xFactory, concExtino,
 							lifeExtension, timeExtension, firedTransition,
 							currentDate, test2b);
 					XTimeExtension.instance().assignTimestamp(xEventb,
@@ -171,7 +171,7 @@ public class LogService {
 									null);
 					XAttributeMap test2b = xFactory.createAttributeMap();
 					test2b.put("X", testb);
-					xEventb = LogService.makeXEvent(xFactory, concExtino,
+					xEventb = LogServiceUtil.makeXEvent(xFactory, concExtino,
 							lifeExtension, timeExtension, firedTransition,
 							currentDate, test2b);
 					XTimeExtension.instance().assignTimestamp(xEventb,
@@ -197,7 +197,7 @@ public class LogService {
 										null);
 						XAttributeMap test2b = xFactory.createAttributeMap();
 						test2b.put("X", testb);
-						xEventb = LogService.makeXEvent(xFactory, concExtino,
+						xEventb = LogServiceUtil.makeXEvent(xFactory, concExtino,
 								lifeExtension, timeExtension, firedTransition,
 								currentDate, test2b);
 						XTimeExtension.instance().assignTimestamp(xEventb,

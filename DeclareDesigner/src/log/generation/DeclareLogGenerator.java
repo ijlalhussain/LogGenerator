@@ -31,6 +31,7 @@ import minerful.concept.constraint.existence.Init;
 import minerful.concept.constraint.existence.Participation; //EXISTENCE;
 import minerful.concept.constraint.relation.AlternatePrecedence;
 import minerful.concept.constraint.relation.ChainPrecedence;
+import minerful.concept.constraint.relation.ChainResponse;
 import minerful.concept.constraint.relation.NotChainSuccession;
 import minerful.concept.constraint.relation.NotCoExistence;
 import minerful.concept.constraint.relation.NotSuccession;
@@ -85,21 +86,21 @@ import org.deckfour.xes.model.XEvent;
 import org.deckfour.xes.model.XLog;
 import org.deckfour.xes.model.XTrace;
 
+/*
+ *Main Class of Log Generator
 
-
+*/
 public class DeclareLogGenerator {
-	/*public static long traceLength = 0;*/
-	
-	static LinkedHashMap<String, Alphabet> abMap = new LinkedHashMap<String, Alphabet>();
+	static LinkedHashMap<String, Alphabet> alphabetMap = new LinkedHashMap<String, Alphabet>();
 	static LinkedHashMap<String, Alphabet> abMap2 = new LinkedHashMap<String, Alphabet>();
 	static LinkedHashMap<String, Alphabet> abMapAll = new LinkedHashMap<String, Alphabet>();
-	static LinkedHashMap<String, Alphabet> abMapx = new LinkedHashMap<String, Alphabet>();
+	static LinkedHashMap<String, Alphabet> alphabetMapx = new LinkedHashMap<String, Alphabet>();
 	static LinkedHashMap<String, Alphabet> corrlationList = new LinkedHashMap<String, Alphabet>();	
 	static LinkedHashMap<String, Alphabet> abMapdata = new LinkedHashMap<String, Alphabet>();
 	static ArrayList<String> alphabets1 = new ArrayList();
-	static ArrayList<String> firstact = new ArrayList();
-	static ArrayList<String> secondact = new ArrayList();
-	static ArrayList<String> firstcont = new ArrayList();
+	static ArrayList<String> firstactivationList = new ArrayList();
+	static ArrayList<String> secondActivationList = new ArrayList();
+	static ArrayList<String> firstConditionList = new ArrayList();
 	static ArrayList<String> CorrelationContList = new ArrayList();
 	static ArrayList<String> addedList = new ArrayList();
 	static ArrayList<String> countedList = new ArrayList();
@@ -108,23 +109,14 @@ public class DeclareLogGenerator {
 	static ArrayList<String> alphabetList = new ArrayList();
 	static ArrayList<String> repeatList = new ArrayList();
 	static ArrayList<String> combinedList = new ArrayList();
-	static ArrayList<String> combinedListB = new ArrayList();
 	static ArrayList<String> constrainList = new ArrayList<String>();
 	static 	TreeMap<TaskChar,String> newLogIndex = new TreeMap<TaskChar,String>();
 	static 	TreeMap<Integer,TraceAlphabet> traceMap = new TreeMap<Integer,TraceAlphabet>();
-	static 	TreeMap<Integer,LogAlphabet> logMap = new TreeMap<Integer,LogAlphabet>();
-	//static 	HashMap<Integer,TraceAlphabet> traceMap2 = new HashMap<Integer,TraceAlphabet>();
-	
+	static 	TreeMap<Integer,LogAlphabet> logMap = new TreeMap<Integer,LogAlphabet>();	
 	static TreeMap<Integer, TraceAlphabet> traceMap2 = new TreeMap<Integer,TraceAlphabet>();
-	static TreeMap<Integer, TraceAlphabet> traceMaptest = new TreeMap<Integer,TraceAlphabet>();
-	//static TreeMap<Integer, TraceAlphabet> traceMap3 = new TreeMap<Integer,TraceAlphabet>();
-//	static 	HashMap<Integer,List<TraceAlphabet>> traceDuplicates = new HashMap<Integer,List<TraceAlphabet>>();
-	
-	
 	static String secondkey ="";
 	static String actcond ="";
 	static String constrainB ="";
-	private LogMakerCmdParameters parameters;
 	public static Encoding OUTPUT_ENCODING = Encoding.xes;
 	public static final File OUTPUT_LOG = new File("");
 
@@ -132,8 +124,26 @@ public class DeclareLogGenerator {
 			String filename, String destitionfile) {
 		AssignmentViewBroker broker = XMLBrokerFactory
 				.newAssignmentBroker(filename);
-		AssignmentModel model = broker.readAssignment();
-		
+		AssignmentModel model = broker.readAssignment();				
+		// addNewData(model);
+		getAlphabets(model); // add first aphabets and condition
+		checkActivation(model); // add activation conditions
+		ParameterSettings2.jProgressBar1.setValue(3);
+		AddFirstLetter(model); // add into abMap
+		generateCombination(); // count alphabets
+		alphabetMapx.clear();
+		SetCombinationCondtion(); // combination without rep.
+		ILPSolverUtil.CheckIlpConditions(alphabetMapx);
+		ParameterSettings2.jProgressBar1.setValue(4);
+
+		ILPSolverUtil.purifyLog(combinedList, alphabetMapx);
+
+		if (alphabetMapx.isEmpty()) {
+			JOptionPane.showMessageDialog(null, "Unable to Generate Log!");
+			return false;
+		}
+		addCorrelatedConditions();
+	//	CheckforPrecendence();
 		
 		LogMakerCmdParameters logMakParameters = new LogMakerCmdParameters(
 				minlength, maxlength, LogSize);
@@ -142,56 +152,31 @@ public class DeclareLogGenerator {
 
 		File OUTPUT_LOG = new File(destitionfile);
 		logMakParameters.outputLogFile = OUTPUT_LOG;
-		
-	
-		
-		// addNewData(model);
-		getAlphabets(model); // add first aphabets and condition
-		checkActivation(model); // add activation conditions
-		ParameterSettings2.jProgressBar1.setValue(3);
-		AddFirstLetter(model); //add into abMap
-		generateCombination(); // count alphabets
-		abMapx.clear();
-		SetCombinationCondtion(); // combination without rep.
-		IlpSolver.CheckIlpConditions(abMapx);
-		ParameterSettings2.jProgressBar1.setValue(4);
-		
-		
-		IlpSolver.purifyLog(combinedList, abMapx);
-	
-		
-		if (abMapx.isEmpty()) {
-			JOptionPane.showMessageDialog(null, "Unable to Generate Log!");
-			return false;
-		}
-		addCorrelatedConditions();
-	//	CheckforPrecendence();
 		MinerFulLogMaker logMak = new MinerFulLogMaker(logMakParameters);		
 		ProcessModel proMod = null;  
 		//CheckforPrecendence();
-		proMod =newStyleLog();// MinerfulLogGenerator.fromDeclareMapToMinerfulProcessModel(model,null, combinedList, abMapx);
+		proMod = createDataModel();//newStyleLog();
 	 
 		//addCorrelatedConditions();
 		//DeclareModelGenerator dm = new DeclareModelGenerator(model,abMapx);
 		//proMod=	dm.generateModel();
 		
-	    XLog xlog=	logMak.createLog(proMod);
-	   // twist(xlog);
-	    ProcessLog(xlog);
-	    /* GetRandomSelection(xlog);
-	   CreateGraphofLog(xlog);
-	   CombineSelectedLog();*/
-	   addCorrelationtoArray();
-	   mergeLists();
-	  // CheckForSameList(xlog);
-	   //SetMappedILPCondition();
-	   
-	    //twistcopy();
-	    //twistRandomSelection();
-	   	    
-	   // IlpSolver.CheckIlpConditions(abMap2);
-	   
-	    RestoreKeys(xlog);
+		XLog xlog = logMak.createLog(proMod);
+		// CreateBranches(xlog); //twist
+		ProcessLog(xlog);
+		/*
+		 * GetRandomSelection(xlog); CreateGraphofLog(xlog);
+		 * CombineSelectedLog();
+		 */
+		addCorrelationtoArray();
+		mergeLists();
+		// CheckForSameList(xlog);
+		// SetMappedILPCondition();
+		// removeEventswithoutSoucre();
+		// selectRandomEvents();
+		// IlpSolver.CheckIlpConditions(abMap2);
+
+		addEventDataRestoreKeys(xlog);
 	   
 	    // LogService.printLog(xlog);
 	  /*System.out.println("_____printing Map__________________");
@@ -218,54 +203,19 @@ public class DeclareLogGenerator {
 		// TODO Auto-generated method stub
 		
 		for (Entry<String, Alphabet> activity : abMapAll.entrySet()) {
-			Alphabet tc = activity.getValue();
+			Alphabet traceAlphabet = activity.getValue();
 			
-			if (tc.isSingle){
+			if (traceAlphabet.isSingle){
 				System.out.println("Key..:" +activity.getKey() + " Condition: "+
-						tc.fullCondition + " : mapped:" + tc.secondAlphabet);
+						traceAlphabet.fullCondition + " : mapped:" + traceAlphabet.secondAlphabet);
 			}else
 			{
 				System.out.println("Key:" +activity.getKey() + " Condition: "+
-						tc.fullCondition + " : mapped:" + tc.secondAlphabetKey  );
+						traceAlphabet.fullCondition + " : mapped:" + traceAlphabet.secondAlphabetKey  );
 			}
 	
 		}
-		/*
-		for (Entry<Integer, LogAlphabet> activity : logMap.entrySet()) {
-			int k = activity.getKey();
-			LogAlphabet tc = activity.getValue();
-			TraceAlphabet key = traceMap.get(k);
-			if (tc.isFirstKey == true) {
-				System.out.println("key" + key.alphabetKey + " event : " + k + ":Trace:" +tc.traceNo);
-				//ArrayList<Integer> dfsList = new ArrayList<Integer>();
-				String condition = "";
-				for (int i = 0; i < tc.eventLists.size(); i++) {
-						TraceAlphabet tc2 = traceMap.get(tc.eventLists.get(i));
-						Alphabet ab = abMapAll.get(tc2.alphabetKey);
-						
-						if (condition.isEmpty()){
-							condition = condition +"::";
-						}
-						if (tc2.isFirstKey) {
-							System.out.println("Related Key: "+ tc2.alphabetKey +":" 	+ tc.eventLists.get(i));
-							if(ab!=null && ab.actCondition != null){
-							condition = condition +  ab.actCondition.split("::")[0];
-							System.out.println("acc.Cond" + ab.actCondition);
-							}
-						} else {
-							
-							System.out.println("DFS Trace: "+ tc2.alphabetKey +":" 	+ tc.eventLists.get(i));
-							if(ab!=null && ab.relCondition != null)
-							{
-								condition = condition + ab.relCondition;
-								System.out.println("corr.Cond" + ab.actCondition);
-							}
-								
-						}
-					}
-				System.out.println("full condition: "+ condition);
-			}
-		}*/		
+		
 	}
 
 
@@ -275,41 +225,41 @@ public class DeclareLogGenerator {
 		int loopcheck = 0;
 		for (Entry<Integer, LogAlphabet> activity : logMap.entrySet()) {
 			int k = activity.getKey();
-			LogAlphabet tc = activity.getValue();
-			//System.out.println("Trace:" + tc.traceNo + " event : " + k);
-			if (tc.isFirstKey == true) {
-				for (int i = 0; i < tc.eventLists.size(); i++) {
-					if (tc.eventLists.get(i) > k) {
-							TraceAlphabet tc2 = traceMap.get(tc.eventLists.get(i));
+			LogAlphabet traceAlphabet = activity.getValue();
+			//System.out.println("Trace:" + traceAlphabet.traceNo + " event : " + k);
+			if (traceAlphabet.isFirstKey == true) {
+				for (int i = 0; i < traceAlphabet.eventLists.size(); i++) {
+					if (traceAlphabet.eventLists.get(i) > k) {
+							TraceAlphabet tc2 = traceMap.get(traceAlphabet.eventLists.get(i));
 							if (tc2.isFirstKey) {
-								tc.eventLists.remove(tc.eventLists.get(i));
+								traceAlphabet.eventLists.remove(traceAlphabet.eventLists.get(i));
 							}
 						} else {
-							tc.eventLists.remove(tc.eventLists.get(i));
+							traceAlphabet.eventLists.remove(traceAlphabet.eventLists.get(i));
 						}
 					
 
 				}
-				logMap.put(k, tc);
+				logMap.put(k, traceAlphabet);
 
 			}
 		}
 		// remove duplications
 		for (Entry<Integer, LogAlphabet> activity : logMap.entrySet()) {
 			int k = activity.getKey();
-			LogAlphabet tc = activity.getValue();
+			LogAlphabet LogAlphabet = activity.getValue();
 			TraceAlphabet key = traceMap.get(k);
-			if (tc.isFirstKey == true) {
+			if (LogAlphabet.isFirstKey == true) {
 				ArrayList<Integer> dfsList = new ArrayList<Integer>();
 				dfsList.clear();
-				for (int i = 0; i < tc.eventLists.size(); i++) {
-					if (tc.eventLists.get(i) > k) {
-						TraceAlphabet tc2 = traceMap.get(tc.eventLists.get(i));
-						dfsList.add(tc.eventLists.get(i));
+				for (int i = 0; i < LogAlphabet.eventLists.size(); i++) {
+					if (LogAlphabet.eventLists.get(i) > k) {
+						TraceAlphabet tc2 = traceMap.get(LogAlphabet.eventLists.get(i));
+						dfsList.add(LogAlphabet.eventLists.get(i));
 					}
 				}
-				tc.eventLists = dfsList;
-				logMap.put(k, tc);
+				LogAlphabet.eventLists = dfsList;
+				logMap.put(k, LogAlphabet);
 			}
 		}
 		
@@ -319,50 +269,53 @@ public class DeclareLogGenerator {
 	
 	
 	public static ArrayList<Integer> GetMapppedList(int envetNo){
-		 ArrayList<Integer> dfsList = new ArrayList<Integer>();
-		 dfsList.clear();	
-		LogAlphabet tc = logMap.get(envetNo);
-			if (tc==null){
-		//		System.out.println(" No Connected Events: "+ envetNo );
-			return dfsList;	
+		ArrayList<Integer> dfsList = new ArrayList<Integer>();
+		dfsList.clear();
+		LogAlphabet LogAlphabet = logMap.get(envetNo);
+		if (LogAlphabet == null) {
+			// System.out.println(" No Connected Events: "+ envetNo );
+			return dfsList;
+		}
+		TraceAlphabet key = traceMap.get(envetNo);
+
+		if (LogAlphabet.isFirstKey == true) {
+			System.out.println("key" + key.alphabetKey + " event : " + envetNo
+					+ ":Trace:" + LogAlphabet.traceNo);
+
+			String ilpCondition = "";
+			for (int i = 0; i < LogAlphabet.eventLists.size(); i++) {
+				// if (LogAlphabet.eventLists.get(i) > k) {
+				if (!ilpCondition.isEmpty()) {
+					ilpCondition = ilpCondition + "::";
+				}
+				TraceAlphabet tc2 = traceMap.get(LogAlphabet.eventLists.get(i));
+
+				// dfsList.add(LogAlphabet.eventLists.get(i));
+				if (tc2.isFirstKey) {
+
+					// LogAlphabet.eventLists.remove(LogAlphabet.eventLists.get(i));
+					System.out.println("Related Key: " + tc2.alphabetKey + ":"
+							+ LogAlphabet.eventLists.get(i));
+				} else {
+					dfsList.add(LogAlphabet.eventLists.get(i));
+					System.out.println("Connected Events: " + tc2.alphabetKey
+							+ ":" + LogAlphabet.eventLists.get(i));
+				}
 			}
-			TraceAlphabet key = traceMap.get(envetNo);
-			
-			 if (tc.isFirstKey == true) {
-				System.out.println("key" + key.alphabetKey + " event : " + envetNo + ":Trace:" +tc.traceNo);
-			
-				String ilpCondition = "";
-				 for (int i = 0; i < tc.eventLists.size(); i++) {
-				//	if (tc.eventLists.get(i) > k) {
-					if 	(!ilpCondition.isEmpty()){
-						ilpCondition =ilpCondition +"::";	
-					}
-					 TraceAlphabet tc2 = traceMap.get(tc.eventLists.get(i));
-					 
-				//		dfsList.add(tc.eventLists.get(i));
-						if (tc2.isFirstKey) {
-						
-							//	tc.eventLists.remove(tc.eventLists.get(i));
-							System.out.println("Related Key: "+ tc2.alphabetKey +":" 	+ tc.eventLists.get(i));
-						} else {
-							dfsList.add(tc.eventLists.get(i));
-							System.out.println("Connected Events: "+ tc2.alphabetKey +":" 	+ tc.eventLists.get(i));
-						}
-					}			
-			}	
-			 return dfsList;
+		}
+		return dfsList;
 	}
 	
 	
 	private static void CheckForSameList(XLog xlog) {
-		int eventnumber =0;
-	    int traceno =0;
-	   int check =0;
-	   ArrayList<String> sameEvents = new ArrayList<String>();
-	    for (XTrace xtrace : xlog) {
+		int eventnumber = 0;
+		int traceno = 0;
+		int check = 0;
+		ArrayList<String> sameEvents = new ArrayList<String>();
+		for (XTrace xtrace : xlog) {
 			ArrayList<Integer> traceLog = new ArrayList<Integer>();
 			ArrayList<String> traceEvents = new ArrayList<String>();
-			
+
 			traceEvents.clear();
 			traceLog.clear();
 			for (XEvent event : xtrace) {
@@ -376,122 +329,117 @@ public class DeclareLogGenerator {
 				int event = traceLog.get(i);
 				TraceAlphabet tc2 = traceMap.get(event);
 
-			//	if (tc2.isFirstKey) {
-					mappedList = GetMapppedList(event);
-						if(!mappedList.isEmpty()){
-							for (int i2 = i + 1; i2 < traceLog.size(); i2++) {
-							//	System.out.println("Mappedex:" + tc2.alphabetKey + ":"+tc2.Mappedkeys);
-								TraceAlphabet tc = traceMap.get(event);
-								if (tc.Mappedkeys != null) {
-									ArrayList<Integer> mappedList2 = new ArrayList<Integer>();
-									int event2 = traceLog.get(i2);
-									mappedList2 = GetMapppedList(event2);
-									if (!mappedList2.isEmpty() && checkforRepeart(mappedList, mappedList2)) {
-										sameEvents.add(event + "::" + event2);
+				// if (tc2.isFirstKey) {
+				mappedList = GetMapppedList(event);
+				if (!mappedList.isEmpty()) {
+					for (int i2 = i + 1; i2 < traceLog.size(); i2++) {
+						// System.out.println("Mappedex:" + tc2.alphabetKey +
+						// ":"+tc2.Mappedkeys);
+						TraceAlphabet tc = traceMap.get(event);
+						if (tc.Mappedkeys != null) {
+							ArrayList<Integer> mappedList2 = new ArrayList<Integer>();
+							int event2 = traceLog.get(i2);
+							mappedList2 = GetMapppedList(event2);
+							if (!mappedList2.isEmpty()
+									&& checkforRepeart(mappedList, mappedList2)) {
+								sameEvents.add(event + "::" + event2);
 
-									}
-
-								}
-
-						//	}
+							}
 
 						}
-							
-						}
-				
+
+						// }
+
+					}
+
+				}
 
 			}
-
-			
 
 			check = 0;
 			traceno++;
-		}		
+		}
 
-	    
-	    for (int i = 0; i < sameEvents.size(); i++) {
+		for (int i = 0; i < sameEvents.size(); i++) {
 			System.out.println("Similar Events with:" + sameEvents.get(i));
-			String[] ex =  sameEvents.get(i).split("::");
-			
-			for (int count =0; count < ex.length; count++){
+			String[] ex = sameEvents.get(i).split("::");
+
+			for (int count = 0; count < ex.length; count++) {
 				TraceAlphabet tc = traceMap2.get(Integer.parseInt(ex[count]));
-				System.out.println("xxx souce:"+ex[count]);
-				if (tc != null){
-					if (tc.ilpSelectedList != null) {					
-							for (int t = 0; t < tc.ilpSelectedList.size(); t++) {
-							System.out.println("xxx"+tc.ilpSelectedList.get(t));
-							}
-						}		
-				}	
+				System.out.println("xxx souce:" + ex[count]);
+				if (tc != null) {
+					if (tc.ilpSelectedList != null) {
+						for (int t = 0; t < tc.ilpSelectedList.size(); t++) {
+							System.out.println("xxx"
+									+ tc.ilpSelectedList.get(t));
+						}
+					}
+				}
 			}
-			
+
 		}
 	}
 
 	private static void CreateGraphofLog(XLog xlog) {
-		// TODO Auto-generated method stub
-		
-		int trace  =0;
+			
+		int trace = 0;
 		int check = 0;
 		for (Entry<Integer, TraceAlphabet> activity : traceMap2.entrySet()) {
 			int k = activity.getKey();
 			TraceAlphabet tc = activity.getValue();
-			Map<Integer,List<Integer>> ilpIndex = new HashMap<Integer,List<Integer>>();
-		//	System.out.println("Source:" + tc.alphabetKey);
+			Map<Integer, List<Integer>> ilpIndex = new HashMap<Integer, List<Integer>>();
+			// System.out.println("Source:" + tc.alphabetKey);
 			if (tc.Mappedkeys != null) {
 				Graph2 graph2 = new Graph2(600);
 				for (int i = 0; i < tc.Mappedkeys.size(); i++) {
-					graph2.addEdge(k, tc.MappedKeysIndex.get(i));
-				/*	System.out.println("Key : " + tc.Mappedkeys.get(i)
-							+ " index: " + tc.MappedKeysIndex.get(i));*/
+					graph2.addEdge(k, tc.MappedKeysIndex.get(i));					
 				}
-				
-			
-		//	System.out.println(" DFS: "+	graph2.DFS(k));
-			ArrayList<Integer> dfsList = new ArrayList<Integer>();
-			dfsList = graph2.DFS(k);
-			ilpIndex.put(k,dfsList);
-			//TraceAlphabet tc2 = new TraceAlphabet();
-			tc.ilpIndex = ilpIndex;
-			dfsList.remove(0);
-			tc.ilpSelectedList =dfsList;
-			tc.ilpList = dfsList;
-			traceMap2.put(k, tc);
+
+				// System.out.println(" DFS: "+ graph2.DFS(k));
+				ArrayList<Integer> dfsList = new ArrayList<Integer>();
+				dfsList = graph2.DFS(k);
+				ilpIndex.put(k, dfsList);
+				// TraceAlphabet tc2 = new TraceAlphabet();
+				tc.ilpIndex = ilpIndex;
+				dfsList.remove(0);
+				tc.ilpSelectedList = dfsList;
+				tc.ilpList = dfsList;
+				traceMap2.put(k, tc);
 			}
-		}	
+		}
 		// - trace action
-		
-		int eventnumber =0;
-	    int traceno =0;
-	    check =0;
-	   
-	    for (XTrace xtrace : xlog) {
-	    	 ArrayList<Integer> traceLog = new ArrayList<Integer>();
-	 	    ArrayList<String> traceEvents = new ArrayList<String>();
-	    	for (XEvent event : xtrace) {
+
+		int eventnumber = 0;
+		int traceno = 0;
+		check = 0;
+
+		for (XTrace xtrace : xlog) {
+			ArrayList<Integer> traceLog = new ArrayList<Integer>();
+			ArrayList<String> traceEvents = new ArrayList<String>();
+			for (XEvent event : xtrace) {
 				TraceAlphabet tc = traceMap2.get(eventnumber);
-				if (tc != null){
+				if (tc != null) {
 					if (tc.ilpSelectedList != null) {
 						traceLog.add(eventnumber);
-							for (int i = 0; i < tc.ilpSelectedList.size(); i++) {
-								traceEvents.add(eventnumber +"::"+tc.ilpSelectedList.get(i) );
-							}
-						}		
+						for (int i = 0; i < tc.ilpSelectedList.size(); i++) {
+							traceEvents.add(eventnumber + "::"
+									+ tc.ilpSelectedList.get(i));
+						}
+					}
 				}
 				eventnumber++;
 			}
-			
-			
-			Set<Object> strSet = Arrays.stream(traceLog.toArray())
-					.collect(Collectors.toSet());
+
+			Set<Object> strSet = Arrays.stream(traceLog.toArray()).collect(
+					Collectors.toSet());
 			traceLog.clear();
 
 			for (Object s : strSet) {
 				traceLog.add((Integer) s);
 			}
-			for (int l = 0; l < traceLog.size(); l++) {						
+			for (int l = 0; l < traceLog.size(); l++) {
 				TraceAlphabet tb = traceMap.get(traceLog.get(l));
-			//	if (tb.alphabetKey.substring(0,1).equals("A")){
+				// if (tb.alphabetKey.substring(0,1).equals("A")){
 				LogAlphabet logalphabet = new LogAlphabet();
 				logalphabet.eventNo = tb.eventNo;
 				logalphabet.traceNo = tb.traceNo;
@@ -510,21 +458,21 @@ public class DeclareLogGenerator {
 					g33.addEdge(Integer.parseInt(jj[1]),
 							Integer.parseInt(jj[0]));
 				}
-				eventList = g33.DFS(traceLog.get(l));				
+				eventList = g33.DFS(traceLog.get(l));
 				logalphabet.eventLists = eventList;
-				
+
 				if (tb.isFirstKey) {
 					logalphabet.isFirstKey = true;
-					System.out.println("Trace:"+ traceno);
-					System.out.println("LogEvent:"+ traceLog.get(l));
-					System.out.println("LogMapped:"+ eventList.toString());
-					
+					System.out.println("Trace:" + traceno);
+					System.out.println("LogEvent:" + traceLog.get(l));
+					System.out.println("LogMapped:" + eventList.toString());
+
 				} else {
 					logalphabet.isFirstKey = false;
 				}
 				logMap.put(traceLog.get(l), logalphabet);
 			}
-			
+
 			traceEvents.clear();
 			traceLog.clear();
 			check = 0;
@@ -603,320 +551,233 @@ public class DeclareLogGenerator {
 	private static void ProcessLog(XLog xlog) {
 	
 		try {
+			ArrayList<String> sourceList = new ArrayList<String>();
+			ArrayList<String> targetList = new ArrayList<String>();
+			ArrayList<String> traceList = new ArrayList<String>();
+			// ArrayList<Integer> targetIndex = new ArrayList<Integer>();
 
-
-
-		ArrayList<String> sourceList = new ArrayList<String>();
-		ArrayList<String> targetList = new ArrayList<String>();
-		ArrayList<String> traceList = new ArrayList<String>();
-	//	ArrayList<Integer> targetIndex = new ArrayList<Integer>();
-		
-		int count =0;
-		CheckforPrecendence();
-		for (Entry<String, Alphabet> activity : abMapx.entrySet()) {
+			int count = 0;
+			CheckforPrecendence();
+			for (Entry<String, Alphabet> activity : alphabetMapx.entrySet()) {
 				sourceList.add(activity.getKey());
 				constrainList.add(activity.getValue().constrain);
-			//	System.out.println("Constrain : " + activity.getValue().constrain);
-			}			
-		
-		traceMap.clear();
-	//	System.out.println("-----Printing log start -----");
-		int eventnumber =0;
-	    int traceno =0;
-	    int check =0;
-	    for (XTrace xtrace : xlog) {
-			
-			String traceName = XConceptExtension.instance().extractName(
-					xtrace);
-			traceList.clear();
-			
-			System.out.println("TraceName: " + traceName.substring(traceName.lastIndexOf(".",traceName.length())).trim());
-			for (XEvent event : xtrace) {
-				TraceAlphabet tc = new TraceAlphabet();
-				String activityName = XConceptExtension.instance()
-						.extractName(event);
-				traceList.add(DeclareLogGenerator.getAlphabetKey(activityName));				
-				System.out.println("Char : "+ activityName+ " Key: " +	DeclareLogGenerator.getAlphabetKey(activityName)+ " Event :" + eventnumber);					
-				String newKey = DeclareLogGenerator.getAlphabetKey(activityName);
-				tc.alphabetKey = newKey;
-				tc.alphabetKey = DeclareLogGenerator.getAlphabetKey(activityName);
-				tc.eventNo = eventnumber;
-				tc.traceNo = traceno;
-				tc.isFirstKey =  ((sourceList.indexOf(DeclareLogGenerator.getAlphabetKey(activityName)) > -1));
-			    tc.isMapped =false;
-				int indx = sourceList.indexOf(newKey);
-				if (indx > -1)
-				tc.constrain =  constrainList.get(indx);
-				traceMap.put(eventnumber, tc);									
-				eventnumber++;
+				// System.out.println("Constrain : " +
+				// activity.getValue().constrain);
 			}
-			check=0;
-			traceno++;
-		}
-			
-		// processing log ....
-		
-		ArrayList<Integer> traceIndex = new ArrayList<Integer>();
-		ArrayList<String> traceName= new ArrayList<String>();
-	
-		ArrayList<String> isAdded = new ArrayList<String>();
-	//	List<TraceAlphabet> tc = new ArrayList<TraceAlphabet>();
-	//	TraceAlphabet xx = new TraceAlphabet();
-//		tc.add(xx);	
-		//	traceDuplicates
-	//	System.out.println("...Log Processing....");
-		int traceNo=0;
-		traceList.clear();
-		for (Entry<Integer, TraceAlphabet> activity : traceMap.entrySet()) {
-			Integer k = activity.getKey();
-			TraceAlphabet bb = activity.getValue();
-		//	System.out.println("event: "+bb.eventNo + " key :" +  bb.alphabetKey + ":" + bb.constrain);
-			if (traceNo != bb.traceNo){
-				System.out.println("Trace No:  " + (traceNo));
-				for (int i=0; i <traceList.size();i++ )
-				{
-					
-					if (sourceList.indexOf(traceList.get(i)) != -1){
-					targetList.clear();
-					TraceAlphabet traceEvent = traceMap.get(traceIndex.get(i));
-				//	Graph g = new Graph(600);
-					traceEvent.traceNo = traceNo;
-					traceEvent.alphabetKey  =traceList.get(i);
-					traceEvent.selectedSource =traceList.get(i); 
-					traceEvent.sourceIndex = traceIndex.get(i);
-					traceEvent.isMapped =true; 
-					traceEvent.isFirstKey =  ((sourceList.indexOf(traceList.get(i)) > -1));
-					targetList=  getCorr(traceList.get(i));
-					ArrayList<String> temp = new ArrayList<String>();
-					ArrayList<Integer> temp2 = new ArrayList<Integer>();
-					temp2.clear();temp.clear();
-					temp = getmatchList(traceList,targetList, i,traceIndex,traceList.get(i),temp2);
-			//		System.out.println("Source : " + traceList.get(i) + "(" +traceIndex.get(i) +")");
-					if (!temp.isEmpty()) {
-						traceEvent.targetList=	temp;
-						/*traceEvent.targetList=	getmatchList(traceList,targetList, i,traceIndex,traceList.get(i));
-						for (int w=0; w < temp.size(); w++){
-							temp2.add(traceIndex.get(w));
-						}*/
-					traceEvent.targetListIndex = temp2;	
-					
-					
-			 Map<String, Map<String, ArrayList<Integer>>> targetedListwithIndex =new  HashMap<String, Map<String, ArrayList<Integer>>>(); ;
-			 Map<String, ArrayList<Integer>>  targetMap = new HashMap<String, ArrayList<Integer>>();
-						//	if (isAdded.indexOf(traceList.get(i)) == -1) {
+
+			traceMap.clear();
+			// System.out.println("-----Printing log start -----");
+			int eventnumber = 0;
+			int traceno = 0;
+			int check = 0;
+			for (XTrace xtrace : xlog) {
+
+				String traceName = XConceptExtension.instance().extractName(
+						xtrace);
+				traceList.clear();
+
+				System.out.println("TraceName: "
+						+ traceName.substring(
+								traceName.lastIndexOf(".", traceName.length()))
+								.trim());
+				for (XEvent event : xtrace) {
+					TraceAlphabet tc = new TraceAlphabet();
+					String activityName = XConceptExtension.instance()
+							.extractName(event);
+					traceList.add(DeclareLogGenerator
+							.getAlphabetKey(activityName));
+					System.out.println("Char : " + activityName + " Key: "
+							+ DeclareLogGenerator.getAlphabetKey(activityName)
+							+ " Event :" + eventnumber);
+					String newKey = DeclareLogGenerator
+							.getAlphabetKey(activityName);
+					tc.alphabetKey = newKey;
+					tc.alphabetKey = DeclareLogGenerator
+							.getAlphabetKey(activityName);
+					tc.eventNo = eventnumber;
+					tc.traceNo = traceno;
+					tc.isFirstKey = ((sourceList.indexOf(DeclareLogGenerator
+							.getAlphabetKey(activityName)) > -1));
+					tc.isMapped = false;
+					int indx = sourceList.indexOf(newKey);
+					if (indx > -1)
+						tc.constrain = constrainList.get(indx);
+					traceMap.put(eventnumber, tc);
+					eventnumber++;
+				}
+				check = 0;
+				traceno++;
+			}
+
+			// processing log ....
+
+			ArrayList<Integer> traceIndex = new ArrayList<Integer>();
+			ArrayList<String> traceName = new ArrayList<String>();
+			ArrayList<String> isAdded = new ArrayList<String>();
+
+			int traceNo = 0;
+			traceList.clear();
+			for (Entry<Integer, TraceAlphabet> activity : traceMap.entrySet()) {
+				Integer k = activity.getKey();
+				TraceAlphabet bb = activity.getValue();
+				// System.out.println("event: "+bb.eventNo + " key :" +
+				// bb.alphabetKey + ":" + bb.constrain);
+				if (traceNo != bb.traceNo) {
+					System.out.println("Trace No:  " + (traceNo));
+					for (int i = 0; i < traceList.size(); i++) {
+
+						if (sourceList.indexOf(traceList.get(i)) != -1) {
+							targetList.clear();
+							TraceAlphabet traceEvent = traceMap.get(traceIndex
+									.get(i));
+							// Graph g = new Graph(600);
+							traceEvent.traceNo = traceNo;
+							traceEvent.alphabetKey = traceList.get(i);
+							traceEvent.selectedSource = traceList.get(i);
+							traceEvent.sourceIndex = traceIndex.get(i);
+							traceEvent.isMapped = true;
+							traceEvent.isFirstKey = ((sourceList
+									.indexOf(traceList.get(i)) > -1));
+							targetList = getCorrelationList(traceList.get(i));
+							ArrayList<String> temp = new ArrayList<String>();
+							ArrayList<Integer> temp2 = new ArrayList<Integer>();
+							temp2.clear();
+							temp.clear();
+							temp = getmatchList(traceList, targetList, i,
+									traceIndex, traceList.get(i), temp2);
+							// System.out.println("Source : " + traceList.get(i)
+							// + "(" +traceIndex.get(i) +")");
+							if (!temp.isEmpty()) {
+								traceEvent.targetList = temp;
+								traceEvent.targetListIndex = temp2;
+								Map<String, Map<String, ArrayList<Integer>>> targetedListwithIndex = new HashMap<String, Map<String, ArrayList<Integer>>>();
+								Map<String, ArrayList<Integer>> targetMap = new HashMap<String, ArrayList<Integer>>();
 								isAdded.add(traceList.get(i));
 								isAdded.clear();
 								for (int ww = 0; ww < temp.size(); ww++) {
-									String key =  temp.get(ww);
-									ArrayList<Integer> traces =  new ArrayList<Integer>();
-								if (isAdded.indexOf(key) == -1) {
-									isAdded.add(key);
-									for (int t = i + 1; t < traceList.size(); t++) {
-										if (traceList.get(t).contains("_")) {
-											if (key.equals(traceList.get(t))) {
-												traces.add(traceIndex.get(t));
-											} else {
-												String keys[] = traceList.get(t).split("_");
-												if (key.equals(keys[0])
-														|| key.equals(keys[1])) {
+									String key = temp.get(ww);
+									ArrayList<Integer> traces = new ArrayList<Integer>();
+									if (isAdded.indexOf(key) == -1) {
+										isAdded.add(key);
+										for (int t = i + 1; t < traceList
+												.size(); t++) {
+											if (traceList.get(t).contains("_")) {
+												if (key.equals(traceList.get(t))) {
 													traces.add(traceIndex
 															.get(t));
-												}
+												} else {
+													String keys[] = traceList
+															.get(t).split("_");
+													if (key.equals(keys[0])
+															|| key.equals(keys[1])) {
+														traces.add(traceIndex
+																.get(t));
+													}
 
-											}
-										}
-										else
-									/*	if (key.contains("_")) {
-											String keys[] = key.split("_");
-											for (int ky = 0; ky < keys.length; ky++) {
-												if (keys[ky].equals(traceList
-														.get(t))) {
-													traces.add(traceIndex
-															.get(t)); break;
 												}
-											}
-
-										} else {*/
+											} else
 
 											if (key.equals(traceList.get(t))) {
 												traces.add(traceIndex.get(t));
 											}
-									//	}
-									}
-									targetMap.put(key.substring(0,1), traces);
-								}
-							}
-								/*
-								for (int jk = 0; jk < temp2.size(); jk++) {
-									 ArrayList<Integer> test =  new ArrayList<Integer>();
-									g.addEdge(traceIndex.get(i), temp2.get(jk));
-									g.addEdge(temp2.get(jk), traceIndex.get(i));
-									test.add(temp2.get(jk));
-									for (int lc=i; lc <traceList.size(); lc++){
-										if(traceList.get(lc).equals(temp2.get(jk))){
-											g.addEdge(traceIndex.get(lc), temp2.get(jk));
-											g.addEdge(temp2.get(jk), traceIndex.get(lc));
-											test.add(traceIndex.get(lc));
+
 										}
+										targetMap.put(key.substring(0, 1),
+												traces);
 									}
-									targetMap.put(temp.get(jk),test);	
 								}
-								ArrayList<Integer> dfs = new ArrayList<Integer>();
-								ArrayList<Integer> ilp = new ArrayList<Integer>();
-								dfs = g.DFS(traceIndex.get(i));
-								
-								for (int df=0;df< dfs.size(); df++){
-									int srch = traceIndex.indexOf(dfs.get(df));
-									if (sourceList.indexOf(traceList.get(srch)) == -1){
-										ilp.add(dfs.get(df));
-									}	
-									
-								}*/
-								
-							//	CheckforRando(dfs,traceIndex,traceList);
-								 targetedListwithIndex.put(traceList.get(i), targetMap);
-								 traceEvent.targetedListwithIndex =targetedListwithIndex;
-							//	 traceEvent.ilpList = dfs;
-							//	traceEvent.ilpSelectedList = ilp;
-							//	System.out.println("checking for " 	+ traceIndex.get(i));
-							//	System.out.println(g.DFS(traceIndex.get(i)));
-								//System.out.println(ilp.toString());
-								
-						//	}
+
+								//Not required after branch issue
+							//	targetedListwithIndex.put(traceList.get(i),
+							//			targetMap);
+							//	traceEvent.targetedListwithIndex = targetedListwithIndex;
+
+							}
+
+							//traceMap2.put(traceIndex.get(i), traceEvent);
+
 						}
-	//				tc.add(traceEvent);
-			//	System.out.println("Duplicates: " +traceIndex.get(i) + ":" + traceList.get(i) + temp2.toString() + temp.toString());
-				traceMap2.put(traceIndex.get(i), traceEvent);	
-				//traceMap.put(traceIndex.get(i), traceEvent);
 					}
-				}
-				//if (!tc.isEmpty())
-			//	traceDuplicates.put(traceNo, tc);
-		//		tc.clear();
-				//getEventList(traceIndex,sourceList,traceList,traceNo);
-			//	traceNo = k;
-				traceNo = bb.traceNo;
-//				targetIndex.clear();
-				traceIndex.clear();
-				traceList.clear();
-				isAdded.clear();
-				//traceNo ;
-			}
-//			targetIndex.add(bb.targetIndex);
-			traceIndex.add(k);
-			traceList.add(bb.alphabetKey);			
-		}	
 
-
-		for (int iX=0; iX <traceList.size();iX++ )
-		{
-			if (sourceList.indexOf(traceList.get(iX)) != -1){
-			targetList.clear();
-			TraceAlphabet traceEvent = traceMap.get(traceIndex.get(iX));
-			Graph g = new Graph(600);
-			//	traceEvent.traceNo = traceNo;
-				traceEvent.alphabetKey  =traceList.get(iX);
-				traceEvent.selectedSource =traceList.get(iX); 
-				traceEvent.sourceIndex = traceIndex.get(iX);
-				traceEvent.isMapped =true;
-				traceEvent.isFirstKey =  ((sourceList.indexOf(traceList.get(iX)) > -1));
-			targetList=  getCorr(traceList.get(iX));
-			ArrayList<String> temp = new ArrayList<String>();
-			ArrayList<Integer> temp2 = new ArrayList<Integer>();
-			temp2.clear();temp.clear();
-			temp = getmatchList(traceList,targetList, iX,traceIndex,traceList.get(iX),temp2);
-	//		System.out.println("Source : " + traceList.get(iX) + "(" +traceIndex.get(iX) +")");
-			if (!temp.isEmpty()) {
-				traceEvent.targetList=	temp;
-				traceEvent.targetListIndex = temp2;	
-					Map<String, Map<String, ArrayList<Integer>>> targetedListwithIndex = new HashMap<String, Map<String, ArrayList<Integer>>>();
-					;
-					Map<String, ArrayList<Integer>> targetMap = new HashMap<String, ArrayList<Integer>>();
-					// if (isAdded.indexOf(traceList.get(i)) == -1) {
-					//isAdded.add(traceList.get(i));
+					traceNo = bb.traceNo;
+					// targetIndex.clear();
+					traceIndex.clear();
+					traceList.clear();
 					isAdded.clear();
-					for (int ww = 0; ww < temp.size(); ww++) {
-						String key = temp.get(ww);
-						ArrayList<Integer> traces = new ArrayList<Integer>();
-						if (isAdded.indexOf(key) == -1) {
-							isAdded.add(key);
-							for (int t = iX+1; t < traceList.size(); t++) {
-								if (traceList.get(t).contains("_")) {
-									if (key.equals(traceList.get(t))) {
-										traces.add(traceIndex.get(t));
-									} else {
-										String keys[] = traceList.get(t).split("_");
-										if (key.equals(keys[0])
-												|| key.equals(keys[1])) {
-											traces.add(traceIndex
-													.get(t));
-										}
-
-									}
-								}
-								else
-/*								if (key.contains("_")) {
-									String keys[] = key.split("_");
-									for (int ky = 0; ky < keys.length; ky++) {
-										if (keys[ky].equals(traceList
-												.get(t))) {
-											traces.add(traceIndex
-													.get(t)); break;
-										}
-									}
-
-								} else {*/
-
-									if (key.equals(traceList.get(t))) {
-										traces.add(traceIndex.get(t));
-									}
-								//}
-
-							}
-							targetMap.put(key.substring(0,1), traces);
-						}
-					}
-
-/*					//if (isAdded.indexOf(traceList.get(iX)) == -1) {
-						isAdded.add(traceList.get(iX));
-						for (int jk = 0; jk < temp2.size(); jk++) {
-							g.addEdge(traceIndex.get(iX), temp2.get(jk));
-							g.addEdge(temp2.get(jk), traceIndex.get(iX));
-							
-							for (int lc=iX; lc <traceList.size(); lc++){
-								if(traceList.get(lc).equals(traceList.get(iX))){
-									g.addEdge(traceIndex.get(lc), temp2.get(jk));
-									g.addEdge(temp2.get(jk), traceIndex.get(lc));
-								}
-							}
-						}
-						
-						ArrayList<Integer> dfs = new ArrayList<Integer>();
-						ArrayList<Integer> ilp = new ArrayList<Integer>();
-						dfs = g.DFS(traceIndex.get(iX));
-						
-						for (int df=0;df< dfs.size(); df++){
-							int srch = traceIndex.indexOf(dfs.get(df));
-							System.out.println(traceList.get(srch) + ":"+dfs.get(df));
-							if (sourceList.indexOf(traceList.get(srch)) == -1){
-								ilp.add(dfs.get(df));
-							}	
-							
-						}
-*/					//	System.out.println("checking for " + traceIndex.get(iX));
-					//	System.out.println(g.DFS(traceIndex.get(iX)));
-						 targetedListwithIndex.put(traceList.get(iX), targetMap);
-						 traceEvent.targetedListwithIndex =targetedListwithIndex;
-//						System.out.println(ilp.toString());
-					}
-			traceMap2.put(traceIndex.get(iX), traceEvent);
+					// traceNo ;
 				}
-			//}
-		}
-		} catch (Exception e){
+				// targetIndex.add(bb.targetIndex);
+				traceIndex.add(k);
+				traceList.add(bb.alphabetKey);
+			}
 
-		    // Deal with e as you please.
-		    //e may be any type of exception at all.
+			for (int iX = 0; iX < traceList.size(); iX++) {
+				if (sourceList.indexOf(traceList.get(iX)) != -1) {
+					targetList.clear();
+					TraceAlphabet traceEvent = traceMap.get(traceIndex.get(iX));
+					Graph g = new Graph(600);
+					// traceEvent.traceNo = traceNo;
+					traceEvent.alphabetKey = traceList.get(iX);
+					traceEvent.selectedSource = traceList.get(iX);
+					traceEvent.sourceIndex = traceIndex.get(iX);
+					traceEvent.isMapped = true;
+					traceEvent.isFirstKey = ((sourceList.indexOf(traceList
+							.get(iX)) > -1));
+					targetList = getCorrelationList(traceList.get(iX));
+					ArrayList<String> temp = new ArrayList<String>();
+					ArrayList<Integer> temp2 = new ArrayList<Integer>();
+					temp2.clear();
+					temp.clear();
+					temp = getmatchList(traceList, targetList, iX, traceIndex,
+							traceList.get(iX), temp2);
+					// System.out.println("Source : " + traceList.get(iX) + "("
+					// +traceIndex.get(iX) +")");
+					if (!temp.isEmpty()) {
+						traceEvent.targetList = temp;
+						traceEvent.targetListIndex = temp2;
+						Map<String, Map<String, ArrayList<Integer>>> targetedListwithIndex = new HashMap<String, Map<String, ArrayList<Integer>>>();
+						Map<String, ArrayList<Integer>> targetMap = new HashMap<String, ArrayList<Integer>>();
+						isAdded.clear();
+						for (int ww = 0; ww < temp.size(); ww++) {
+							String key = temp.get(ww);
+							ArrayList<Integer> traces = new ArrayList<Integer>();
+							if (isAdded.indexOf(key) == -1) {
+								isAdded.add(key);
+								for (int t = iX + 1; t < traceList.size(); t++) {
+									if (traceList.get(t).contains("_")) {
+										if (key.equals(traceList.get(t))) {
+											traces.add(traceIndex.get(t));
+										} else {
+											String keys[] = traceList.get(t)
+													.split("_");
+											if (key.equals(keys[0])
+													|| key.equals(keys[1])) {
+												traces.add(traceIndex.get(t));
+											}
+
+										}
+									} else if (key.equals(traceList.get(t))) {
+										traces.add(traceIndex.get(t));
+									}
+									// }
+
+								}
+								targetMap.put(key.substring(0, 1), traces);
+							}
+						}
+					//not required after branch issue.
+						//targetedListwithIndex.put(traceList.get(iX), targetMap);
+					//	traceEvent.targetedListwithIndex = targetedListwithIndex;
+						// System.out.println(ilp.toString());
+					}
+					//traceMap2.put(traceIndex.get(iX), traceEvent);
+				}
+				// }
+			}
+		} catch (Exception e) {
+
+			// Deal with e as you please.
+			// e may be any type of exception at all.
 
 		}
 	
@@ -924,8 +785,7 @@ public class DeclareLogGenerator {
 	}
 
 
-	private static void CheckforRando(ArrayList<Integer> dfs,
-			ArrayList<Integer> traceIndex, ArrayList<String> traceList) {
+	private static void CheckforRando(ArrayList<Integer> dfs,ArrayList<Integer> traceIndex, ArrayList<String> traceList) {
 		// TODO Auto-generated method stub
 		ArrayList<String> Added = new ArrayList<String>();
 		ArrayList<Integer> AddedIndex = new ArrayList<Integer>();
@@ -957,7 +817,7 @@ public class DeclareLogGenerator {
 
 
 	private static void mergeLists() {
-		for (Entry<String, Alphabet> activity : abMapx.entrySet()) {
+		for (Entry<String, Alphabet> activity : alphabetMapx.entrySet()) {
 			String k = activity.getKey();
 			Alphabet ret = activity.getValue();
 			abMapAll.put(k, ret);
@@ -973,89 +833,82 @@ public class DeclareLogGenerator {
 	}
 
 
-	private static void RestoreKeys(XLog xlog) {
-	int count =0;
-	int check =0;
-	int eventnumber=0;
+	private static void addEventDataRestoreKeys(XLog xlog) {
+		int count = 0;
+		int check = 0;
+		int eventnumber = 0;
 		for (XTrace xtrace : xlog) {
-				for (XEvent event : xtrace) {				
-					//event.getAttributes().
-				
-					XAttributeMap eventAttributes = event.getAttributes();
-					String name = "?";
-					int local=0;
-					for (String key : eventAttributes.keySet()) {
-						if (local==0){
-							name= 	eventAttributes.get(key).toString();
-						}
-					
-						/*String value = eventAttributes.get(key).toString();
-						String ww = eventAttributes.get(key).getKey();
-						System.out.println(" eventAttributes key: " + key + "  value: " + value + " ww: " + ww);*/
-						local++;
+			for (XEvent event : xtrace) {
+				// event.getAttributes().
+
+				XAttributeMap eventAttributes = event.getAttributes();
+				String name = "?";
+				int local = 0;
+				for (String key : eventAttributes.keySet()) {
+					if (local == 0) {
+						name = eventAttributes.get(key).toString();
 					}
-										
-					String keyName = 	getAlphabetKey(name);
-					String paylaodName = "Data";
-					int keyValue = (int) Math.random();
-					Alphabet ExeActivity = abMapAll.get(keyName);
-					if (ExeActivity !=null){
-						paylaodName	 = ExeActivity.payLoadName;
-						keyValue= getRandomTrace(ExeActivity.minValue,ExeActivity.maxValue);
-					}
-					
-					if (paylaodName ==null || paylaodName.isEmpty())
-					{ paylaodName="Data";}
-					XConceptExtension.instance().assignName(event,keyName);
-					 XFactory xFactory = XFactoryRegistry.instance().currentDefault();
-						XAttribute test = xFactory.createAttributeLiteral(paylaodName,Integer.toString(keyValue), null);
-						XAttributeMap test2 = event.getAttributes();
-						test2.put(paylaodName, test);
-						event.setAttributes(test2);
-						//xtrace.set(check, event);
-						//check++;
-					xtrace.set(check, event);
-					check++;
-					
-					eventnumber++;	
+					local++;
 				}
-				check=0;
-				
-				
+
+				String keyName = getAlphabetKey(name);
+				String paylaodName = "Data:";
+				int keyValue = (int) Math.random();
+				Alphabet ExeActivity = abMapAll.get(keyName);
+				if (ExeActivity != null) {
+					paylaodName = paylaodName+ ExeActivity.payLoadName;
+					keyValue = getRandomTrace(ExeActivity.minValue,
+							ExeActivity.maxValue);
+				}
+
+				if (paylaodName == null || paylaodName.isEmpty()) {
+					paylaodName = "Data";
+				}
+				XConceptExtension.instance().assignName(event, keyName);
+				XFactory xFactory = XFactoryRegistry.instance()
+						.currentDefault();
+				XAttribute test = xFactory.createAttributeLiteral(paylaodName,
+						Integer.toString(keyValue), null);
+				XAttributeMap test2 = event.getAttributes();
+				test2.put(paylaodName, test);
+				event.setAttributes(test2);
+				xtrace.set(check, event);
+				check++;
+
+				eventnumber++;
 			}
+			check = 0;
+
+		}
 			
 	}
 
 
 	private static void addCorrelationtoArray() {
-		for (Entry<String, Alphabet> activity : abMapx.entrySet()) {
+		for (Entry<String, Alphabet> activity : alphabetMapx.entrySet()) {
 			String k = activity.getKey();
 			Alphabet ret = activity.getValue();
 
-			if (ret != null){
-				if(ret.correlationlist != null){
-					for(int i=0; i < ret.correlationlist.length; i++){
-					  String key = ret.correlationlist[i];
-					  ret.isActivated = false;
-					  String condition = ret.actCondition + "::" + ret.relCondition;
-					  /*  System.out.println("-----------:( "+key+ " ):-----------------");
-					  
-					  System.out.println("actCondition: "+ ret.actCondition );
-					  System.out.println("Corelation: "+ ret.relCondition );
-					  System.out.println("Key: "+ key + " Codition : " + condition );*/
-					  ret.actCondition = condition;
-					  abMap2.put(key, ret);
-				  }	
+			if (ret != null) {
+				if (ret.correlationlist != null) {
+					for (int i = 0; i < ret.correlationlist.length; i++) {
+						String key = ret.correlationlist[i];
+						ret.isActivated = false;
+						String condition = ret.actCondition + "::"
+								+ ret.relCondition;
+						ret.actCondition = condition;
+						abMap2.put(key, ret);
+					}
 				}
 			}
-		}		
+		}	
 	}
 
 
-	public static ArrayList<String> getCorr(String key){
+	public static ArrayList<String> getCorrelationList(String key){
 		ArrayList<String> targetList = new ArrayList<String>();	
 		
-		Alphabet ret = abMapx.get(key);
+		Alphabet ret = alphabetMapx.get(key);
 		if (ret != null){
 			if(ret.correlationlist != null){
 				targetList.clear();
@@ -1123,170 +976,153 @@ public class DeclareLogGenerator {
 		return ret;
 			
 	}
-	public static void twist(XLog xlog) {
+	public static void CreateBranches(XLog xlog) {
 		/*try {*/
 
-			ArrayList<String> sourceList = new ArrayList<String>();
-			ArrayList<String> targetList = new ArrayList<String>();
-			ArrayList<String> traceList = new ArrayList<String>();
-		//	ArrayList<Integer> targetIndex = new ArrayList<Integer>();
-			
-			int count =0;
-			CheckforPrecendence();
-			for (Entry<String, Alphabet> activity : abMapx.entrySet()) {
-					sourceList.add(activity.getKey());
-					constrainList.add(activity.getValue().constrain);
-					System.out.println("Constrain : " + activity.getValue().constrain);
-				}			
-			
-			traceMap.clear();
-			System.out.println("-----Printing log start -----");
-			int eventnumber =0;
-		    int traceno =0;
-		    int check =0;
-		    for (XTrace xtrace : xlog) {
-				
-				String traceName = XConceptExtension.instance().extractName(
-						xtrace);
-				traceList.clear();
-				
-				System.out.println("TraceName: " + traceName.substring(traceName.lastIndexOf(".",traceName.length())).trim());
-				for (XEvent event : xtrace) {
-					TraceAlphabet tc = new TraceAlphabet();
-					String activityName = XConceptExtension.instance()
-							.extractName(event);
-					traceList.add(DeclareLogGenerator.getAlphabetKey(activityName));				
-					System.out.println("Char : "+ activityName+ " Key: " +	DeclareLogGenerator.getAlphabetKey(activityName)+ " Event :" + eventnumber);					
-					String newKey = DeclareLogGenerator.getAlphabetKey(activityName);
-					tc.alphabetKey = newKey;
-					tc.alphabetKey = DeclareLogGenerator.getAlphabetKey(activityName);
-					tc.eventNo = eventnumber;
-					tc.traceNo = traceno;
-					tc.isFirstKey = true;
-					tc.isMapped =false;
-					int indx = sourceList.indexOf(newKey);
-					if (indx > -1)
-					tc.constrain =  constrainList.get(indx);
-					traceMap.put(eventnumber, tc);									
-					eventnumber++;
-				}
-				check=0;
-				traceno++;
-			}
-				
-			// processing log ....
-			
-			ArrayList<Integer> traceIndex = new ArrayList<Integer>();
-			ArrayList<String> traceName= new ArrayList<String>();
-			
-		//	List<TraceAlphabet> tc = new ArrayList<TraceAlphabet>();
-		//	TraceAlphabet xx = new TraceAlphabet();
-	//		tc.add(xx);	
-			//	traceDuplicates
-			System.out.println("...Log Processing....");
-			int traceNo=0;
+		ArrayList<String> sourceList = new ArrayList<String>();
+		ArrayList<String> targetList = new ArrayList<String>();
+		ArrayList<String> traceList = new ArrayList<String>();
+		// ArrayList<Integer> targetIndex = new ArrayList<Integer>();
+
+		int count = 0;
+		CheckforPrecendence();
+		for (Entry<String, Alphabet> activity : alphabetMapx.entrySet()) {
+			sourceList.add(activity.getKey());
+			constrainList.add(activity.getValue().constrain);
+			System.out.println("Constrain : " + activity.getValue().constrain);
+		}
+
+		traceMap.clear();
+		System.out.println("-----Printing log start -----");
+		int eventnumber = 0;
+		int traceno = 0;
+		int check = 0;
+		for (XTrace xtrace : xlog) {
+
+			String traceName = XConceptExtension.instance().extractName(xtrace);
 			traceList.clear();
-			for (Entry<Integer, TraceAlphabet> activity : traceMap.entrySet()) {
-				Integer k = activity.getKey();
-				TraceAlphabet bb = activity.getValue();
-			//	System.out.println("event: "+bb.eventNo + " key :" +  bb.alphabetKey + ":" + bb.constrain);
-				if (traceNo != bb.traceNo){
-					System.out.println("Duplication in Trace:  " + (traceNo));
-					for (int i=0; i <traceList.size();i++ )
-					{
-						if (sourceList.indexOf(traceList.get(i)) != -1){
+
+			System.out.println("TraceName: "
+					+ traceName.substring(
+							traceName.lastIndexOf(".", traceName.length()))
+							.trim());
+			for (XEvent event : xtrace) {
+				TraceAlphabet traceAlphabet = new TraceAlphabet();
+				String activityName = XConceptExtension.instance().extractName(
+						event);
+				traceList.add(DeclareLogGenerator.getAlphabetKey(activityName));
+				System.out.println("Char : " + activityName + " Key: "
+						+ DeclareLogGenerator.getAlphabetKey(activityName)
+						+ " Event :" + eventnumber);
+				String newKey = DeclareLogGenerator
+						.getAlphabetKey(activityName);
+				traceAlphabet.alphabetKey = newKey;
+				traceAlphabet.alphabetKey = DeclareLogGenerator
+						.getAlphabetKey(activityName);
+				traceAlphabet.eventNo = eventnumber;
+				traceAlphabet.traceNo = traceno;
+				traceAlphabet.isFirstKey = true;
+				traceAlphabet.isMapped = false;
+				int indx = sourceList.indexOf(newKey);
+				if (indx > -1)
+					traceAlphabet.constrain = constrainList.get(indx);
+				traceMap.put(eventnumber, traceAlphabet);
+				eventnumber++;
+			}
+			check = 0;
+			traceno++;
+		}
+
+		// processing log ....
+
+		ArrayList<Integer> traceIndex = new ArrayList<Integer>();
+		ArrayList<String> traceName = new ArrayList<String>();
+		System.out.println("...Log Processing....");
+		int traceNo = 0;
+		traceList.clear();
+		for (Entry<Integer, TraceAlphabet> activity : traceMap.entrySet()) {
+			Integer k = activity.getKey();
+			TraceAlphabet bb = activity.getValue();
+			if (traceNo != bb.traceNo) {
+				System.out.println("Duplication in Trace:  " + (traceNo));
+				for (int i = 0; i < traceList.size(); i++) {
+					if (sourceList.indexOf(traceList.get(i)) != -1) {
 						targetList.clear();
 						TraceAlphabet eEvent = new TraceAlphabet();
 						eEvent.traceNo = traceNo;
-						eEvent.alphabetKey  =traceList.get(i);
-						eEvent.selectedSource =traceList.get(i); 
+						eEvent.alphabetKey = traceList.get(i);
+						eEvent.selectedSource = traceList.get(i);
 						eEvent.sourceIndex = traceIndex.get(i);
-						eEvent.isMapped =true;
-						targetList=  getCorr(traceList.get(i));
+						eEvent.isMapped = true;
+						targetList = getCorrelationList(traceList.get(i));
 						ArrayList<String> temp = new ArrayList<String>();
 						ArrayList<Integer> temp2 = new ArrayList<Integer>();
-						temp2.clear();temp.clear();
-						temp = getmatchList(traceList,targetList, i,traceIndex,traceList.get(i),temp2);
-				//		System.out.println("Source : " + traceList.get(i) + "(" +traceIndex.get(i) +")");
+						temp2.clear();
+						temp.clear();
+						temp = getmatchList(traceList, targetList, i,
+								traceIndex, traceList.get(i), temp2);						
 						if (!temp.isEmpty()) {
-							eEvent.targetList=	temp;
-							/*traceEvent.targetList=	getmatchList(traceList,targetList, i,traceIndex,traceList.get(i));
-							for (int w=0; w < temp.size(); w++){
-								temp2.add(traceIndex.get(w));
-							}*/
-							eEvent.targetListIndex = temp2;	
-							
-							
-							
-							
-							
+							eEvent.targetList = temp;
+							eEvent.targetListIndex = temp2;
 						}
+						traceMap2.put(traceIndex.get(i), eEvent);
 						
-		//				tc.add(traceEvent);
-				//	System.out.println("Duplicates: " +traceIndex.get(i) + ":" + traceList.get(i) + temp2.toString() + temp.toString());
-					traceMap2.put(traceIndex.get(i), eEvent);	
-					//traceMap.put(traceIndex.get(i), traceEvent);
-						}
 					}
-					//if (!tc.isEmpty())
-				//	traceDuplicates.put(traceNo, tc);
-			//		tc.clear();
-					//getEventList(traceIndex,sourceList,traceList,traceNo);
-				//	traceNo = k;
-					traceNo = bb.traceNo;
-//					targetIndex.clear();
-					traceIndex.clear();
-					traceList.clear();
-					
-					//traceNo ;
-				}
-	//			targetIndex.add(bb.targetIndex);
-				traceIndex.add(k);
-				traceList.add(bb.alphabetKey);			
-			}	
-			//getEventList(traceIndex,sourceList,traceList,traceNo);
-		//traceNo++;
-	//		System.out.println("Duplication in Last Trace:  " + (traceNo));
-			//tc.clear();
-			for (int iX=0; iX <traceList.size();iX++ )
-			{
-				if (sourceList.indexOf(traceList.get(iX)) != -1){
-				targetList.clear();
-				TraceAlphabet traceEvent = new TraceAlphabet();// traceMap.get(traceIndex.get(iX));
-					traceEvent.traceNo = traceNo;
-					traceEvent.alphabetKey  =traceList.get(iX);
-					traceEvent.selectedSource =traceList.get(iX); 
-					traceEvent.sourceIndex = traceIndex.get(iX);
-					traceEvent.isMapped =true;
-				targetList=  getCorr(traceList.get(iX));
-				ArrayList<String> temp = new ArrayList<String>();
-				ArrayList<Integer> temp2 = new ArrayList<Integer>();
-				temp2.clear();temp.clear();
-				temp = getmatchList(traceList,targetList, iX,traceIndex,traceList.get(iX),temp2);
-		//		System.out.println("Source : " + traceList.get(iX) + "(" +traceIndex.get(iX) +")");
-				if (!temp.isEmpty()) {
-					traceEvent.targetList=	temp;
-					traceEvent.targetListIndex = temp2;	
-				}
-				traceMap2.put(traceIndex.get(iX), traceEvent);
-				}
-			}
-			
-			
-			System.out.println("....Mapped Trace...");
-			for (Entry<Integer, TraceAlphabet> activity : traceMap2.entrySet()) {
-				Integer k = activity.getKey();
-				TraceAlphabet tx = activity.getValue();
-			System.out.println("Eevent : " + k + " Map (A): " + tx.selectedSource + ":" + tx.sourceIndex);
-			if ((tx.targetList != null)) {
-				for (int m = 0; m < tx.targetList.size(); m++) {
-					System.out.println("Trace : " +tx.traceNo + " event :" +k + " source : "
-							+ tx.selectedSource + ":" + tx.sourceIndex
-							+ " target:" + tx.targetList.get(m)
-							+ " : Index : (" + tx.targetListIndex.get(m) + ")");
 				}
 
-				
+				traceNo = bb.traceNo;
+				// targetIndex.clear();
+				traceIndex.clear();
+				traceList.clear();
+
+				// traceNo ;
+			}
+			// targetIndex.add(bb.targetIndex);
+			traceIndex.add(k);
+			traceList.add(bb.alphabetKey);
+		}
+
+		for (int iX = 0; iX < traceList.size(); iX++) {
+			if (sourceList.indexOf(traceList.get(iX)) != -1) {
+				targetList.clear();
+				TraceAlphabet traceEvent = new TraceAlphabet();// traceMap.get(traceIndex.get(iX));
+				traceEvent.traceNo = traceNo;
+				traceEvent.alphabetKey = traceList.get(iX);
+				traceEvent.selectedSource = traceList.get(iX);
+				traceEvent.sourceIndex = traceIndex.get(iX);
+				traceEvent.isMapped = true;
+				targetList = getCorrelationList(traceList.get(iX));
+				ArrayList<String> temp = new ArrayList<String>();
+				ArrayList<Integer> temp2 = new ArrayList<Integer>();
+				temp2.clear();
+				temp.clear();
+				temp = getmatchList(traceList, targetList, iX, traceIndex,
+						traceList.get(iX), temp2);
+				// System.out.println("Source : " + traceList.get(iX) + "("
+				// +traceIndex.get(iX) +")");
+				if (!temp.isEmpty()) {
+					traceEvent.targetList = temp;
+					traceEvent.targetListIndex = temp2;
+				}
+				traceMap2.put(traceIndex.get(iX), traceEvent);
+			}
+		}
+
+		System.out.println("....Mapped Trace...");
+		for (Entry<Integer, TraceAlphabet> activity : traceMap2.entrySet()) {
+			Integer k = activity.getKey();
+			TraceAlphabet tx = activity.getValue();
+			System.out.println("Eevent : " + k + " Map (A): "
+					+ tx.selectedSource + ":" + tx.sourceIndex);
+			if ((tx.targetList != null)) {
+				for (int m = 0; m < tx.targetList.size(); m++) {
+					System.out.println("Trace : " + tx.traceNo + " event :" + k
+							+ " source : " + tx.selectedSource + ":"
+							+ tx.sourceIndex + " target:"
+							+ tx.targetList.get(m) + " : Index : ("
+							+ tx.targetListIndex.get(m) + ")");
+				}
+
 				System.out.println("---Hello---Random: "
 						+ SelectRandomName(tx.targetList));
 				System.out.println("");
@@ -1294,104 +1130,80 @@ public class DeclareLogGenerator {
 
 		}
 
-				
-	/*	
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}*/
-		
 		System.out.println("-----Printing log end -----");
 	}
 	
-	public static void twistcopy(){
+	public static void removeEventswithoutSouce(){
 		System.out.println("----------index printing---------");
 		
-		Iterator<Entry<Integer, TraceAlphabet>> iter = traceMap.entrySet().iterator();
+		Iterator<Entry<Integer, TraceAlphabet>> iter = traceMap.entrySet()
+				.iterator();
 		while (iter.hasNext()) {
-		    Map.Entry<Integer,TraceAlphabet> entry = iter.next();
-		    if((entry.getValue().selectedSource == null)&&
-		    		(entry.getValue().selectedSource == null)){
-		        iter.remove();
-		    }
+			Map.Entry<Integer, TraceAlphabet> entry = iter.next();
+			if ((entry.getValue().selectedSource == null)
+					&& (entry.getValue().selectedSource == null)) {
+				iter.remove();
+			}
 		}
-		
-		
-		int  traceNo=-1;
-			for (Entry<Integer, TraceAlphabet> activity : traceMap.entrySet()) {
-				TraceAlphabet bb = activity.getValue();			
-				if (bb.traceNo != traceNo){
-					traceNo = bb.traceNo;
-					System.out.println("----------Trace ("+traceNo+")----------" );
-				
-				}
-				
-				System.out.println(" Trace: "+ bb.traceNo + " Event:"+ bb.eventNo + "  : Source " +
-				bb.selectedSource +"(" + bb.sourceIndex + ")  : Target " + bb.selectedTarget 
-				+ "(" + bb.targetIndex + ")" +  bb.constrain);
-				
-			}	
-		
-		
+		int traceNo = -1;
+		for (Entry<Integer, TraceAlphabet> activity : traceMap.entrySet()) {
+			TraceAlphabet bb = activity.getValue();
+			if (bb.traceNo != traceNo) {
+				traceNo = bb.traceNo;
+				System.out.println("----------Trace (" + traceNo+ ")----------");
+
+			}
+
+			System.out.println(" Trace: " + bb.traceNo + " Event:" + bb.eventNo
+					+ "  : Source " + bb.selectedSource + "(" + bb.sourceIndex
+					+ ")  : Target " + bb.selectedTarget + "(" + bb.targetIndex
+					+ ")" + bb.constrain);
+
+		}		
 	}
 	
-	public static void twistRandomSelection(){
+	public static void selectRandomEvents(){
 		ArrayList<String> eventKey = new ArrayList();
 		ArrayList<String> matched = new ArrayList();
 		ArrayList<Integer> eventNo = new ArrayList();
 		ArrayList<String> added = new ArrayList();
-		ArrayList<String> targetList =  new ArrayList();
- 		int  traceNo=0;
+		ArrayList<String> targetList = new ArrayList();
+		int traceNo = 0;
 		for (Entry<Integer, TraceAlphabet> activity : traceMap.entrySet()) {
-			
-			TraceAlphabet bb = activity.getValue();			
-			if (bb.traceNo != traceNo){
-			   setRandomTrace(eventKey,eventNo,traceNo);
-			   System.out.println("Sect " + secondact);
-			   
-			   for (int i = 0; i < secondact.size(); i++) {
-				   String jx= secondact.get(i);
-				    String jj[] = jx.split(":");
-					
-				    targetList=  getCorr(jj[0]);
-				    String found = jj[jj.length -1];
-				    
-				    /*for (int x = i + 1; x < secondact.size(); x++) {
-				    	 String jx2= secondact.get(x);
-						   String jj2[] = jx.split(":");
-							String found2 = jj[jj.length -1];
-				    	
-				    	if (found.equals(found2)) {
-						String Dupli = secondact.get(i);
-						if (added.indexOf(found)<= -1){
-							//if (secondact.get(i) == secondact.get(j) && i != j) {
-							matched.add(found);
-							added.add(found);
-							}	
-						
-					} // 
-				    }// end of second if
-*/				}
+
+			TraceAlphabet bb = activity.getValue();
+			if (bb.traceNo != traceNo) {
+				setRandomTrace(eventKey, eventNo, traceNo);
+				System.out.println("Sect " + secondActivationList);
+
+				for (int i = 0; i < secondActivationList.size(); i++) {
+					String jx = secondActivationList.get(i);
+					String jj[] = jx.split(":");
+
+					targetList = getCorrelationList(jj[0]);
+					String found = jj[jj.length - 1];
+				}
 
 				traceNo = bb.traceNo;
-				System.out.println("----------Trace ("+traceNo+")----------" );
+				System.out.println("----------Trace (" + traceNo+ ")----------");
 				eventKey.clear();
 				eventNo.clear();
-				secondact.clear();
+				secondActivationList.clear();
 				added.clear();
 				matched.clear();
-			
+
 			}
-		//	eventKey.add(bb.selectedSource);
+			// eventKey.add(bb.selectedSource);
 			eventKey.add(bb.selectedTarget);
 			eventNo.add(activity.getKey());
-			System.out.println(" Trace: "+ bb.traceNo + " Event:"+ bb.eventNo + "  : Source " +
-			bb.selectedSource +"(" + bb.sourceIndex + ")  : Target " + bb.selectedTarget 
-			+ "(" + bb.targetIndex + ")" +  bb.constrain);
-			
-		}	
-		
-		 setRandomTrace(eventKey,eventNo,traceNo);
+			System.out.println(" Trace: " + bb.traceNo + " Event:" + bb.eventNo
+					+ "  : Source " + bb.selectedSource + "(" + bb.sourceIndex
+					+ ")  : Target " + bb.selectedTarget + "(" + bb.targetIndex
+					+ ")" + bb.constrain);
+
+		}
+
+		setRandomTrace(eventKey, eventNo, traceNo);
 	
 	}
 	
@@ -1481,76 +1293,27 @@ public class DeclareLogGenerator {
 	}
 	
 	public static String setRandomTrace(ArrayList<String> eventKey,ArrayList<Integer> eventNo,int traceNo){
-		String ret ="";
-		ArrayList<String> duplicateList = new ArrayList();	
+		String ret = "";
+		ArrayList<String> duplicateList = new ArrayList();
 		ArrayList<String> corrList = new ArrayList();
 		System.out.println("setRandomTrace");
-	
+
 		for (int i = 0; i < eventKey.size(); i++) {
 			System.out.println("i " + i + " event " + eventKey.get(i) + " key "
 					+ eventNo.get(i));
-			for (int j = i+1; j < eventKey.size(); j++) {
+			for (int j = i + 1; j < eventKey.size(); j++) {
 				if (eventKey.get(i) == eventKey.get(j) && i != j) {
 					duplicateList.add(eventKey.get(i));
-					String Dupli = eventKey.get(i)+ ":"+eventNo.get(j);
-					if (secondact.indexOf(Dupli) <= -1)
-					secondact.add(Dupli);
+					String Dupli = eventKey.get(i) + ":" + eventNo.get(j);
+					if (secondActivationList.indexOf(Dupli) <= -1)
+						secondActivationList.add(Dupli);
 					System.out.println("Duplicate" + eventKey.get(j)
 							+ ": event " + eventNo.get(j));
 				}
 			}
 		}
-				
-			
-		/*	
-		
-		for (int i = 0; i < eventKey.size(); i++)
-		{
-			System.out.println("duplicate event: " + eventNo.get(i));
-			for (int j = i + 1 ; j < eventKey.size(); j++) 
-			{ 
-				if (eventKey.get(i).equals(eventKey.get(j))) { 
-					System.out.println("Duplicates at" + eventKey.get(i) + " at : "+eventNo.get(i));
-					//System.out.println("eventKey.get(j)" + eventKey.get(j));
-				}
-			}
-		}
-*/
-			/*
-		
-		
-		for (int i=0; i < eventNo.size(); i ++){
-			int event = eventNo.get(i);
-			String key = eventKey.get(i);
-			corrList.clear();
-			corrList= getCorr(eventKey.get(i));
-			for (int k=0; k < corrList.size(); k++){
-				if(corrList.get(k).equals(eventKey.get(i)))
-				duplicateList.add(corrList.get(k));
-			}		
-			
-			for (int ii=i; ii < eventNo.size(); ii ++){
-				if (eventKey.get(i).equals(eventKey.get(ii)))
-				{
-					duplicateList.add(eventKey.get(i));	
-				}
-			}
-		}
-		int indx =0;
-			
-				if (duplicateList.size() > 0)
-				{
-					indx = selectRandom(duplicateList.size());
 
-				int ind = eventKey.indexOf(duplicateList.get(indx));
-
-				if (ind > -1) {
-					ret = eventKey.get(ind);
-				}
-			
-		System.out.println("Duplicates :" + ret);
-		}	
-*/		return ret;
+		return ret;
 	}
 	
 	public static void getEventList(ArrayList<Integer> traceList,ArrayList<String> sourceList,ArrayList<String> traceListName, int count ){
@@ -1563,7 +1326,7 @@ public class DeclareLogGenerator {
 			int index = sourceList.indexOf(traceListName.get(i));
 		//	
 			if (index > -1) {
-				targetList = getCorr(sourceList.get(index));
+				targetList = getCorrelationList(sourceList.get(index));
 			//	getmatchList(traceListName,targetList,null,""); 
 				
 				if (!targetList.isEmpty()) {
@@ -1590,114 +1353,96 @@ public class DeclareLogGenerator {
 	}
 	
 	
-public static ProcessModel newStyleLog (){
+public static ProcessModel createDataModel (){
 
-	List<TaskChar> where = new ArrayList<TaskChar>();
-	List<Constraint> lst = new ArrayList<Constraint>();
-	List<String> mylist = new  ArrayList<String>();
+	List<TaskChar> addtaskCharList = new ArrayList<TaskChar>();
+	List<Constraint> constraintList = new ArrayList<Constraint>();
+	List<String> targetList = new  ArrayList<String>();
 	
 	
-	for (Entry<String, Alphabet> activity : abMapx.entrySet()) {
-		String key = activity.getKey();
-		Alphabet filter = activity.getValue();
-		mylist.add(key);
-		
-	/*	if (!filter.secondAlphabetKey.isEmpty()) {			
-			String alphabetname = BranchCombination.getParentLetter(key);
-			String xnam = " 1st : "+ key.replace(key,filter.secondAlphabetKey);//filter.correlationlist[j]; \
-			xnam = key.replace(alphabetname,filter.secondAlphabetKey);
-			mylist.add(xnam);		
-		} // second key
-		
-		else {*/
-			System.out.println("New Style : " + key + ":"+ filter.secondAlphabet);
-			System.out.println(filter.secondAlphabet);
-			if (filter.correlationlist != null) {
-				for (int j = 0; j < filter.correlationlist.length; j++) {
-					String xnam = " Correlation 1st : "
-							+ filter.correlationlist[j];
-					//if(mylist.indexOf(filter.correlationlist[j]) != -1){
-						mylist.add(filter.correlationlist[j]);	
-				//	}
-					
-				/*	String alphabetname = BranchCombination.getParentLetter(filter.correlationlist[j]);
-					String blist[] = filter.secondAlphabet.split("::");
-				if (blist.length>1){
-					for (int ndm =0; ndm <blist.length; ndm++){
-						if (!alphabetname.equals("")){
-						if(!blist[ndm].equals(alphabetname)){
-							System.out.println(filter.correlationlist[j].replace(alphabetname, blist[ndm]));
-							mylist.add(filter.correlationlist[j].replace(alphabetname, blist[ndm]));							
-						}			}
-					}
-					}*/
+		for (Entry<String, Alphabet> activity : alphabetMapx.entrySet()) {
+			String key = activity.getKey();
+			Alphabet alphabet = activity.getValue();
+			targetList.add(key);
+			if (alphabet.correlationlist != null) {
+				for (int j = 0; j < alphabet.correlationlist.length; j++) {
+					targetList.add(alphabet.correlationlist[j]);
 				}
 			}
 
 			else {
 				String alphabetname = BranchCombination.getParentLetter(key);
-				String xnam = " 1st : "
-						+ key.replace(key, filter.secondAlphabetKey);// filter.correlationlist[j];
+				String xnam = " 1st : " + key.replace(key, alphabet.secondAlphabetKey);// alphabet.correlationlist[j];
 																		// \
-				xnam = key.replace(alphabetname, filter.secondAlphabetKey);
-				mylist.add(xnam);
+				xnam = key.replace(alphabetname, alphabet.secondAlphabetKey);
+				targetList.add(xnam);
 			}
 		}
 	
 	
-	if (!mylist.isEmpty()){
-		Set<Object> strSet = Arrays.stream(mylist.toArray()).collect(Collectors.toSet());
-		mylist.clear();
-		
-		for(Object s: strSet){
-			mylist.add((String) s);
+		if (!targetList.isEmpty()) {
+			Set<Object> strSet = Arrays.stream(targetList.toArray()).collect(
+					Collectors.toSet());
+			targetList.clear();
+
+			for (Object s : strSet) {
+				targetList.add((String) s);
+			}
 		}
-	}
+
+		Collections.sort(targetList);
+		int theEnd = 65 + targetList.size();
+		for (int vchar = 65; vchar < theEnd; vchar++) {
+			char c = (char) vchar;
+			System.out.println("Char: " + c);
+			TaskChar cc = new TaskChar(c);
+			addtaskCharList.add(cc);
+		}
 	
-	Collections.sort(mylist);
-	int theEnd = 65+ mylist.size();
-	for (int vchar = 65; vchar < theEnd;vchar++ ){
-		char c = (char)vchar;
-		System.out.println("Char: "+ c);
-		TaskChar cc = new TaskChar(c);
-		where.add(cc);			
-	}
-	
-	for (int i=0; i < mylist.size(); i++){
-		newLogIndex.put(where.get(i),mylist.get(i));
-		System.out.println("Map:  Key: "+ where.get(i) + " Char: "+  mylist.get(i));
-	}
+		for (int i = 0; i < targetList.size(); i++) {
+			newLogIndex.put(addtaskCharList.get(i), targetList.get(i));
+			System.out.println("Map:  Key: " + addtaskCharList.get(i) + " Char: "
+					+ targetList.get(i));
+		}
 	
 	
-	for (Entry<String, Alphabet> activity : abMapx.entrySet()) {
-		String key = activity.getKey();
-		Alphabet filter = activity.getValue();
+	for (Entry<String, Alphabet> activity : alphabetMapx.entrySet()) {
+			String key = activity.getKey();
+			Alphabet alphabet = activity.getValue();
+
+			TaskChar firstChar = getAlphabetValue(key);// newLogIndex.get(key);
+
+			ArrayList<TaskChar> taskCharList = new ArrayList<TaskChar>();
+			TaskCharSet target = new TaskCharSet();
+			taskCharList.clear();
+
+			if (alphabet.constrain.equals("existence")) {
+				/*
+				 * if (BranchCombination.getParentLetter(k).equals(k)) {
+				 * continue; }
+				 */
+				if (alphabet.isSingle) {
+					continue;
+				}
+			}
+
+			if (alphabet.constrain.equals("absence")) {
+				if (alphabet.isSingle) {
+					continue;
+				}
+			}
 		
-		TaskChar firstChar = getAlphabetValue(key);//  newLogIndex.get(key);
-		
-		ArrayList<TaskChar> list = new ArrayList<TaskChar>();
-		TaskCharSet target = new TaskCharSet();
-		/*if (!filter.secondAlphabetKey.isEmpty()) {			
-			String alphabetname = BranchCombination.getParentLetter(key);
-			String xnam =  key.replace(key,filter.secondAlphabetKey);//filter.correlationlist[j]; \
-			xnam = key.replace(alphabetname,filter.secondAlphabetKey);
-			testchar[0]= newLogIndex.get(xnam);	
-			
-		} // second key
-		
-		else {
-		*/	list.clear();
 		
 			String xKey = key.substring(key.length() - 1);
 
 			if (xKey.equals("0")) {
-				if (filter.correlationlist != null){
-					for(int j=0; j < filter.correlationlist.length ; j++){
-						String xnam =filter.correlationlist[j];
-						list.add(getAlphabetValue(filter.correlationlist[j]));
-						int len = filter.correlationlist[j].length();
+				if (alphabet.correlationlist != null){
+					for(int j=0; j < alphabet.correlationlist.length ; j++){
+						String xnam =alphabet.correlationlist[j];
+						taskCharList.add(getAlphabetValue(alphabet.correlationlist[j]));
+						int len = alphabet.correlationlist[j].length();
 						if ((xnam.contains("_"))
-								&& (xnam.contains(filter.secondAlphabetKey))) {
+								&& (xnam.contains(alphabet.secondAlphabetKey))) {
 							String sx[] = xnam.split("_");
 							String first = BranchCombination.getParentLetter(key);
 							String last = BranchCombination.getParentLetter(sx[0]);
@@ -1705,7 +1450,7 @@ public static ProcessModel newStyleLog (){
 							last = sx[0].replace(last, "");
 							System.out.println("First" + first + " :Lst" + last);
 							if (first.equals(last)) {
-								list.add(getAlphabetValue(filter.correlationlist[j]));								
+								taskCharList.add(getAlphabetValue(alphabet.correlationlist[j]));								
 							}
 						} 
 					}
@@ -1716,425 +1461,422 @@ public static ProcessModel newStyleLog (){
 			
 			// end of one leerl
 			else {		
-			if (filter.correlationlist != null){
-				for(int j=0; j < filter.correlationlist.length ; j++){
-					String xnam =filter.correlationlist[j];
-					int len = filter.correlationlist[j].length();
-					if ((xnam.contains("_"))
-							&& (xnam.contains(filter.secondAlphabetKey))) {
-						String sx[] = xnam.split("_");
-						String first = BranchCombination.getParentLetter(key);
-						String last = BranchCombination.getParentLetter(sx[0]);
-						first = key.replace(first, "");
-						last = sx[0].replace(last, "");
-						System.out.println("First" + first + " :Lst" + last);
-						//if (first.equals(last)) {
-						if (filter.isRoot){	
-						list.add(getAlphabetValue(filter.correlationlist[j]));
-							// list.add(
-							// newLogIndex.get(filter.correlationlist[j]));
+			if (alphabet.correlationlist != null){
+				for(int j=0; j < alphabet.correlationlist.length ; j++){
+					String xnam =alphabet.correlationlist[j];
+					int len = alphabet.correlationlist[j].length();
+						if ((xnam.contains("_"))
+								&& (xnam.contains(alphabet.secondAlphabetKey))) {
+							String sx[] = xnam.split("_");
+							String first = BranchCombination
+									.getParentLetter(key);
+							String last = BranchCombination
+									.getParentLetter(sx[0]);
+							first = key.replace(first, "");
+							last = sx[0].replace(last, "");
+							System.out
+									.println("First" + first + " :Lst" + last);
+						
+							if (alphabet.isRoot) {
+								taskCharList
+										.add(getAlphabetValue(alphabet.correlationlist[j]));
+
+							}
+						} else if ((alphabet.correlationlist[j].length() < key
+								.length() + 3)
+								&& (xnam.contains(alphabet.secondAlphabetKey))) {
+							taskCharList
+									.add(getAlphabetValue(alphabet.correlationlist[j]));
+
 						}
-					} else if ((filter.correlationlist[j].length() < key
-							.length() + 3)
-							&& (xnam.contains(filter.secondAlphabetKey))) {
-						list.add(getAlphabetValue(filter.correlationlist[j]));
-						// list.add(newLogIndex.get(filter.correlationlist[j]));
-					}
 					}
 			} else {
 				String alphabetname = BranchCombination.getParentLetter(key);
-				String xnam = key.replace(key, filter.secondAlphabetKey);// filter.correlationlist[j];
+				String xnam = key.replace(key, alphabet.secondAlphabetKey);// alphabet.correlationlist[j];
 																			// \
 				if ((xnam.length() + 3 == key.length())
-						&& (xnam.contains(filter.secondAlphabetKey))) {
-					xnam = key.replace(alphabetname, filter.secondAlphabetKey);
-					// list.add(newLogIndex.get(xnam));
-					list.add(getAlphabetValue(xnam));
+						&& (xnam.contains(alphabet.secondAlphabetKey))) {
+					xnam = key.replace(alphabetname, alphabet.secondAlphabetKey);
+					
+					taskCharList.add(getAlphabetValue(xnam));
 				}
-			}  // end of filter empy
+			}  // end of alphabet empy
 			} // end of zero level check
 			
 		
-			
-			if (filter.constrain.equals("response")) {
-				Response res = new Response(new TaskCharSet(firstChar), new TaskCharSet(list));
-				lst.add(res);
-			
-				if (filter.correlationlist != null) {
-					for (int j = 1; j < filter.correlationlist.length; j++) {
-						list.clear();
-						String xnam = " Correlation 1st : "	+ filter.correlationlist[j];
-						mylist.add(filter.correlationlist[j]);
-						if (filter.isRoot==false){
-							list.add(getAlphabetValue(filter.correlationlist[j]));
-							Response res2 = new Response(new TaskCharSet(firstChar), new TaskCharSet(list));
-							lst.add(res2);
-						}// false
-					}
-					
-				}
-				
-			} else if (filter.constrain.equals("precedence")) {
-				Precedence res = new Precedence( new TaskCharSet(list),new TaskCharSet(firstChar));
-				lst.add(res);
-				
-				if (filter.correlationlist != null) {
-					for (int j = 1; j < filter.correlationlist.length; j++) {
-						list.clear();
-						String xnam = " Correlation 1st : "
-								+ filter.correlationlist[j];
-						mylist.add(filter.correlationlist[j]);
-					if (filter.isRoot==false){
-						list.add(getAlphabetValue(filter.correlationlist[j]));
-						//Response res2 = new Response(new TaskCharSet(firstChar), new TaskCharSet(list));
-						Precedence res2 = new Precedence( new TaskCharSet(list),new TaskCharSet(firstChar));
-						lst.add(res2);
-					
-					}// false
-					}
-					
-				}
-				
-				
-				//START OF RESPONCE EXIS
-			} 	if (filter.constrain.equals("respondedexistence")){
-				RespondedExistence res = new RespondedExistence(new TaskCharSet(firstChar), new TaskCharSet(list)); 
-				//Response res = new Response(new TaskCharSet(firstChar), new TaskCharSet(list));
-				lst.add(res);
-			
-				if (filter.correlationlist != null) {
-					for (int j = 1; j < filter.correlationlist.length; j++) {
-						list.clear();
-						String xnam = " Correlation 1st : "
-								+ filter.correlationlist[j];
-						mylist.add(filter.correlationlist[j]);
-				
-					if (filter.isRoot==false){
-						list.add(getAlphabetValue(filter.correlationlist[j]));
-						//Response res2 = new Response(new TaskCharSet(firstChar), new TaskCharSet(list));
-						RespondedExistence res2 = new RespondedExistence(new TaskCharSet(firstChar), new TaskCharSet(list));
-						lst.add(res2);
-					
-					}// false
-					}
-					
-				}
-			
-			} 	if (filter.constrain.equals("alternateresponse")){
-				
-				AlternateResponse res = new AlternateResponse(new TaskCharSet(firstChar), new TaskCharSet(list)); 
-				lst.add(res);			
-				if (filter.correlationlist != null) {
-					for (int j = 1; j < filter.correlationlist.length; j++) {
-						list.clear();
-						String xnam = " Correlation 1st : "
-								+ filter.correlationlist[j];
-						mylist.add(filter.correlationlist[j]);
-				
-					if (filter.isRoot==false){
-						list.add(getAlphabetValue(filter.correlationlist[j]));
-						AlternateResponse res2 = new AlternateResponse(new TaskCharSet(firstChar), new TaskCharSet(list));
-						lst.add(res2);
-					
-					}// false
-					}
-					
-				}
-				
-			} else	if (filter.constrain.equals("notresponse")){
-				
-				NotSuccession res = new NotSuccession(new TaskCharSet(firstChar), new TaskCharSet(list)); 
-				lst.add(res);			
-				if (filter.correlationlist != null) {
-					for (int j = 1; j < filter.correlationlist.length; j++) {
-						list.clear();
-						String xnam = " Correlation 1st : "
-								+ filter.correlationlist[j];
-						mylist.add(filter.correlationlist[j]);
-				
-					if (filter.isRoot==false){
-						list.add(getAlphabetValue(filter.correlationlist[j]));
-						NotSuccession res2 = new NotSuccession(new TaskCharSet(firstChar), new TaskCharSet(list));
-						lst.add(res2);
-					
-					}// false
-					}					
-				}
-
-				} else	if (filter.constrain.equals("notchainresponse")){
-				
-					NotChainSuccession res = new NotChainSuccession(new TaskCharSet(firstChar), new TaskCharSet(list)); 
-				lst.add(res);			
-				if (filter.correlationlist != null) {
-					for (int j = 1; j < filter.correlationlist.length; j++) {
-						list.clear();
-						String xnam = " Correlation 1st : "
-								+ filter.correlationlist[j];
-						mylist.add(filter.correlationlist[j]);
-				
-					if (filter.isRoot==false){
-						list.add(getAlphabetValue(filter.correlationlist[j]));
-						NotChainSuccession res2 = new NotChainSuccession(new TaskCharSet(firstChar), new TaskCharSet(list));
-						lst.add(res2);
-					
-					}// false
-					}					
-				}
-
-			}	 else if (filter.constrain.equals("precedence")) {
-				Precedence res = new Precedence( new TaskCharSet(list),new TaskCharSet(firstChar));
-				lst.add(res);
-				
-				if (filter.correlationlist != null) {
-					for (int j = 1; j < filter.correlationlist.length; j++) {
-						list.clear();
-						String xnam = " Correlation 1st : "
-								+ filter.correlationlist[j];
-						mylist.add(filter.correlationlist[j]);
-					if (filter.isRoot==false){
-						list.add(getAlphabetValue(filter.correlationlist[j]));
-						//Response res2 = new Response(new TaskCharSet(firstChar), new TaskCharSet(list));
-						Precedence res2 = new Precedence( new TaskCharSet(list),new TaskCharSet(firstChar));
-						lst.add(res2);
-					
-					}// false
-					}
-					
-				}
-				
-				
-				 
-			}
-			
-			
-			
-			else if (filter.constrain.equals("notrespondedexistence")) {
-				
-				
-				NotCoExistence res = new NotCoExistence(
-						new TaskCharSet(firstChar), new TaskCharSet(list));
-				lst.add(res);
-				if (filter.correlationlist != null) {
-					for (int j = 1; j < filter.correlationlist.length; j++) {
-						list.clear();
-						String xnam = " Correlation 1st : "
-								+ filter.correlationlist[j];
-						mylist.add(filter.correlationlist[j]);
-
-						if (filter.isRoot == false) {
-							list.add(getAlphabetValue(filter.correlationlist[j]));
-							NotCoExistence res2 = new NotCoExistence(
-									new TaskCharSet(firstChar),
-									new TaskCharSet(list));
-							lst.add(res2);
-
-						}// false
-					}
-				}
-
-			}
-
-			else if (filter.constrain.equals("alternateprecedence")) {
-				
-				AlternatePrecedence res = new AlternatePrecedence( new TaskCharSet(list),new TaskCharSet(firstChar));
-				lst.add(res);
-				
-				if (filter.correlationlist != null) {
-					for (int j = 1; j < filter.correlationlist.length; j++) {
-						list.clear();
-						String xnam = " Correlation 1st : "
-								+ filter.correlationlist[j];
-						mylist.add(filter.correlationlist[j]);
-					if (filter.isRoot==false){
-						list.add(getAlphabetValue(filter.correlationlist[j]));
-						AlternatePrecedence res2 = new AlternatePrecedence( new TaskCharSet(list),new TaskCharSet(firstChar));
-						lst.add(res2);					
-					}// false
-					}
-					
-				}
-			}
-
-			else if (filter.constrain.equals("existence")) {
-				//list.clear();
-				if (filter.correlationlist != null) {
-					for (int j = 0; j < filter.correlationlist.length; j++) {
-						//list.clear();
-						String xnam = " Correlation 1st : "
-								+ filter.correlationlist[j];
-						mylist.add(filter.correlationlist[j]);
-					
-						if (filter.isRoot == false) {
-							list.add(getAlphabetValue(filter.correlationlist[j]));
-							/*Participation res2 = new Participation(new TaskCharSet(list));
-							lst.add(res2);*/
-						}// false
-					}
-
-				} 			
- 			
- 			Participation res = new Participation(new TaskCharSet(list));
- 			
-			lst.add(res);
-			}else if (filter.constrain.equals("chainprecedence")) {
-				ChainPrecedence res = new ChainPrecedence( new TaskCharSet(list),new TaskCharSet(firstChar));
-				lst.add(res);
-				
-				if (filter.correlationlist != null) {
-					for (int j = 1; j < filter.correlationlist.length; j++) {
-						list.clear();
-						String xnam = " Correlation 1st : "
-								+ filter.correlationlist[j];
-						mylist.add(filter.correlationlist[j]);
-					if (filter.isRoot==false){
-						list.add(getAlphabetValue(filter.correlationlist[j]));						
-						ChainPrecedence res2 = new ChainPrecedence( new TaskCharSet(list),new TaskCharSet(firstChar));
-						lst.add(res2);
-					
-					}// false
-					}
-					
-				}
-			}	else if (filter.constrain.equals("notprecedence")) {
-				
-				NotSuccession res = new NotSuccession( new TaskCharSet(list),new TaskCharSet(firstChar));
-				lst.add(res);
-				
-				if (filter.correlationlist != null) {
-					for (int j = 1; j < filter.correlationlist.length; j++) {
-						list.clear();
-						String xnam = " Correlation 1st : "
-								+ filter.correlationlist[j];
-						mylist.add(filter.correlationlist[j]);
-					if (filter.isRoot==false){
-						list.add(getAlphabetValue(filter.correlationlist[j]));						
-						NotSuccession res2 = new NotSuccession( new TaskCharSet(list),new TaskCharSet(firstChar));
-						lst.add(res2);
-					
-					}// false
-					}
-					
-				}
-			}
-			
-			else if (filter.constrain.equals("init")) {
-				//list.clear();
-				if (filter.correlationlist != null) {
-					for (int j = 0; j < filter.correlationlist.length; j++) {
-						//list.clear();
-						String xnam = " Correlation 1st : "
-								+ filter.correlationlist[j];
-						mylist.add(filter.correlationlist[j]);
-					
-						if (filter.isRoot == false) {
-							list.add(getAlphabetValue(filter.correlationlist[j]));
-							/*Participation res2 = new Participation(new TaskCharSet(list));
-							lst.add(res2);*/
-						}// false
-					}
-
-				} 			
- 			
-				Init res = new Init(new TaskCharSet(list));
-				lst.add(res);
-			}
-			
-			else if (filter.constrain.equals("end")) {
-				//list.clear();
-				if (filter.correlationlist != null) {
-					for (int j = 0; j < filter.correlationlist.length; j++) {
-						//list.clear();
-						String xnam = " Correlation 1st : "
-								+ filter.correlationlist[j];
-						mylist.add(filter.correlationlist[j]);
-					
-						if (filter.isRoot == false) {
-							list.add(getAlphabetValue(filter.correlationlist[j]));
-							/*Participation res2 = new Participation(new TaskCharSet(list));
-							lst.add(res2);*/
-						}// false
-					}
-
-				} 			
- 			
-				End res = new End(new TaskCharSet(list));
-				lst.add(res);
-			}
-			
-			else if (filter.constrain.equals("absence")) {
-				//list.clear();
-				if (filter.correlationlist != null) {
-					for (int j = 0; j < filter.correlationlist.length; j++) {
-						//list.clear();
-						String xnam = " Correlation 1st : "
-								+ filter.correlationlist[j];
-						mylist.add(filter.correlationlist[j]);
-					
-						if (filter.isRoot == false) {
-							list.add(getAlphabetValue(filter.correlationlist[j]));
-							/*Participation res2 = new Participation(new TaskCharSet(list));
-							lst.add(res2);*/
-						}// false
-					}
-
-				} 			
- 			 
-				AtMostOne res = new AtMostOne(new TaskCharSet(list));
-				lst.add(res);
-			}
-		//--END OF ALTERNATE PRESE	
+			// create new model for log generation..
+		     switch (alphabet.constrain) {
+	            case "response": 
+						Response response = new Response(new TaskCharSet(firstChar),
+								new TaskCharSet(taskCharList));
+						constraintList.add(response);
+						if (alphabet.correlationlist != null) {
+							for (int j = 1; j < alphabet.correlationlist.length; j++) {
+								taskCharList.clear();
+								targetList.add(alphabet.correlationlist[j]);
+								if (alphabet.isRoot == false) {
+									taskCharList.add(getAlphabetValue(alphabet.correlationlist[j]));
+									Response response2 = new Response(new TaskCharSet(
+											firstChar), new TaskCharSet(taskCharList));
+									constraintList.add(response2);
+								}
+							}
 		
+						}
+						break;
+						
+	            case "alternateresponse" :
+						AlternateResponse res = new AlternateResponse(new TaskCharSet(
+								firstChar), new TaskCharSet(taskCharList));
+						constraintList.add(res);
+						if (alphabet.correlationlist != null) {
+							for (int j = 1; j < alphabet.correlationlist.length; j++) {
+								taskCharList.clear();
+								targetList.add(alphabet.correlationlist[j]);
+								if (alphabet.isRoot == false) {
+									taskCharList.add(getAlphabetValue(alphabet.correlationlist[j]));
+									AlternateResponse res2 = new AlternateResponse(
+											new TaskCharSet(firstChar),
+											new TaskCharSet(taskCharList));
+									constraintList.add(res2);
+		
+								}
+							}
+		
+						}
+						break;
+						
+	            case "notresponse" :
+					NotSuccession notresponse = new NotSuccession(new TaskCharSet(
+							firstChar), new TaskCharSet(taskCharList));
+					constraintList.add(notresponse);
+					if (alphabet.correlationlist != null) {
+						for (int j = 1; j < alphabet.correlationlist.length; j++) {
+							taskCharList.clear();
+							targetList.add(alphabet.correlationlist[j]);
+	
+							if (alphabet.isRoot == false) {
+								taskCharList.add(getAlphabetValue(alphabet.correlationlist[j]));
+								NotSuccession notresponse2 = new NotSuccession(
+										new TaskCharSet(firstChar),
+										new TaskCharSet(taskCharList));
+								constraintList.add(notresponse2);
+	
+							}
+						}
+					}
+					break;
+	         
+	            case "respondedexistence" :
+						RespondedExistence respondedexistence = new RespondedExistence(
+								new TaskCharSet(firstChar), new TaskCharSet(taskCharList));
+						constraintList.add(respondedexistence);
+						if (alphabet.correlationlist != null) {
+							for (int j = 1; j < alphabet.correlationlist.length; j++) {
+								taskCharList.clear();
+								targetList.add(alphabet.correlationlist[j]);
+		
+								if (alphabet.isRoot == false) {
+									taskCharList.add(getAlphabetValue(alphabet.correlationlist[j]));
+									RespondedExistence respondedexistence2 = new RespondedExistence(
+											new TaskCharSet(firstChar),
+											new TaskCharSet(taskCharList));
+									constraintList.add(respondedexistence2);
+		
+								}
+							}
+		
+						}
+						break;
+	        
+	            case "notchainresponse" :
+					NotChainSuccession notchainresponse = new NotChainSuccession(
+							new TaskCharSet(firstChar), new TaskCharSet(taskCharList));
+					constraintList.add(notchainresponse);
+					if (alphabet.correlationlist != null) {
+						for (int j = 1; j < alphabet.correlationlist.length; j++) {
+							taskCharList.clear();
+							targetList.add(alphabet.correlationlist[j]);
+	
+							if (alphabet.isRoot == false) {
+								taskCharList.add(getAlphabetValue(alphabet.correlationlist[j]));
+								NotChainSuccession notchainresponse2 = new NotChainSuccession(
+										new TaskCharSet(firstChar),
+										new TaskCharSet(taskCharList));
+								constraintList.add(notchainresponse2);
+	
+							}
+						}
+					}
+					break;
+					
+	            case "chainresponse":	            	
+						ChainResponse chainresponse = new ChainResponse(
+								new TaskCharSet(firstChar), new TaskCharSet(taskCharList));
+						constraintList.add(chainresponse);
+						if (alphabet.correlationlist != null) {
+							for (int j = 1; j < alphabet.correlationlist.length; j++) {
+								taskCharList.clear();
+								targetList.add(alphabet.correlationlist[j]);
+								if (alphabet.isRoot == false) {
+									taskCharList.add(getAlphabetValue(alphabet.correlationlist[j]));
+									ChainResponse chainresponse2 = new ChainResponse(
+											new TaskCharSet(firstChar),
+											new TaskCharSet(taskCharList));
+									constraintList.add(chainresponse2);
+								}
+							}
+		
+						}		
+						break;
+					
+	            case "notrespondedexistence":
+						NotCoExistence notrespondedexistence = new NotCoExistence(new TaskCharSet(
+								firstChar), new TaskCharSet(taskCharList));
+						constraintList.add(notrespondedexistence);
+						if (alphabet.correlationlist != null) {
+							for (int j = 1; j < alphabet.correlationlist.length; j++) {
+								taskCharList.clear();
+								targetList.add(alphabet.correlationlist[j]);
+		
+								if (alphabet.isRoot == false) {
+									taskCharList.add(getAlphabetValue(alphabet.correlationlist[j]));
+									NotCoExistence notrespondedexistence2 = new NotCoExistence(
+											new TaskCharSet(firstChar),
+											new TaskCharSet(taskCharList));
+									constraintList.add(notrespondedexistence2);
+		
+								}// false
+							}
+						}
+						break;
+	            
+	            case "precedence":
+					Precedence precedence = new Precedence(new TaskCharSet(taskCharList),
+							new TaskCharSet(firstChar));
+					constraintList.add(precedence);
+					if (alphabet.correlationlist != null) {
+						for (int j = 1; j < alphabet.correlationlist.length; j++) {
+							taskCharList.clear();
+							targetList.add(alphabet.correlationlist[j]);
+							if (alphabet.isRoot == false) {
+								taskCharList.add(getAlphabetValue(alphabet.correlationlist[j]));
+								Precedence precedence2 = new Precedence(
+										new TaskCharSet(taskCharList), new TaskCharSet(
+												firstChar));
+								constraintList.add(precedence2);
+	
+							}
+						}
+					}
+					break;
+					
+	            case "alternateprecedence" :
+						AlternatePrecedence alternateprecedence = new AlternatePrecedence(
+								new TaskCharSet(taskCharList), new TaskCharSet(firstChar));
+						constraintList.add(alternateprecedence);
+	
+						if (alphabet.correlationlist != null) {
+							for (int j = 1; j < alphabet.correlationlist.length; j++) {
+								taskCharList.clear();
+								targetList.add(alphabet.correlationlist[j]);
+								if (alphabet.isRoot == false) {
+									taskCharList.add(getAlphabetValue(alphabet.correlationlist[j]));
+									AlternatePrecedence alternateprecedence2 = new AlternatePrecedence(
+											new TaskCharSet(taskCharList), new TaskCharSet(
+													firstChar));
+									constraintList.add(alternateprecedence2);
+								}
+							}
+	
+						}				
+						break;
+	            	
+	            case "chainprecedence" :
+							ChainPrecedence chainprecedence = new ChainPrecedence(
+									new TaskCharSet(taskCharList), new TaskCharSet(firstChar));
+							constraintList.add(chainprecedence);
+			
+							if (alphabet.correlationlist != null) {
+								for (int j = 1; j < alphabet.correlationlist.length; j++) {
+									taskCharList.clear();
+									targetList.add(alphabet.correlationlist[j]);
+									if (alphabet.isRoot == false) {
+										taskCharList.add(getAlphabetValue(alphabet.correlationlist[j]));
+										ChainPrecedence chainprecedence2 = new ChainPrecedence(
+												new TaskCharSet(taskCharList), new TaskCharSet(
+														firstChar));
+										constraintList.add(chainprecedence2);
+			
+									}
+								}
+			
+							}
+		            	break;
+		            	
+		            case "notprecedence":
+							NotSuccession notprecedence = new NotSuccession(
+									new TaskCharSet(taskCharList), new TaskCharSet(firstChar));
+							constraintList.add(notprecedence);
+			
+							if (alphabet.correlationlist != null) {
+								for (int j = 1; j < alphabet.correlationlist.length; j++) {
+									taskCharList.clear();
+									targetList.add(alphabet.correlationlist[j]);
+									if (alphabet.isRoot == false) {
+										taskCharList.add(getAlphabetValue(alphabet.correlationlist[j]));
+										NotSuccession notprecedence2 = new NotSuccession(
+												new TaskCharSet(taskCharList), new TaskCharSet(
+														firstChar));
+										constraintList.add(notprecedence2);
+			
+									}
+								}
+			
+							}
+		            	break;
+		            	
+		            case "notchainprecedence" :		            	
+		            	NotChainSuccession notchainprecedence = new NotChainSuccession(new TaskCharSet(taskCharList),
+								new TaskCharSet(firstChar));
+						constraintList.add(notchainprecedence);
+						if (alphabet.correlationlist != null) {
+							for (int j = 1; j < alphabet.correlationlist.length; j++) {
+								taskCharList.clear();
+								targetList.add(alphabet.correlationlist[j]);
+								if (alphabet.isRoot == false) {
+									taskCharList.add(getAlphabetValue(alphabet.correlationlist[j]));
+									NotChainSuccession notchainprecedence2 = new NotChainSuccession(
+											new TaskCharSet(taskCharList), new TaskCharSet(
+													firstChar));
+									constraintList.add(notchainprecedence2);
+		
+								}
+							}
+						}		
+		           	break;	            	
+	            	
+	            case "existence": 
+			            	if (alphabet.correlationlist != null) {
+								for (int j = 0; j < alphabet.correlationlist.length; j++) {							
+									targetList.add(alphabet.correlationlist[j]);
+								
+									if (alphabet.isRoot == false) {
+										taskCharList.add(getAlphabetValue(alphabet.correlationlist[j]));								
+									}
+								}
+		
+							} 			
+						
+						Participation existence = new Participation(new TaskCharSet(taskCharList)); 			
+						constraintList.add(existence);
+			        break;
+			            	
+		            	
+	            case "init" :
+						if (alphabet.correlationlist != null) {
+							for (int j = 0; j < alphabet.correlationlist.length; j++) {
+								targetList.add(alphabet.correlationlist[j]);
+		
+								if (alphabet.isRoot == false) {
+									taskCharList.add(getAlphabetValue(alphabet.correlationlist[j]));
+								}// false
+							}
+		
+						}
+		
+						Init init = new Init(new TaskCharSet(taskCharList));
+						constraintList.add(init);
+	            	break;
+	            	
+	            case "last":
+						if (alphabet.correlationlist != null) {
+							for (int j = 0; j < alphabet.correlationlist.length; j++) {		
+								targetList.add(alphabet.correlationlist[j]);		
+								if (alphabet.isRoot == false) {
+									taskCharList.add(getAlphabetValue(alphabet.correlationlist[j]));
+		
+								}
+							}
+		
+						}		
+						End last = new End(new TaskCharSet(taskCharList));
+						constraintList.add(last);		
+					break;
+					
+	            case "absence":	            	
+				/*	if (alphabet.correlationlist != null) {
+						for (int j = 0; j < alphabet.correlationlist.length; j++) {
+							targetList.add(alphabet.correlationlist[j]);
+						
+							if (alphabet.isRoot == false) {
+								taskCharList.add(getAlphabetValue(alphabet.correlationlist[j]));
+								
+							}// false
+						}
 
+					} 	*/		
+	 			 // Speical case for absense
+	            	taskCharList.clear();
+	            	taskCharList.add(firstChar);
+					AtMostOne absence = new AtMostOne(new TaskCharSet(taskCharList));
+					constraintList.add(absence);   	
+	            	break;
+	           
+	            default: 
+	            	break;
+	        }		     
+	} 
+		     
+		  
+		Set<TaskChar> alphabetS = new TreeSet<TaskChar>(addtaskCharList);
+		int i = 0;
+
+		TaskCharEncoderDecoder taChEnDe = new TaskCharEncoderDecoder();
+		taChEnDe.encode(alphabetS);
+		TaskCharArchive taChaAr = new TaskCharArchive(
+				taChEnDe.getTranslationMap());
+		for (TaskChar tCh : alphabetS) {
+			tCh.identifier = taChaAr.getTaskChar(tCh.taskClass).identifier;
 		}
-	
-	
-	 Set<TaskChar> alphabetS = new TreeSet<TaskChar>(where);
-  	int i=0;
-	
-	TaskCharEncoderDecoder taChEnDe = new TaskCharEncoderDecoder();
-	taChEnDe.encode(alphabetS);
-	TaskCharArchive taChaAr = new TaskCharArchive(taChEnDe.getTranslationMap());
-	for (TaskChar tCh : alphabetS) {
-		tCh.identifier = taChaAr.getTaskChar(tCh.taskClass).identifier;
-	}
 
-	ConstraintsBag bag = new ConstraintsBag(alphabetS);
-	for (Constraint con : lst) {
-		System.out.println(con + " :RE> " + con.getRegularExpression());
-		bag.add(con.getBase(), con);
-	}
-	ProcessModel proMod = new ProcessModel(taChaAr, bag);
-	return proMod;
-	
+		ConstraintsBag bag = new ConstraintsBag(alphabetS);
+		for (Constraint con : constraintList) {
+			System.out.println(con + " :RE> " + con.getRegularExpression());
+			bag.add(con.getBase(), con);
+		}
+		ProcessModel proMod = new ProcessModel(taChaAr, bag);
+		return proMod;
+
 }
 	
 	
 public static TaskChar getAlphabetValue(String search){
 	TaskChar ret = null; 
-	for (Entry<TaskChar,String> entry : newLogIndex.entrySet()) {
-        String key = entry.getValue();
-        TaskChar t1 = entry.getKey();
-		 if(key.equals(search)) {
-            ret = t1;
-           // System.out.println(t1 + ": "+ key + " : " + search);
-            break;
-           }
-       }
-	return ret;	
+		for (Entry<TaskChar, String> entry : newLogIndex.entrySet()) {
+			String key = entry.getValue();
+			TaskChar t1 = entry.getKey();
+			if (key.equals(search)) {
+				ret = t1;
+				// System.out.println(t1 + ": "+ key + " : " + search);
+				break;
+			}
+		}
+		return ret;
 }
 
 public static String getAlphabetKey(String search){
 	String ret = null; 
-	for (Entry<TaskChar,String> entry : newLogIndex.entrySet()) {
-        String key = entry.getValue();
-        String t1 = entry.getKey().toString();
-		 if(t1.equals(search)) {
-            ret = key;
-           // System.out.println(t1 + ": "+ key + " : " + search);
-            break;
-           }
-       }
-	return ret;	
+		for (Entry<TaskChar, String> entry : newLogIndex.entrySet()) {
+			String key = entry.getValue();
+			String t1 = entry.getKey().toString();
+			if (t1.equals(search)) {
+				ret = key;
+				// System.out.println(t1 + ": "+ key + " : " + search);
+				break;
+			}
+		}
+		return ret;
 }
 
 	private static void CheckforPrecendence() {
@@ -2142,67 +1884,37 @@ public static String getAlphabetKey(String search){
 	LinkedHashMap<String, Alphabet> abMaptemp = new LinkedHashMap<String, Alphabet>();
 		String aa ="";
 		String bb = "";
-		for (Entry<String, Alphabet> activity : abMapx.entrySet()) {
+		for (Entry<String, Alphabet> activity : alphabetMapx.entrySet()) {
 			String k = activity.getKey();
-			Alphabet filter = activity.getValue();
+			Alphabet alphabet = activity.getValue();
 			aa="";bb="";
-			if (filter.constrain.contains("precedence")){
+			if (alphabet.constrain.contains("precedence")){
 				
-				System.out.println("A :" + filter.alphabetkey);
-				System.out.println("B :" + filter.secondAlphabetKey);
+				System.out.println("A :" + alphabet.alphabetkey);
+				System.out.println("B :" + alphabet.secondAlphabetKey);
 				
 				aa = BranchCombination.getParentLetter(k);
-				bb = BranchCombination.getParentLetter(filter.secondAlphabetKey);
+				bb = BranchCombination.getParentLetter(alphabet.secondAlphabetKey);
 				k = k.replace(aa, bb);
-				filter.alphabetkey = filter.alphabetkey.replace(aa,bb);
-				filter.alphabetname = filter.alphabetname.replace(aa,bb);
-				filter.secondAlphabetKey = aa;
-				//filter.secondAlphabetKey = filter.secondAlphabetKey.replace(bb,aa);
-				String corr [] = filter.correlationlist;
+				alphabet.alphabetkey = alphabet.alphabetkey.replace(aa,bb);
+				alphabet.alphabetname = alphabet.alphabetname.replace(aa,bb);
+				alphabet.secondAlphabetKey = aa;
+				//alphabet.secondAlphabetKey = alphabet.secondAlphabetKey.replace(bb,aa);
+				String corr [] = alphabet.correlationlist;
 				if (corr!=null)
 				{
 					for (int i=0; i < corr.length; i++){						
 					corr[i] = corr[i].replace(bb, aa);	
 					}
-				filter.correlationlist = corr;	
+				alphabet.correlationlist = corr;	
 				}
 				
 			}
-			abMaptemp.put(k,filter);
+			abMaptemp.put(k,alphabet);
 		}
-		abMapx.clear();
-		abMapx=abMaptemp;
-	/*	System.out.println("-------Precendece Checking-----------");
-		
-		for (Entry<String, Alphabet> activity : abMapx.entrySet()) {
-			String k = activity.getKey();
-			Alphabet filter = activity.getValue();
-			System.out.println("___________________________");
-			System.out.println("Key: "+ k );
-			System.out.println("actCondition: "+ filter.actCondition );
-			System.out.println("Corelation: "+ filter.relCondition );
-			System.out.println("fullCondition: "+ filter.fullCondition );
-			System.out.println("ILP: "+ filter.ilpCondition );
-			System.out.println("secondAlphabetKey: "+ filter.secondAlphabetKey );
-			System.out.println("Constrains : "+ filter.constrain );
-			
-			
-			 
-			if (filter.correlationlist != null){
-			for (int i=0; i < filter.correlationlist.length; i++){
-				if (i>=1){
-					System.out.println("Cor : "+ filter.correlationlist[i]);
-					//System.out.println("Cor : "+  filter.correlationlist[0] +"_"+filter.correlationlist[i]);
-				}else{
-				System.out.println("Cor : "+ filter.correlationlist[i]);
-			}}}
-		
-		}
-		System.out.println("Wait");*/
+		alphabetMapx.clear();
+		alphabetMapx=abMaptemp;	
 	}
-
-
-
 
 
 	public static int selectRandom(int max) {
@@ -2235,7 +1947,6 @@ public static String getAlphabetKey(String search){
 		}
 
 	}
-
 	
 	public static void generateCombination() {
 		repeatList.clear();
@@ -2247,174 +1958,155 @@ public static String getAlphabetKey(String search){
 			System.out.println(lst[1]);
 			int max = Integer.parseInt(lst[1]);
 			combinedList.add(lst[0]);
-			
-		 int ind =	alphabetList.indexOf(lst[0]);
-		// String b = countedListB.get(ind);
-		// combinedListB.add(b);
+			int ind = alphabetList.indexOf(lst[0]);
 			if (max > 1) {
 				BranchCombination.GetCombination(lst[0], max, combinedList);
-			//	BranchCombination.GetCombination(b, max, combinedListB);
 				repeatList.add(combinedList.get(combinedList.size() - 1));
-		  } else {
-			  combinedList.add(lst[0]);
-		//	  combinedList.add(b);
-		  }
+			} else {
+				combinedList.add(lst[0]);
+			}
 		}
 		System.out.println("");
 	}
 	
-	public static void SetFirstLetters(){
-		for (int k=0; k< combinedList.size(); k++)
-		{
+	public static void SetFirstLetters() {
+		for (int k = 0; k < combinedList.size(); k++) {
 			String[] kk = combinedList.get(k).toString().split(" ");
-			String name= combinedList.get(k);
+			String name = combinedList.get(k);
 			System.out.println(name);
-			if (kk.length <= 1){				
-				zeroLevel(name.replaceAll(" ",""));				
-			} else
-			{
-				//String name= combinedList.get(k).toString().replaceAll(" ","");
-				UpperLevel(name);
+			if (kk.length <= 1) {
+				getRootCondition(name.replaceAll(" ", ""));
+			} else {
+				// String name=
+				// combinedList.get(k).toString().replaceAll(" ","");
+				getUpperLevelCondition(name);
 			}
 		}
 	}
-	public static String getAcitvationCondition(String a){
-		for (int i = 0; i < firstact.size(); i++) {
-			if (firstact.get(i).equals(a))
-			{
-				return firstcont.get(i);
+
+	public static String getAcitvationCondition(String a) {
+		for (int i = 0; i < firstactivationList.size(); i++) {
+			if (firstactivationList.get(i).equals(a)) {
+				return firstConditionList.get(i);
 			}
 		}
 		return "Error:ActivationCondition";
 	}
 	
-	public static String UpperLevel(String ss) {
+	public static String getUpperLevelCondition(String alphabets) {
 		String cond = "";
 		String temp = "";
 		String found = "";
 		String result = "";
-		String[] sst = ss.split(" ");
+		String[] alphabetsList = alphabets.split(" ");
 		for (int rep = 0; rep < repeatList.size(); rep++) {
-			for (int j = 0; j < sst.length; j++) {
-				if (repeatList.get(rep).contains(sst[j])) {
+			for (int j = 0; j < alphabetsList.length; j++) {
+				if (repeatList.get(rep).contains(alphabetsList[j])) {
 					found = repeatList.get(rep).toString();
 					break;
 				}
 			}
 		}
-		
+
 		String[] sList = found.split(" ");
-	//	List<String> finalDiff = ListUtils.subtract(Arrays.asList(sList), Arrays.asList(sst)); 
-		
-		/*for (int j = 0; j < finalDiff.size(); j++) {
-			System.out.println("Missing::  "+ finalDiff.get(j));
-		}*/
-		
-		for (int upper=0; upper < sList.length; upper++){
+		for (int upper = 0; upper < sList.length; upper++) {
 			temp = "";
-			for (int ind = 0; ind < sst.length; ind++) {
-				if (sst[ind].equals(sList[upper])){
-					temp = sst[ind];
+			for (int ind = 0; ind < alphabetsList.length; ind++) {
+				if (alphabetsList[ind].equals(sList[upper])) {
+					temp = alphabetsList[ind];
 					result = getAcitvationCondition(temp);
 					break;
 				}
-		    	}
-			if (temp.isEmpty()) {
-			temp = 	sList[upper];
-			result = BranchCombination.divertCondition(getAcitvationCondition(temp));
 			}
-		
+			if (temp.isEmpty()) {
+				temp = sList[upper];
+				result = BranchCombination
+						.divertCondition(getAcitvationCondition(temp));
+			}
 
 			if (!cond.isEmpty()) {
 				cond = cond + "::";
 			}
-			cond = cond +result;// BranchCombination.divertCondition(temp);	
-			
+			cond = cond + result;// BranchCombination.divertCondition(temp);
+
 		}
 		return cond;
 	}// if contains ss
 	
 	
-	public static String zeroLevel(String ss) {
+	public static String getRootCondition(String alphabet) {
 		String allCond = "";
 		String cond = "";
 		String temp = "";
 		for (int rep = 0; rep < repeatList.size(); rep++) {
-			if (repeatList.get(rep).contains(ss)) {
+			if (repeatList.get(rep).contains(alphabet)) {
 				allCond = repeatList.get(rep).toString();
-				String[] sst = allCond.split(" ");
-					for (int ind = 0; ind < sst.length; ind++) {
-						temp = getAcitvationCondition(sst[ind]);
-						if (!cond.isEmpty())
-								cond = cond + "::";
-							if (sst[ind].equals(ss)) {
-								cond = cond + temp;
-							} else {
-								cond = cond + BranchCombination.divertCondition(temp);
-							}
-					}// end of sst loop
+				String[] conditionlist = allCond.split(" ");
+				for (int ind = 0; ind < conditionlist.length; ind++) {
+					temp = getAcitvationCondition(conditionlist[ind]);
+					if (!cond.isEmpty())
+						cond = cond + "::";
+					if (conditionlist[ind].equals(alphabet)) {
+						cond = cond + temp;
+					} else {
+						cond = cond + BranchCombination.divertCondition(temp);
+					}
+				}// end of sst loop
 				break;
-			}//if contains ss
+			}// if contains ss
 		}
 		return cond;
 	}
 	public static void getAlphabets(AssignmentModel model) {
 		
 		countedList.clear();
-		String firstName = "";	
+		String firstName = "";
 		String constrain = "";
-		String lastname="";
-		String vkey = "";
-		System.out.println("-----------First Step--------------");
+		String lastname = "";
+	//First Step
 		for (nl.tue.declare.domain.model.ConstraintDefinition cd : model
 				.getConstraintDefinitions()) {
-			 constrain = cd.getName().replace("-", "").replace(" ", "").toLowerCase();
+			constrain = cd.getName().replace("-", "").replace(" ", "")
+					.toLowerCase();
 			for (Parameter p : cd.getParameters()) {
-				
+
 				for (nl.tue.declare.domain.model.ActivityDefinition ad : cd
-						.getBranches(p)) {	
-				
-				//	System.out.println(ad.getName());					
-					if (constrain.contains("precedence"))
-					{
+						.getBranches(p)) {
+					// System.out.println(ad.getName());
+					if (constrain.contains("precedence")) {
 						if (p.getName().equals("B")) {
 							firstName = ad.getName().toString();
+							firstName = firstName.replace(" ", "");
 							countedList.add(firstName);
 							alphabetList.add(lastname);
 							alphabetList.add(firstName);
 							countedListB.add(firstName);
-							//countedListB.add(firstName);
+							// countedListB.add(firstName);
 						} else {
-						//	alphabetList.add(ad.getName());
+							// alphabetList.add(ad.getName());
 							lastname = ad.getName();
-							
+							lastname = lastname.replace(" ", "");
 						}
-					}
-					else{
-					if (p.getName().equals("A")) {
-						firstName = ad.getName().toString();
-						System.out.println(firstName);
-						countedList.add(firstName);
-						alphabetList.add(firstName);
-						//countedListB.add(firstName);
 					} else {
-						alphabetList.add(ad.getName());
-						countedListB.add(ad.getName());
-						System.out.println(ad.getName());
-					}
+						if (p.getName().equals("A")) {
+							firstName = ad.getName().toString();
+							System.out.println(firstName);
+							firstName = firstName.replace(" ", "");
+							countedList.add(firstName);
+							alphabetList.add(firstName);
+							// countedListB.add(firstName);
+						} else {
+							String temp = ad.getName().replace(" ", "");
+							alphabetList.add(temp);
+							countedListB.add(temp);
+							System.out.println(ad.getName());
+						}
 					}
 				}
 			}
-		}		
+		}
 		BranchCombination.countAlphabets(countedList);
-		//alphabetList.clear();
-//		Iterable<nl.tue.declare.domain.model.ActivityDefinition> dd = model
-//				.getActivityDefinitions();
-//		for (nl.tue.declare.domain.model.ActivityDefinition d : dd) {
-//			System.out.println(d.getName());
-//			alphabetList.add(d.getName());
-//			countedList.add(d.getName());
-//		} 
+		
 		
 	}
 
@@ -2462,9 +2154,8 @@ public static String getAlphabetKey(String search){
 	public static int checkList(String alph)
 	{
 		int ret = 0;
-		for (int i=0; i<alphabets1.size(); i++)
-		{
-			if (alphabets1.get(i).toString() ==alph){
+		for (int i = 0; i < alphabets1.size(); i++) {
+			if (alphabets1.get(i).toString() == alph) {
 				ret++;
 			}
 		}
@@ -2473,69 +2164,72 @@ public static String getAlphabetKey(String search){
 	
 
 	public static void checkActivation(AssignmentModel model) {
-		String condef;
+		//String condef;
 		// alphabets.clear();
 		alphabets1.clear();
 		// conditions.clear();
-		firstact.clear();
-		firstcont.clear();
+		firstactivationList.clear();
+		firstConditionList.clear();
 		abMapdata.clear();
 		String vkey = "";
 		int check = 0;
-	//	static LinkedHashMap<String, Alphabet> abMapdata = new LinkedHashMap<String, Alphabet>();
+		
 		for (nl.tue.declare.domain.model.ConstraintDefinition cd : model
 				.getConstraintDefinitions()) {
-			String constrain = cd.getName().replace("-", "").replace(" ", "").toLowerCase();
-			Alphabet ab = new Alphabet();
-			ab.constrain = constrain;
-			ab.actCondition = 	getLeft(cd.getCondition().toString());
-			ab.relCondition = getRelCond(cd.getCondition().toString());
-			check=0;
+			String constrain = cd.getName().replace("-", "").replace(" ", "")
+					.toLowerCase();
+			Alphabet alphabet = new Alphabet();
+			alphabet.constrain = constrain;
+			alphabet.actCondition = getActivationCondition(cd.getCondition().toString());
+			alphabet.relCondition = getcorrelationCondition(cd.getCondition().toString());
+			check = 0;
 			for (Parameter p : cd.getParameters()) {
 				for (nl.tue.declare.domain.model.ActivityDefinition ad : cd
-						.getBranches(p)) {	
-				
-					
-					if (constrain.contains("precedence")){
+						.getBranches(p)) {
+
+					if (constrain.contains("precedence")) {
 						if (p.getName().equals("B")) {
 							String sname = ad.getName();
-							
-							firstact.add(sname +checkList(sname));
+							sname = sname.replace(" ", "");
+							firstactivationList.add(sname + checkList(sname));
 							alphabets1.add(sname);
 							if (!cd.getCondition().toString().isEmpty()) {
-								firstcont.add(getLeft(cd.getCondition().toString()));
-								CorrelationContList.add(getRelCond(cd.getCondition().toString()));
+								firstConditionList.add(getActivationCondition(cd.getCondition()
+										.toString()));
+								CorrelationContList.add(getcorrelationCondition(cd
+										.getCondition().toString()));
 							} else {
-								firstcont.add("");
+								firstConditionList.add("");
 								CorrelationContList.add("");
 							}
-						} /// end of A
-						
+						} // / end of A
+
+					} else {
+
+						// Start of A
+						if (p.getName().equals("A")) {
+							String sname = ad.getName();
+							sname = sname.replace(" ", "");
+							firstactivationList.add(sname + checkList(sname));
+							alphabets1.add(sname);
+							if (!cd.getCondition().toString().isEmpty()) {
+								firstConditionList.add(getActivationCondition(cd.getCondition()
+										.toString()));
+								CorrelationContList.add(getcorrelationCondition(cd
+										.getCondition().toString()));
+							} else {
+								firstConditionList.add("");
+								CorrelationContList.add("");
+							}
+						} // / end of A
 					}
-					else
-					{
-					
-					//Start of A
-					if (p.getName().equals("A")) {
-						String sname = ad.getName();
-						firstact.add(sname +checkList(sname));
-						alphabets1.add(sname);
-						if (!cd.getCondition().toString().isEmpty()) {
-							firstcont.add(getLeft(cd.getCondition().toString()));
-							CorrelationContList.add(getRelCond(cd.getCondition().toString()));
-						} else {
-							firstcont.add("");
-							CorrelationContList.add("");
-						}
-					} /// end of A
-					}		
-					
-					abMapdata.put(vkey, ab);
-					
-					}					
+
+					abMapdata.put(vkey, alphabet);
+
 				}
 			}
-		System.out.println(firstact);
+		}
+		System.out.println(firstactivationList);
 		
 		}	
 	
@@ -2563,7 +2257,7 @@ public static String getAlphabetKey(String search){
 						if (p1.getName().equals("B")
 								&& (ad1.getName()
 										.equals(activity))) {
-							if (getLeft(
+							if (getActivationCondition(
 									cd1.getCondition()
 											.toString())
 									.equals(condition)) {
@@ -2572,7 +2266,7 @@ public static String getAlphabetKey(String search){
 											+ "::";
 								}
 								Fullcondition = Fullcondition
-										+ BranchCombination.divertCondition(getLeft(cd1
+										+ BranchCombination.divertCondition(getActivationCondition(cd1
 												.getCondition()
 												.toString()));
 							}
@@ -2583,7 +2277,7 @@ public static String getAlphabetKey(String search){
 					if (p1.getName().equals("A")
 							&& (ad1.getName()
 									.equals(activity))) {
-						if (getLeft(
+						if (getActivationCondition(
 								cd1.getCondition()
 										.toString())
 								.equals(condition)) {
@@ -2592,7 +2286,7 @@ public static String getAlphabetKey(String search){
 										+ "::";
 							}
 							Fullcondition = Fullcondition
-									+ BranchCombination.divertCondition(getLeft(cd1
+									+ BranchCombination.divertCondition(getActivationCondition(cd1
 											.getCondition()
 											.toString()));
 						}
@@ -2608,151 +2302,167 @@ public static String getAlphabetKey(String search){
 	public static void Addnew(String fname, String lname, String act, String ilpcond, boolean isActivated,
 			String relcond,String FullCondition,String cons, boolean isroot)
 	{
-		Alphabet ab = new Alphabet();
-		ab.alphabetname = fname;
+		
+		fname = fname.replace(" ", "");
+		lname = lname.replace(" ", "");
+		Alphabet alphabet = new Alphabet();
+		alphabet.alphabetname = fname;
 	
-		int val =  0;
-		if (!act.isEmpty())
-		{
-			val=Integer.parseInt(getPayloadValue(act));
-			ab.payLoadValue = val;
-			ab.randomValue = val;
-			ab.payLoadILPValue = val;
-			ab.randomValue = val;
-			ab.actCondition = act;
-		} else
-		{
-			ab.actCondition = "";
-			ab.payLoadValue = val;
-			ab.randomValue = val;
-			ab.payLoadILPValue = val;
-			ab.randomValue = val;
+		int val = 0;
+		if (!act.isEmpty()) {
+			val = Integer.parseInt(getPayloadValue(act));
+			alphabet.payLoadValue = val;
+			alphabet.randomValue = val;
+			alphabet.payLoadILPValue = val;
+			alphabet.randomValue = val;
+			alphabet.actCondition = act;
+			alphabet.payLoadName = getPayload(act);
+		} else {
+			alphabet.actCondition = "";
+			alphabet.payLoadValue = val;
+			alphabet.randomValue = val;
+			alphabet.payLoadILPValue = val;
+			alphabet.randomValue = val;
 		}
 		
-		ab.alphabetkey = fname;
-		ab.ilpCondition = ilpcond;
-		ab.isActivated = isActivated;
-		if (relcond.isEmpty()){
-		ab.isRetaiveTrue =false;
-		ab.relCondition = "";
+		alphabet.alphabetkey = fname;
+		alphabet.ilpCondition = ilpcond;
+		alphabet.isActivated = isActivated;
+		if (relcond.isEmpty()) {
+			alphabet.isRetaiveTrue = false;
+			alphabet.relCondition = "";
 		} else {
-		ab.relCondition = relcond;
-		ab.isRetaiveTrue = true;
+			alphabet.relCondition = relcond;
+			alphabet.isRetaiveTrue = true;
 		}
-		ab.secondAlphabet = lname;
-		ab.secondAlphabetKey = lname;
-		ab.constrain = cons;
-		ab.fullCondition = FullCondition;
-		ab.isRoot = isroot;
-		abMap.put(fname, ab);
-		abMapx.put(fname, ab);
+		alphabet.secondAlphabet = lname;
+		alphabet.secondAlphabetKey = lname;
+		alphabet.constrain = cons;
+		alphabet.fullCondition = FullCondition;
+		alphabet.isRoot = isroot;
+		
+	
+		alphabetMap.put(fname, alphabet);
+		alphabetMapx.put(fname, alphabet);
 		
 	}
 	
 	public static void AddFirstLetter(AssignmentModel model) {
 		String fname = "";
-		String FullCondition="";
-		String lname="";
+		String FullCondition = "";
+		String lname = "";
 		String ilpcond = "";
-		String condition ="";
-		String constrain ="";
-		int ind=0;
-		boolean addparent = false;
+		String condition = "";
+		String constrain = "";
+		int ind = 0;
+
 		for (nl.tue.declare.domain.model.ConstraintDefinition cd : model
 				.getConstraintDefinitions()) {
-			FullCondition = cd.getCondition().toString();	
-			condition = getLeft(FullCondition);
-				addparent =false;
-				for (Parameter p : cd.getParameters()) {
-					for (nl.tue.declare.domain.model.ActivityDefinition ad : cd
-							.getBranches(p)) {
-						
-						//constrain= cd.getName();
-						constrain = cd.getName().replace("-", "").replace(" ", "").toLowerCase();
-						
-						
-						if (constrain.contains("precedence")) {
+			FullCondition = cd.getCondition().toString();
+			condition = getActivationCondition(FullCondition);
+			for (Parameter p : cd.getParameters()) {
+				for (nl.tue.declare.domain.model.ActivityDefinition ad : cd
+						.getBranches(p)) {
+					constrain = cd.getName().replace("-", "").replace(" ", "")
+							.toLowerCase();
 
-							if (p.getName().equals("B")) {
-								 fname = ad.getName().toString();
-								 addparent= (checkIndex(fname) ==0);
-								 addedList.add(fname);
-								// lname =ad.getName().toString();
-								 ilpcond =	getCondtions(model,lname,condition);
-									ind = checkIndex(fname);					
-									ind = ind - 1;
-									
-								if (ind==0){
-									addparent =true;
-									Addnew(fname,lname,condition,ilpcond,true,getRelCond(FullCondition),FullCondition,constrain,true);	
-								}	
-								fname = fname+ (Integer.toString(ind));
-								Addnew(fname,lname,condition,ilpcond,true,getRelCond(FullCondition),FullCondition,constrain,true);
-								/*if (addparent){
-								Addnew(fname+"_1",lname, BranchCombination.divertCondition(condition),ilpcond,true,getRelCond(condition),FullCondition,constrain);
-								}*/
-								Addnew(lname,"","","",false,"",FullCondition,constrain,false);			 
-								}else
-								{
-									lname= ad.getName().toString();
-								}		
-						} // end of precedence
-						
-						//start of response and ...
-						else {
+					if (constrain.contains("precedence")) {
+
+						if (p.getName().equals("B")) {
+							fname = ad.getName().toString();
+							fname = fname.replace(" ", "");
+							lname = lname.replace(" ", "");
+							addedList.add(fname);
+							
+							ilpcond = getCondtions(model, lname, condition);
+							ind = checkIndex(fname);
+							ind = ind - 1;
+
+							if (ind == 0) {
+
+								Addnew(fname, lname, condition, ilpcond, true,
+										getcorrelationCondition(FullCondition),
+										FullCondition, constrain, true);
+							}
+							fname = fname + (Integer.toString(ind));
+							Addnew(fname, lname, condition, ilpcond, true,
+									getcorrelationCondition(FullCondition), FullCondition,
+									constrain, true);
+
+							Addnew(lname, "", "", "", false, "", FullCondition,
+									constrain, false);
+						} else {
+							lname = ad.getName().toString();
+						}
+					} // end of precedence
+
+					// start of response and ...
+					else {
 						if (p.getName().equals("A")) {
-						 fname = ad.getName().toString();
-						 addparent= (checkIndex(fname) ==0);
-						 addedList.add(fname);
-						 
-							if ((constrain.equals("existence")||(constrain.equals("init")))
-									||(constrain.equals("end"))||(constrain.equals("absence"))){
-								ilpcond =	getCondtions(model,fname,condition);
-								ind = checkIndex(fname);					
+							fname = ad.getName().toString();
+							//fname = ad.getName().toString();
+							fname = fname.replace(" ", "");
+							lname = lname.replace(" ", "");
+							addedList.add(fname);
+						//	addedList.add(fname.replace(" ", ""));
+
+							if ((constrain.equals("existence") || (constrain
+									.equals("init")))
+									|| (constrain.equals("last"))
+									|| (constrain.equals("absence"))) {
+								ilpcond = getCondtions(model, fname, condition);
+								ind = checkIndex(fname);
 								ind = ind - 1;
 								lname = fname;
-							if (ind==0){
-								addparent =true;
-								Addnew(fname,lname,condition,ilpcond,true,getRelCond(FullCondition),FullCondition,constrain,true);	
-							}	
-							fname = fname+ (Integer.toString(ind));
-							Addnew(fname,lname,condition,ilpcond,true,getRelCond(FullCondition),FullCondition,constrain,true);
-							if (addparent){
-							Addnew(fname+"_1",lname, BranchCombination.divertCondition(condition),ilpcond,true,getRelCond(condition),FullCondition,constrain,true);
-							}
-							Addnew(lname,"","","",false,"",FullCondition,constrain,false);
+								if (ind == 0) {
+
+									Addnew(fname, lname, condition, ilpcond,
+											true, getcorrelationCondition(FullCondition),
+											FullCondition, constrain, true);
 								}
-					
-						}else
-						{
-							lname= ad.getName().toString();
-						}						
+								fname = fname + (Integer.toString(ind));
+								Addnew(fname, lname, condition, ilpcond, true,
+										getcorrelationCondition(FullCondition),
+										FullCondition, constrain, true);
+
+								Addnew(lname, "", "", "", false, "",
+										FullCondition, constrain, false);
+							}
+
+						} else {
+							lname = ad.getName().toString();
+						}
 					}
-					//start b
+					// start b
 					if (p.getName().equals("B")) {
-						
-						ilpcond =	getCondtions(model,fname,condition);
-						ind = checkIndex(fname);					
+						fname = fname.replace(" ", "");
+						lname = lname.replace(" ", "");
+						ilpcond = getCondtions(model, fname, condition);
+						ind = checkIndex(fname);
 						ind = ind - 1;
-						
-					if (ind==0){
-						addparent =true;
-						Addnew(fname,lname,condition,ilpcond,true,getRelCond(FullCondition),FullCondition,constrain,true);	
-					}	
-					fname = fname+ (Integer.toString(ind));
-					Addnew(fname,lname,condition,ilpcond,true,getRelCond(FullCondition),FullCondition,constrain,true);
-					if (addparent){
-					Addnew(fname+"_1",lname, BranchCombination.divertCondition(condition),ilpcond,true,getRelCond(condition),FullCondition,constrain,false);
+
+						if (ind == 0) {
+
+							Addnew(fname, lname, condition, ilpcond, true,
+									getcorrelationCondition(FullCondition), FullCondition,
+									constrain, true);
+						}
+						fname = fname + (Integer.toString(ind));
+						Addnew(fname, lname, condition, ilpcond, true,
+								getcorrelationCondition(FullCondition), FullCondition,
+								constrain, true);
+
+						Addnew(lname, "", "", "", false, "", FullCondition,
+								constrain, false);
+						System.out.println("First : " + fname + " Last : "
+								+ lname);
 					}
-					Addnew(lname,"","","",false,"",FullCondition,constrain,false);
-				System.out.println("First : " +fname + " Last : " +  lname);
-					} 
 					// end of b response
 				}
-					}
+			}
 		}
-		
-		System.out.println(abMap);
+
+		System.out.println(alphabetMap);
 	}
 
 	public static void SetCombinationCondtion() {
@@ -2761,80 +2471,79 @@ public static String getAlphabetKey(String search){
 		String codition = "";
 		String tempp = "";
 		String send = "";
-		String[] clst;
+		String[] correlationList;
 		String b = "";
 		String combinationCond = "";
 		String constain = "";
-		// Alphabet ab = new Alphabet();
-		
-		abMapx.clear();
+		// Alphabet alphabet = new Alphabet();
+
+		alphabetMapx.clear();
 		for (int i = 0; i < combinedList.size(); i++) {
-			clst = combinedList.get(i).trim().split(" ");
+			correlationList = combinedList.get(i).trim().split(" ");
 			key = combinedList.get(i).toString().trim().replaceAll(" ", "");
 			codition = "";
-			System.out.println("key"+ key  + " : " + clst.length);
-			if (clst.length <= 1) {
-				codition = zeroLevel(clst[0]);
+			System.out.println("key" + key + " : " + correlationList.length);
+			if (correlationList.length <= 1) {
+				codition = getRootCondition(correlationList[0]);
 			} else {
-				codition = UpperLevel(combinedList.get(i));
+				codition = getUpperLevelCondition(combinedList.get(i));
 			}
 			combinationCond = codition;
-			Alphabet abX = abMap.get(key);
-			if (abX == null) {
-				Alphabet ab = new Alphabet();
-				ab.ilpCondition = "";
+			Alphabet Existingalphabet = alphabetMap.get(key);
+			if (Existingalphabet == null) {
+				Alphabet alphabet = new Alphabet();
+				alphabet.ilpCondition = "";
 				if (!codition.isEmpty())
-					ab.ilpCondition = codition;
-				ab.conditionlist = clst;
-				ab.alphabetkey = key;
-				ab.isSingle = false;
-				ab.isRoot = false;
-				ab.alphabetname =  BranchCombination.getParentLetter(key);
-				if (clst.length > 1) {
-					ab.isSingle = true;
-					ab.secondAlphabet = getB(clst);					
-				}	
-				ab.constrain = constrainB;
-				String cor = getCoRel(clst);// = abMap.get(ab.alphabetname);
+					alphabet.ilpCondition = codition;
+				alphabet.conditionlist = correlationList;
+				alphabet.alphabetkey = key;
+				alphabet.isSingle = false;
+				alphabet.isRoot = false;
+				alphabet.alphabetname = BranchCombination.getParentLetter(key);
+				if (correlationList.length > 1) {
+					alphabet.isSingle = true;
+					alphabet.secondAlphabet = getSecondAlphabet(correlationList);
+				}
+				alphabet.constrain = constrainB;
+				String cor = getCorrelationCondition(correlationList);// = abMap.get(alphabet.alphabetname);
 				String cond = "";
-				for (int c=0; c < clst.length; c++){
-					Alphabet alph = abMap.get(clst[c]);
-					if (c==0){
-						ab.secondAlphabetKey = alph.secondAlphabetKey;	
+				for (int c = 0; c < correlationList.length; c++) {
+					Alphabet alph = alphabetMap.get(correlationList[c]);
+					if (c == 0) {
+						alphabet.secondAlphabetKey = alph.secondAlphabetKey;
+						alphabet.payLoadName = alph.payLoadName;
 					}
-					if (!cond.isEmpty()) cond = cond + "::";
-					if (alph!=null){
+					if (!cond.isEmpty())
+						cond = cond + "::";
+					if (alph != null) {
 						cond = cond + alph.fullCondition;
-					//	ab.fullCondition = bd.fullCondition;
+						// alphabet.fullCondition = bd.fullCondition;
 					}
 				}
-				ab.fullCondition = cond;
-				
-				
-				
-				ab.actCondition = actcond;
-				if (cor!=null){
-					ab.relCondition = cor;
-					ab.isRetaiveTrue =true;
-				} else
-				{
-					ab.relCondition = "" ;
-					ab.isRetaiveTrue =false;
+				alphabet.fullCondition = cond;
+
+				alphabet.actCondition = actcond;
+				if (cor != null) {
+					alphabet.relCondition = cor;
+					alphabet.isRetaiveTrue = true;
+				} else {
+					alphabet.relCondition = "";
+					alphabet.isRetaiveTrue = false;
 				}
-				abMapx.put(key, ab);
+				alphabetMapx.put(key, alphabet);
 			} else {
-				abX.isSingle = false;
-				if (clst.length > 1) {
-					abX.secondAlphabet = getB(clst);
-					abX.isSingle = true;
+				Existingalphabet.isSingle = false;
+				if (correlationList.length > 1) {
+					Existingalphabet.secondAlphabet = getSecondAlphabet(correlationList);
+					Existingalphabet.isSingle = true;
 				}
-								
+
 				if (!codition.isEmpty())
-					abX.ilpCondition = codition;
-				abX.conditionlist = clst;
-				abX.alphabetkey = key;
-				
-				abMapx.put(key, abX);
+					Existingalphabet.ilpCondition = codition;
+				Existingalphabet.conditionlist = correlationList;
+				Existingalphabet.alphabetkey = key;
+
+				alphabetMapx.put(key, Existingalphabet);
 			}
 
 		}
@@ -2844,42 +2553,37 @@ public static String getAlphabetKey(String search){
 
 	public static void addCorrelatedConditions() {
 		String corCondtion = "";
-		for (Entry<String, Alphabet> activity : abMapx.entrySet()) {
+		for (Entry<String, Alphabet> activity : alphabetMapx.entrySet()) {
 			String k = activity.getKey();
-			Alphabet filter = activity.getValue();
-			if (filter.isRetaiveTrue) {
+			Alphabet alphabet = activity.getValue();
+			if (alphabet.isRetaiveTrue) {
 				corCondtion = getCorrlationAlphabet(k);
 				String[] corChoine = corCondtion.split(" ");
 
-				if ((filter.constrain.equals("existence")) || ((filter.constrain.equals("init")))
-						|| ((filter.constrain.equals("end")))|| ((filter.constrain.equals("absence")))) {
+				if ((alphabet.constrain.equals("existence"))
+						|| ((alphabet.constrain.equals("init")))
+						|| ((alphabet.constrain.equals("last")))
+						|| ((alphabet.constrain.equals("absence")))) {
 					if (corChoine.length <= 1) {
-						String[] cor = getZeroCor(k, filter.alphabetname,
-								filter.secondAlphabetKey, filter);
-						filter.correlationlist = cor;
-						filter.secondAlphabet = "";
-						/*
-						 * SetSecondList(filter.alphabetname,
-						 * filter.secondAlphabetKey,cor);
-						 */
-
+						String[] cor = getZeroCor(k, alphabet.alphabetname,
+								alphabet.secondAlphabetKey, alphabet);
+						alphabet.correlationlist = cor;
+						alphabet.secondAlphabet = "";
 					} else {
-						filter.correlationlist = getUpperCor(k,
-								filter.alphabetname, filter.secondAlphabetKey,
-								filter.secondAlphabet);
+						alphabet.correlationlist = getUpperCor(k,
+								alphabet.alphabetname, alphabet.secondAlphabetKey,
+								alphabet.secondAlphabet);
 
 					}
 
 				} else {
-				
+
 					if (corChoine.length <= 1) {
 
-						String[] cor = getZeroCor(k, filter.alphabetname,
-								filter.secondAlphabetKey, filter);
-						// filter.correlationlist = cor;
-						String test = filter.secondAlphabetKey;
-
-						System.out.println("xxx" + filter.constrain);
+						String[] cor = getZeroCor(k, alphabet.alphabetname,
+								alphabet.secondAlphabetKey, alphabet);
+						String test = alphabet.secondAlphabetKey;
+						System.out.println("xxx" + alphabet.constrain);
 						if (test.isEmpty()) {
 							test = "XX";
 						}
@@ -2887,66 +2591,52 @@ public static String getAlphabetKey(String search){
 
 						String[] corx = test.split("::");
 
-						filter.correlationlist = corx;
-						filter.secondAlphabet = "";
-						/*
-						 * SetSecondList(filter.alphabetname,
-						 * filter.secondAlphabetKey,cor);
-						 */
-					
+						alphabet.correlationlist = corx;
+						alphabet.secondAlphabet = "";
+
 					} else {
-						// filter.correlationlist = getUpperCor(k,
-						// filter.alphabetname,
-						// filter.secondAlphabetKey,filter.secondAlphabet);
-						filter.correlationlist = filter.secondAlphabet
+
+						alphabet.correlationlist = alphabet.secondAlphabet
 								.split("::");
-						String snd = filter.secondAlphabet;
-						// xxx filter.secondAlphabet = snd.replaceAll(
-						// filter.secondAlphabetKey, "!@#@!");
-						/*
-						 * System.out.println("Key: " + k + " :  Upper corre: "
-						 * + getUpperCor(k,filter.alphabetname,
-						 * filter.secondAlphabetKey));
-						 */
+						String snd = alphabet.secondAlphabet;
+
 					}
 				}
-				abMapx.put(k, filter);
+				alphabetMapx.put(k, alphabet);
 			}
 		}
-		
-		for (Entry<String, Alphabet> activity : abMapx.entrySet()) {
+
+		for (Entry<String, Alphabet> activity : alphabetMapx.entrySet()) {
 			String k = activity.getKey();
-			Alphabet filter = activity.getValue();
+			Alphabet alphabet = activity.getValue();
 			System.out.println("___________________________");
-			System.out.println("Key: "+ k );
-			System.out.println("actCondition: "+ filter.actCondition );
-			System.out.println("Corelation: "+ filter.relCondition );
-			System.out.println("fullCondition: "+ filter.fullCondition );
-			System.out.println("ILP: "+ filter.ilpCondition );
-			System.out.println("secondAlphabetKey: "+ filter.secondAlphabetKey );
-			System.out.println("Constrains : "+ filter.constrain );
-			
-			
-			 
-			if (filter.correlationlist != null){
-			for (int i=0; i < filter.correlationlist.length; i++){
-				if (i>=1){
-					System.out.println("Cor : "+ filter.correlationlist[i]);
-					//System.out.println("Cor : "+  filter.correlationlist[0] +"_"+filter.correlationlist[i]);
-				}else{
-				System.out.println("Cor : "+ filter.correlationlist[i]);
-			}}}
-		
+			System.out.println("Key: " + k);
+			System.out.println("actCondition: " + alphabet.actCondition);
+			System.out.println("Corelation: " + alphabet.relCondition);
+			System.out.println("fullCondition: " + alphabet.fullCondition);
+			System.out.println("ILP: " + alphabet.ilpCondition);
+			System.out
+					.println("secondAlphabetKey: " + alphabet.secondAlphabetKey);
+			System.out.println("Constrains : " + alphabet.constrain);
+			System.out.println("IsSingle : " + alphabet.isSingle);
+
+			if (alphabet.correlationlist != null) {
+				for (int i = 0; i < alphabet.correlationlist.length; i++) {
+					System.out
+					.println("Cor : " + alphabet.correlationlist[i]);
+				}
+			}
+
 		}
 		System.out.println("Wait");
 	}
-	
-	public static void SetSecondList(String a, String b, String[] lst){
+
+	public static void SetSecondList(String a, String b, String[] lst) {
 		String aa = BranchCombination.getParentLetter(a);
 		corrlationList.put(a, null);
 	}
 	
-	public static String[] getZeroCor(String xkey, String a, String b, Alphabet ab) {
+	public static String[] getZeroCor(String xkey, String a, String b, Alphabet alphabet) {
 		String aa = BranchCombination.getParentLetter(a);
 		String ret = "";
 		for (int ind = 0; ind < combinedList.size(); ind++) {
@@ -2972,7 +2662,7 @@ public static String getAlphabetKey(String search){
 					}
 				}
 			}
-		}	
+		}
 		return ret.split("::");
 	}
 	
@@ -2981,55 +2671,54 @@ public static String getAlphabetKey(String search){
 		String ret = "";
 		int vsize = 0;
 		String sblist[] = sendlist.split("::");
-		
-		for (int q=0; q < sblist.length; q++){
+
+		for (int q = 0; q < sblist.length; q++) {
 			b = sblist[q];
 			for (int ind = 0; ind < combinedList.size(); ind++) {
-				String root[] =  combinedList.get(ind).split(" ");
-				String  temp = combinedList.get(ind).replaceAll(" ", "");
-				if(temp.length() == xkey.length()){
-				if (temp.contains(xkey)) {
-					if (!ret.isEmpty()) {
-						ret = ret + "::";
-					}
-					if (root.length == 0)
-					{ret = ret + combinedList.get(ind).replaceAll(aa, b).replaceAll(" ", "").trim();}
-					else
-					{
-						String vtemp =  combinedList.get(ind).replaceAll(aa, b).replaceAll(" ", "").trim();
-						if(!vtemp.equals(root[0].replaceAll(aa, b)))
-						{
-							ret = ret+ vtemp /*+ "::"+ root[0].replaceAll(aa, b) + "_"+ vtemp*/;}
-						else{
-							/*{ret = ret+ vtemp;}	*/
-							if (sblist.length>0){
-								 for(int j=0; j<sblist.length; j++)
-									{if (!ret.isEmpty()) {
-										ret = ret + "::";
-									}
-									ret = ret + vtemp.replace(aa, sblist[j]);
-								}
-								}
+				String root[] = combinedList.get(ind).split(" ");
+				String temp = combinedList.get(ind).replaceAll(" ", "");
+				if (temp.length() == xkey.length()) {
+					if (temp.contains(xkey)) {
+						if (!ret.isEmpty()) {
+							ret = ret + "::";
 						}
-					
-					
-						
-						
-						
+						if (root.length == 0) {
+							ret = ret
+									+ combinedList.get(ind).replaceAll(aa, b)
+											.replaceAll(" ", "").trim();
+						} else {
+							String vtemp = combinedList.get(ind)
+									.replaceAll(aa, b).replaceAll(" ", "")
+									.trim();
+							if (!vtemp.equals(root[0].replaceAll(aa, b))) {
+								ret = ret + vtemp /*
+												 * + "::"+
+												 * root[0].replaceAll(aa, b) +
+												 * "_"+ vtemp
+												 */;
+							} else {
+								/* {ret = ret+ vtemp;} */
+								if (sblist.length > 0) {
+									for (int j = 0; j < sblist.length; j++) {
+										if (!ret.isEmpty()) {
+											ret = ret + "::";
+										}
+										ret = ret
+												+ vtemp.replace(aa, sblist[j]);
+									}
+								}
+							}
+
+						}
 					}
 				}
-				}
-			}	
-			
-		}
-		
-		
-		
+			}
+
+		}		
 		return ret.split("::");
 	}
 	
 	public static String getCorrlationAlphabet(String xkey) {
-		// Ali
 		String ret = "";
 		for (int ind = 0; ind < combinedList.size(); ind++) {
 			if (xkey.equals(combinedList.get(ind).replaceAll(" ", "").trim())) {
@@ -3042,49 +2731,49 @@ public static String getAlphabetKey(String search){
 		return ret;
 	}
 	
-	public static String getB(String[] clst){
-		String b="";
+	public static String getSecondAlphabet(String[] correlationList){
+		String b = "";
 		constrainB = "";
-		secondkey ="";
-		for (int i2=0;i2< clst.length;i2++){
-			Alphabet b2 = abMap.get(clst[i2]);
-			if (b2!=null){
-				
-				if(b2.constrain.contains("precedence")){
+		secondkey = "";
+		for (int i2 = 0; i2 < correlationList.length; i2++) {
+			Alphabet b2 = alphabetMap.get(correlationList[i2]);
+			if (b2 != null) {
+
+				if (b2.constrain.contains("precedence")) {
 					secondkey = b2.secondAlphabetKey;
-					if(constrainB.isEmpty())
-						constrainB =b2.constrain;
-					
-				}else{
-				if(constrainB.isEmpty())
-					constrainB =b2.constrain;
+					if (constrainB.isEmpty())
+						constrainB = b2.constrain;
+
+				} else {
+					if (constrainB.isEmpty())
+						constrainB = b2.constrain;
 				}
-				if (!b.isEmpty()){
-					b=b+"::";
+				if (!b.isEmpty()) {
+					b = b + "::";
 				}
-				b=b+b2.secondAlphabet;
+				b = b + b2.secondAlphabet;
 			}
 		}
 		return b;
 	}
 	
 	
-	public static String getCoRel(String[] clst){
+	public static String getCorrelationCondition(String[] correlationList){
 		String b="";
 		String act = "";
-		secondkey ="";
-		constrainB ="";
-		for (int i2=0;i2< clst.length;i2++){
-			Alphabet b2 = abMap.get(clst[i2]);
-			if (b2!=null){
-			if (!b.isEmpty()){
-					b=b+"::";
+		secondkey = "";
+		constrainB = "";
+		for (int i2 = 0; i2 < correlationList.length; i2++) {
+			Alphabet b2 = alphabetMap.get(correlationList[i2]);
+			if (b2 != null) {
+				if (!b.isEmpty()) {
+					b = b + "::";
 				}
-				if (!act.isEmpty()){
-					act=act+"::";
+				if (!act.isEmpty()) {
+					act = act + "::";
 				}
-				b=b+b2.relCondition;
-				act=act+b2.actCondition;
+				b = b + b2.relCondition;
+				act = act + b2.actCondition;
 			}
 		}
 		actcond = act;
@@ -3105,48 +2794,17 @@ public static String getAlphabetKey(String search){
 		alphabets1 = result;
 	}
 	
-/*	public static void getSingleCodition() {
-		removeDuplicates();
-		String cnd ="";
-		for (int ind = 0; ind < alphabets1.size(); ind++) {
-			for (int i = 0; i < firstact.size(); i++) {
-				String s =  alphabets1.get(ind)+i+"";
-				System.out.println(s + ":"+firstact.get(i).toString());
-				if (firstact.get(i).toString().equals(s)) {
-					if(!cnd.isEmpty())
-						cnd = cnd +"::";
-						cnd = cnd + firstcont.get(i).toString();					
-				}
-			}
-			
-			for (int ii = 0; ii < firstact.size(); ii++) {
-				String temp = alphabets1.get(ind) + ii;
-				System.out.println(temp);
-				
-				if (firstact.get(ii).toString().equals(temp)) {
-					Alphabet ab = abMapx.get(temp);
-					if (ab != null) {
-						ab.ilpCondition = cnd;
-						ab.isSingle = false;
-						abMapx.put(temp, ab);
-					}
-				}
-			}
-		}		
-	}
-	*/
-
-
-
-	public static String getLeft(String s) {
-		if (s.isEmpty()) return "";
-		ConstraintConditions c = ConstraintConditions.build(s);
+	public static String getActivationCondition(String fullcondition) {
+		if (fullcondition.isEmpty())
+			return "";
+		ConstraintConditions c = ConstraintConditions.build(fullcondition);
 		return c.getActivationCondition();
 	}
-	
-	public static String getRelCond(String s) {
-		if (s.isEmpty()) return "";
-		ConstraintConditions c = ConstraintConditions.build(s);
+
+	public static String getcorrelationCondition(String fullcondition) {
+		if (fullcondition.isEmpty())
+			return "";
+		ConstraintConditions c = ConstraintConditions.build(fullcondition);
 		return c.getConstraintCondition();
 	}
 
