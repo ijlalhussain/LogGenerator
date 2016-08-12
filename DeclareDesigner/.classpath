@@ -16,31 +16,45 @@
 	<classpathentry kind="lib" path="lib/MINERful.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/J2SE-1.5"/>
 	<classpathentry kind="lib" path="lib/swing-layout-1.0.4.jar"/>
-	<classpathentry kind="lib" path="D:/MasterProject/synthetic-log-generator/DeclareDesigner/lib/DeclareVisualizer.jar"/>
-	<classpathentry kind="lib" path="D:/MasterProject/synthetic-log-generator/DeclareDesigner/lib/MINERful.jar"/>
-	<classpathentry kind="lib" path="D:/MasterProject/synthetic-log-generator/DeclareDesigner/lib/slickerbox1.0rc1.jar"/>
-	<classpathentry kind="lib" path="D:/MasterProject/synthetic-log-generator/DeclareDesigner/lib/jfreechart-1.0.14.jar"/>
-	<classpathentry kind="lib" path="D:/MasterProject/synthetic-log-generator/DeclareDesigner/lib/jgraph.jar"/>
-	<classpathentry kind="lib" path="D:/MasterProject/synthetic-log-generator/DeclareDesigner/lib/log4j-1.2.16.jar"/>
-	<classpathentry kind="lib" path="D:/MasterProject/synthetic-log-generator/DeclareDesigner/lib/automaton.jar"/>
-	<classpathentry kind="lib" path="D:/MasterProjectNew/synthetic-log-generator/DeclareDesigner/lib/jeval-0.9.4.jar"/>
-	<classpathentry kind="lib" path="D:/MasterProjectNew/synthetic-log-generator/DeclareDesigner/lib/ltl2aut.jar"/>
-	<classpathentry kind="lib" path="D:/MasterProjectNew/synthetic-log-generator/DeclareDesigner/lib/javailp-1.2a.jar"/>
-	<classpathentry kind="lib" path="D:/MasterProjectNew/synthetic-log-generator/DeclareDesigner/lib/lpsolve55j.jar"/>
-	<classpathentry kind="lib" path="D:/MasterProjectNew/synthetic-log-generator/DeclareDesigner/lib/cplex.jar"/>
-	<classpathentry kind="lib" path="D:/MasterProjectNew/synthetic-log-generator/DeclareDesigner/lib/glpk-java.jar"/>
-	<classpathentry kind="lib" path="D:/MasterProjectNew/synthetic-log-generator/DeclareDesigner/lib/gurobi.jar"/>
-	<classpathentry kind="lib" path="D:/MasterProjectNew/synthetic-log-generator/DeclareDesigner/lib/mosek.jar"/>
-	<classpathentry kind="lib" path="D:/MasterProjectNew/synthetic-log-generator/DeclareDesigner/lib/org.sat4j.core.jar"/>
-	<classpathentry kind="lib" path="D:/MasterProjectNew/synthetic-log-generator/DeclareDesigner/lib/org.sat4j.pb.jar"/>
-	<classpathentry kind="lib" path="D:/MasterProjectNew/synthetic-log-generator/DeclareDesigner/lib/collections-generic-4.01.jar"/>
-	<classpathentry kind="lib" path="D:/MasterProjectNew/synthetic-log-generator/DeclareDesigner/lib/java-cup-11a-runtime.jar"/>
-	<classpathentry kind="lib" path="D:/MasterProjectNew/synthetic-log-generator/DeclareDesigner/lib/jep-2.4.0.jar"/>
-	<classpathentry kind="lib" path="D:/MasterProjectNew/synthetic-log-generator/DeclareDesigner/lib/alt-rt.jar"/>
-	<classpathentry kind="lib" path="D:/MasterProjectNew/synthetic-log-generator/DeclareDesigner/lib/Widgets.jar"/>
-	<classpathentry kind="lib" path="D:/MasterProjectNew/synthetic-log-generator/DeclareDesigner/lib/DeclareMiner.jar"/>
-	<classpathentry kind="lib" path="D:/MasterProjectNew/synthetic-log-generator/DeclareDesigner/lib/commons-lang3-3.4.jar"/>
 	<classpathentry kind="lib" path="lib/resources.jar"/>
 	<classpathentry kind="lib" path="lib/com.google.guava_1.6.0.jar"/>
+	<classpathentry kind="lib" path="lib/jeval-0.9.4.jar"/>
+	<classpathentry kind="lib" path="lib/alt-rt.jar"/>
+	<classpathentry kind="lib" path="lib/automaton.jar"/>
+	<classpathentry kind="lib" path="lib/commons-lang3-3.4.jar"/>
+	<classpathentry kind="lib" path="lib/cplex.jar"/>
+	<classpathentry kind="lib" path="lib/DeclareMiner.jar"/>
+	<classpathentry kind="lib" path="lib/DeclareVisualizer.jar"/>
+	<classpathentry kind="lib" path="lib/glpk-java.jar"/>
+	<classpathentry kind="lib" path="lib/gurobi.jar"/>
+	<classpathentry kind="lib" path="lib/javailp-1.2a.jar"/>
+	<classpathentry kind="lib" path="lib/Widgets.jar"/>
+	<classpathentry kind="lib" path="lib/slickerbox1.0rc1.jar"/>
+	<classpathentry kind="lib" path="lib/jfreechart-1.0.14.jar"/>
+	<classpathentry kind="lib" path="lib/jgraph.jar"/>
+	<classpathentry kind="lib" path="lib/combinatoricslib-2.0.jar"/>
+	<classpathentry kind="lib" path="lib/commons-cli-1.2.jar"/>
+	<classpathentry kind="lib" path="lib/commons-lang3-3.1.jar"/>
+	<classpathentry kind="lib" path="lib/commons-math3-3.1.1.jar"/>
+	<classpathentry kind="lib" path="lib/dom4j-1.6.1.jar"/>
+	<classpathentry kind="lib" path="lib/gson-1.4.jar"/>
+	<classpathentry kind="lib" path="lib/guava-16.0.1.jar"/>
+	<classpathentry kind="lib" path="lib/javassist-3.12.1.GA.jar"/>
+	<classpathentry kind="lib" path="lib/jsr305-1.3.9.jar"/>
+	<classpathentry kind="lib" path="lib/log4j-1.2.16.jar"/>
+	<classpathentry kind="lib" path="lib/log4j-api-2.4.1.jar"/>
+	<classpathentry kind="lib" path="lib/log4j-core-2.4.1.jar"/>
+	<classpathentry kind="lib" path="lib/lpsolve55j.jar"/>
+	<classpathentry kind="lib" path="lib/mosek.jar"/>
+	<classpathentry kind="lib" path="lib/org.sat4j.core.jar"/>
+	<classpathentry kind="lib" path="lib/org.sat4j.pb.jar"/>
+	<classpathentry kind="lib" path="lib/reflections-0.9.5.jar"/>
+	<classpathentry kind="lib" path="lib/reflections-0.9.8-uberjar.jar"/>
+	<classpathentry kind="lib" path="lib/reflections-0.9.8.jar"/>
+	<classpathentry kind="lib" path="lib/slf4j-api-1.6.1.jar"/>
+	<classpathentry kind="lib" path="lib/slf4j-simple-1.6.1.jar"/>
+	<classpathentry kind="lib" path="lib/xeger-1.0-SNAPSHOT.jar"/>
+	<classpathentry kind="lib" path="lib/xml-apis-1.0.b2.jar"/>
+	<classpathentry kind="lib" path="lib/xpp3_min-1.1.4c.jar"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>

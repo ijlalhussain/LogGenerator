@@ -32,14 +32,16 @@ package nl.tue.declare.appl.design.gui;
 
 import java.io.File;
 import java.io.IOException;
-
+import java.time.Duration;
+import java.time.Instant;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import minerful.concept.ProcessModel;
-import minerful.io.encdec.declare.DeclareEncoderDecoder;
+//import minerful.io.encdec.declare.DeclareEncoderDecoder;
+import minerful.io.encdec.declaremap.DeclareMapEncoderDecoder;
 import minerful.logmaker.MinerFulLogMaker;
 import minerful.logmaker.params.LogMakerCmdParameters;
 import minerful.logmaker.params.LogMakerCmdParameters.Encoding;
@@ -224,6 +226,7 @@ public class ParameterSettings2 extends javax.swing.JFrame {
 
             public void run() {
             	
+            	Instant start = Instant.now();
             	String path = System.getProperty("java.library.path");
             	System.out.println(path);
                 
@@ -276,7 +279,7 @@ public class ParameterSettings2 extends javax.swing.JFrame {
             	else
             	{            		
             		System.out.println("Model with No Conditions");
-            		proMod = DeclareEncoderDecoder.fromDeclareMapToMinerfulProcessModel(ParameterSettings.jTextField5.getText());
+            		proMod = DeclareMapEncoderDecoder.fromDeclareMapToMinerfulProcessModel(ParameterSettings.jTextField5.getText());
             		 
             		LogMakerCmdParameters logMakParameters = new LogMakerCmdParameters(minVal, maxVal, traceVal);
             		//Tartu MIN_EVENTS_PER_TRACE, MAX_EVENTS_PER_TRACE, TRACES_IN_LOG);
@@ -292,18 +295,23 @@ public class ParameterSettings2 extends javax.swing.JFrame {
 
             	}
             	jProgressBar1.setValue(10);
+            	
+            	 Instant end = Instant.now();
+                 Duration timeElapsed = Duration.between(start, end);
+                 System.out.println("Time taken: "+ timeElapsed.toMillis() +" milliseconds");
             	if (isConditional){            		
             		if (isOk) JOptionPane.showMessageDialog(null, "Log Generation (with data) completed!");
             	} else {
             		JOptionPane.showMessageDialog(null, "Simple Log Generation completed!");
             	}
-            	
+               
         		
         		} catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}            	
             	            }
+        
         }).start();
     }//GEN-LAST:event_jButton6ActionPerformed
     

@@ -39,7 +39,8 @@ import minerful.concept.constraint.relation.RespondedExistence;
 import minerful.concept.constraint.relation.Response;
 import minerful.concept.constraint.relation.Succession;
 import minerful.io.encdec.TaskCharEncoderDecoder;
-import minerful.io.encdec.declare.DeclareEncoderDecoder;
+//import minerful.io.encdec.declare.DeclareEncoderDecoder;
+import minerful.io.encdec.declaremap.DeclareMapEncoderDecoder;
 import minerful.logparser.StringTaskClass;
 
 import org.processmining.plugins.declareminer.visualizing.ActivityDefinition;
@@ -426,9 +427,9 @@ public class MinerfulLogGenerator {
 			params = new ArrayList<String>();
 
 			Pattern
-				supPattern = Pattern.compile(DeclareEncoderDecoder.SUPPORT_EXTRACTION_REG_EXP),
-				confiPattern = Pattern.compile(DeclareEncoderDecoder.CONFIDENCE_EXTRACTION_REG_EXP),
-				inteFaPattern = Pattern.compile(DeclareEncoderDecoder.IF_EXTRACTION_REG_EXP);
+				supPattern = Pattern.compile(DeclareMapEncoderDecoder.SUPPORT_EXTRACTION_REG_EXP),
+				confiPattern = Pattern.compile(DeclareMapEncoderDecoder.CONFIDENCE_EXTRACTION_REG_EXP),
+				inteFaPattern = Pattern.compile(DeclareMapEncoderDecoder.IF_EXTRACTION_REG_EXP);
 			Matcher
 				supMatcher = supPattern.matcher(cd.getText().trim()),
 				confiMatcher = confiPattern.matcher(cd.getText().trim()),

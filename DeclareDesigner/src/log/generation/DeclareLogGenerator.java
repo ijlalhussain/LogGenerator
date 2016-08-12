@@ -1,3 +1,4 @@
+
 package log.generation;
 
 import java.io.File;
@@ -91,24 +92,25 @@ import org.deckfour.xes.model.XTrace;
 
 */
 public class DeclareLogGenerator {
-	static LinkedHashMap<String, Alphabet> alphabetMap = new LinkedHashMap<String, Alphabet>();
-	static LinkedHashMap<String, Alphabet> abMap2 = new LinkedHashMap<String, Alphabet>();
-	static LinkedHashMap<String, Alphabet> abMapAll = new LinkedHashMap<String, Alphabet>();
-	static LinkedHashMap<String, Alphabet> alphabetMapx = new LinkedHashMap<String, Alphabet>();
-	static LinkedHashMap<String, Alphabet> corrlationList = new LinkedHashMap<String, Alphabet>();	
-	static LinkedHashMap<String, Alphabet> abMapdata = new LinkedHashMap<String, Alphabet>();
-	static ArrayList<String> alphabets1 = new ArrayList();
-	static ArrayList<String> firstactivationList = new ArrayList();
-	static ArrayList<String> secondActivationList = new ArrayList();
-	static ArrayList<String> firstConditionList = new ArrayList();
-	static ArrayList<String> CorrelationContList = new ArrayList();
-	static ArrayList<String> addedList = new ArrayList();
-	static ArrayList<String> countedList = new ArrayList();
-	static ArrayList<String> countedListB = new ArrayList();
+	static LinkedHashMap<String, Alphabet> alphabetMap = new LinkedHashMap<String, Alphabet>(); // Activation Activities
+	static LinkedHashMap<String, Alphabet> acitivityConstraintList = new LinkedHashMap<String, Alphabet>(); //Constraints activities
+	static LinkedHashMap<String, Alphabet> abMap2 = new LinkedHashMap<String, Alphabet>(); // List to Compare
+	static LinkedHashMap<String, Alphabet> abMapAll = new LinkedHashMap<String, Alphabet>(); // Merger all List
+	static LinkedHashMap<String, Alphabet> alphabetMapx = new LinkedHashMap<String, Alphabet>(); // List for Log Generation
+	static LinkedHashMap<String, Alphabet> corrlationList = new LinkedHashMap<String, Alphabet>();	// Correlation Condition List
+	static LinkedHashMap<String, Alphabet> abMapdata = new LinkedHashMap<String, Alphabet>(); // Data List
+	static ArrayList<String> alphabets1 = new ArrayList(); // Name of the Alphabets to check the duplicates
+	static ArrayList<String> firstactivationList = new ArrayList(); // First aplhabet in the event
+	static ArrayList<String> secondActivationList = new ArrayList(); // second alphabet in the event
+	static ArrayList<String> firstConditionList = new ArrayList(); // activation conditions
+	static ArrayList<String> CorrelationContList = new ArrayList(); // correlation conditions
+	static ArrayList<String> addedList = new ArrayList(); // activites added in the log lists
+	static ArrayList<String> countedList = new ArrayList(); // count number of combinations
+	static ArrayList<String> countedListB = new ArrayList(); // combination second list
 	static ArrayList<String> countedListA = new ArrayList();
 	static ArrayList<String> alphabetList = new ArrayList();
 	static ArrayList<String> repeatList = new ArrayList();
-	static ArrayList<String> combinedList = new ArrayList();
+	static ArrayList<String> combinedList = new ArrayList(); // List if akk constraitns
 	static ArrayList<String> constrainList = new ArrayList<String>();
 	static 	TreeMap<TaskChar,String> newLogIndex = new TreeMap<TaskChar,String>();
 	static 	TreeMap<Integer,TraceAlphabet> traceMap = new TreeMap<Integer,TraceAlphabet>();
@@ -121,16 +123,35 @@ public class DeclareLogGenerator {
 	public static final File OUTPUT_LOG = new File("");
 
 	public static boolean GenerateLog(int minlength, int maxlength, long LogSize,
+	/* 
+	 * Read the Declare Model  
+	 */
+			
 			String filename, String destitionfile) {
 		AssignmentViewBroker broker = XMLBrokerFactory
 				.newAssignmentBroker(filename);
 		AssignmentModel model = broker.readAssignment();				
-		// addNewData(model);
+
+		/* 
+		 * Parse the model and add in the List 
+		 */
+				
 		getAlphabets(model); // add first aphabets and condition
+		
+		 
 		checkActivation(model); // add activation conditions
 		ParameterSettings2.jProgressBar1.setValue(3);
 		AddFirstLetter(model); // add into abMap
+		/* 
+		 * splitting the activations
+		 */
+		
 		generateCombination(); // count alphabets
+		
+		/* 
+		 * ILP Check 
+		 */
+		
 		alphabetMapx.clear();
 		SetCombinationCondtion(); // combination without rep.
 		ILPSolverUtil.CheckIlpConditions(alphabetMapx);
@@ -144,7 +165,7 @@ public class DeclareLogGenerator {
 		}
 		addCorrelatedConditions();
 	//	CheckforPrecendence();
-		
+
 		LogMakerCmdParameters logMakParameters = new LogMakerCmdParameters(
 				minlength, maxlength, LogSize);
 		OUTPUT_ENCODING = Encoding.xes;
@@ -152,15 +173,14 @@ public class DeclareLogGenerator {
 
 		File OUTPUT_LOG = new File(destitionfile);
 		logMakParameters.outputLogFile = OUTPUT_LOG;
+		
+		/* 
+		 * Log Process start 
+		 */
 		MinerFulLogMaker logMak = new MinerFulLogMaker(logMakParameters);		
 		ProcessModel proMod = null;  
 		//CheckforPrecendence();
 		proMod = createDataModel();//newStyleLog();
-	 
-		//addCorrelatedConditions();
-		//DeclareModelGenerator dm = new DeclareModelGenerator(model,abMapx);
-		//proMod=	dm.generateModel();
-		
 		XLog xlog = logMak.createLog(proMod);
 		// CreateBranches(xlog); //twist
 		ProcessLog(xlog);
@@ -170,21 +190,8 @@ public class DeclareLogGenerator {
 		 */
 		addCorrelationtoArray();
 		mergeLists();
-		// CheckForSameList(xlog);
-		// SetMappedILPCondition();
-		// removeEventswithoutSoucre();
-		// selectRandomEvents();
-		// IlpSolver.CheckIlpConditions(abMap2);
-
 		addEventDataRestoreKeys(xlog);
-	   
-	    // LogService.printLog(xlog);
-	  /*System.out.println("_____printing Map__________________");
-		   LogService.PrintMyLog(model, abMapx, LogSize, combinedList, minlength, maxlength);
-	 		XLog xxlog = LogService
-				.GenerateLog(model, abMapx, LogSize, combinedList,minlength,maxlength);
-		XLifecycleExtension lifeExtension = XLifecycleExtension.instance();
-		lifeExtension.assignModel(xlog, model.getName());*/
+
 		
 		try {
 			logMak.storeLog();	
@@ -199,6 +206,9 @@ public class DeclareLogGenerator {
 	}
 	
 	
+
+
+
 	private static void SetMappedILPCondition() {
 		// TODO Auto-generated method stub
 		
@@ -218,7 +228,10 @@ public class DeclareLogGenerator {
 		
 	}
 
-
+	/* 
+	 * Combination of correlation activities
+	 * based on Graph 
+	 */
 	private static void CombineSelectedLog() {
 		System.out.println("--------------Log Graph Combinations------------------------");
 		int count = 0;
@@ -366,7 +379,7 @@ public class DeclareLogGenerator {
 
 			for (int count = 0; count < ex.length; count++) {
 				TraceAlphabet tc = traceMap2.get(Integer.parseInt(ex[count]));
-				System.out.println("xxx souce:" + ex[count]);
+				System.out.println(" souce:" + ex[count]);
 				if (tc != null) {
 					if (tc.ilpSelectedList != null) {
 						for (int t = 0; t < tc.ilpSelectedList.size(); t++) {
@@ -390,7 +403,7 @@ public class DeclareLogGenerator {
 			Map<Integer, List<Integer>> ilpIndex = new HashMap<Integer, List<Integer>>();
 			// System.out.println("Source:" + tc.alphabetKey);
 			if (tc.Mappedkeys != null) {
-				Graph2 graph2 = new Graph2(600);
+				Graph graph2 = new Graph(600);
 				for (int i = 0; i < tc.Mappedkeys.size(); i++) {
 					graph2.addEdge(k, tc.MappedKeysIndex.get(i));					
 				}
@@ -443,7 +456,7 @@ public class DeclareLogGenerator {
 				LogAlphabet logalphabet = new LogAlphabet();
 				logalphabet.eventNo = tb.eventNo;
 				logalphabet.traceNo = tb.traceNo;
-				Graph2 g33 = new Graph2(600);
+				Graph g33 = new Graph(600);
 				ArrayList<Integer> eventList = new ArrayList<Integer>();
 				eventList.clear();
 				for (int l2 = 0; l2 < traceEvents.size(); l2++) {
@@ -489,7 +502,10 @@ public class DeclareLogGenerator {
 		return soucelist.equals(checkingList) ? true : false;
 	}
 
-
+	/* 
+	 * Selection of random correlation from multiple  activities
+	 * based on Graph  - not useful for activations only
+	 */
 	public static void GetRandomSelection(XLog xlog) {
 		// TODO Auto-generated method stub
 		
@@ -547,7 +563,10 @@ public class DeclareLogGenerator {
 		
 	}
 
-
+	/* 
+	 * Selection of random correlation from multiple  activities
+	 * based on Graph  - not useful for activations only
+	 */
 	private static void ProcessLog(XLog xlog) {
 	
 		try {
@@ -784,9 +803,13 @@ public class DeclareLogGenerator {
 		
 	}
 
+	/* 
+	 * check and test of random correlation from multiple  activities
+	 * based on Graph  - not useful for activations only
+	 */
 
-	private static void CheckforRando(ArrayList<Integer> dfs,ArrayList<Integer> traceIndex, ArrayList<String> traceList) {
-		// TODO Auto-generated method stub
+	private static void CheckforRandomSelection(ArrayList<Integer> dfs,ArrayList<Integer> traceIndex, ArrayList<String> traceList) {
+		
 		ArrayList<String> Added = new ArrayList<String>();
 		ArrayList<Integer> AddedIndex = new ArrayList<Integer>();
 		ArrayList<Integer> ret = new ArrayList<Integer>();
@@ -815,7 +838,9 @@ public class DeclareLogGenerator {
 		System.out.println("" +ret);
 	}
 
-
+	/* 
+	 * Merge both list .. without any change in the original list
+	 */
 	private static void mergeLists() {
 		for (Entry<String, Alphabet> activity : alphabetMapx.entrySet()) {
 			String k = activity.getKey();
@@ -832,7 +857,9 @@ public class DeclareLogGenerator {
 		
 	}
 
-
+	/* 
+	 * Restore the original activity name by replacing TaskChar Values
+	 */
 	private static void addEventDataRestoreKeys(XLog xlog) {
 		int count = 0;
 		int check = 0;
@@ -883,7 +910,9 @@ public class DeclareLogGenerator {
 			
 	}
 
-
+	/* 
+	 * Correlation Array List
+	 */
 	private static void addCorrelationtoArray() {
 		for (Entry<String, Alphabet> activity : alphabetMapx.entrySet()) {
 			String k = activity.getKey();
@@ -905,31 +934,25 @@ public class DeclareLogGenerator {
 	}
 
 
-	public static ArrayList<String> getCorrelationList(String key){
-		ArrayList<String> targetList = new ArrayList<String>();	
-		
+	public static ArrayList<String> getCorrelationList(String key) {
+		ArrayList<String> targetList = new ArrayList<String>();
+
 		Alphabet ret = alphabetMapx.get(key);
-		if (ret != null){
-			if(ret.correlationlist != null){
+		if (ret != null) {
+			if (ret.correlationlist != null) {
 				targetList.clear();
-				for(int i=0; i < ret.correlationlist.length; i++){
-				  targetList.add(ret.correlationlist[i]);
-				/*  String alphabetname = BranchCombination.getParentLetter(ret.correlationlist[i]);
-					String blist[] = ret.secondAlphabet.split("::");*/
-			/*	if (blist.length>1){
-					for (int ndm =0; ndm <blist.length; ndm++){
-						if (!alphabetname.equals("")){
-						if(!blist[ndm].equals(alphabetname)){
-						//	System.out.println(ret.correlationlist[i].replace(alphabetname, blist[ndm]));
-							targetList.add(ret.correlationlist[i].replace(alphabetname, blist[ndm]));							
-						}			}
-					}
-					}*/
-			  }	
+				for (int i = 0; i < ret.correlationlist.length; i++) {
+					targetList.add(ret.correlationlist[i]);
+				}
 			}
 		}
-		return  targetList;
+
+		return targetList;
 	}
+	
+	/* 
+	 * Print the log with the correlation condition - not in use for Activations
+	 */
 	
 	public static String printme(ArrayList<String> sourceList,ArrayList<String> targetList,
  ArrayList<String> trace, String key,
@@ -941,12 +964,6 @@ public class DeclareLogGenerator {
 			trace2.add(trace.get(kk));
 		}
 		int index = sourceList.indexOf(key);
-		//System.out.println("Combination : Source : " + sourceList.get(index) + "("+
-			//	eventnumber+ ")" );
-		
-	//	for (int b = 0; b < trace2.size(); b++) {
-			//System.out.println("--");
-			
 			if (index > -1) {				
 				//System.out.println("Log  A = " + sourceList.get(index));
 			
@@ -976,6 +993,10 @@ public class DeclareLogGenerator {
 		return ret;
 			
 	}
+	
+	/* 
+	 * Create Branches of the activation
+	 */
 	public static void CreateBranches(XLog xlog) {
 		/*try {*/
 
@@ -1133,6 +1154,10 @@ public class DeclareLogGenerator {
 		System.out.println("-----Printing log end -----");
 	}
 	
+
+	/* 
+	 * Not is use for Actications Only.
+	 */
 	public static void removeEventswithoutSouce(){
 		System.out.println("----------index printing---------");
 		
@@ -1162,6 +1187,10 @@ public class DeclareLogGenerator {
 		}		
 	}
 	
+	
+	/* 
+	 * Not is use for Actications Only.
+	 */
 	public static void selectRandomEvents(){
 		ArrayList<String> eventKey = new ArrayList();
 		ArrayList<String> matched = new ArrayList();
@@ -1207,6 +1236,10 @@ public class DeclareLogGenerator {
 	
 	}
 	
+	
+	/* 
+	 * Not is use for Activations Only.
+	 */
 	public static ArrayList<String> getmatchList(ArrayList<String> trace,ArrayList<String> target,
 			int start,ArrayList<Integer> indx,String source,ArrayList<Integer> eventIndex){
 		boolean foundSwitch = false;  
@@ -1238,6 +1271,9 @@ public class DeclareLogGenerator {
 		return temp;
 	}
 	
+	/* 
+	 * Select a random event from trace.
+	 */
 	public static int SelectRandomIndex(ArrayList<Integer> names) {
 		int ret = -1;
 		ArrayList<Integer> temp = new ArrayList<Integer>();
@@ -1259,7 +1295,9 @@ public class DeclareLogGenerator {
 		return ret;
 	}
 
-	
+	/* 
+	 * Select a random event name from trace.
+	 */	
 	public static int SelectRandomName(ArrayList<String> names) {
 		int ret = -1;
 		ArrayList<String> temp = new ArrayList<String>();
@@ -1292,6 +1330,9 @@ public class DeclareLogGenerator {
 		return ret;
 	}
 	
+	/* 
+	 * Set a random trace.
+	 */
 	public static String setRandomTrace(ArrayList<String> eventKey,ArrayList<Integer> eventNo,int traceNo){
 		String ret = "";
 		ArrayList<String> duplicateList = new ArrayList();
@@ -1352,6 +1393,9 @@ public class DeclareLogGenerator {
 
 	}
 	
+	/* 
+	 * Generating Input Model for MINERFul.
+	 */	
 	
 public static ProcessModel createDataModel (){
 
@@ -1359,7 +1403,9 @@ public static ProcessModel createDataModel (){
 	List<Constraint> constraintList = new ArrayList<Constraint>();
 	List<String> targetList = new  ArrayList<String>();
 	
-	
+	/* 
+	 * Get All activites .
+	 */	
 		for (Entry<String, Alphabet> activity : alphabetMapx.entrySet()) {
 			String key = activity.getKey();
 			Alphabet alphabet = activity.getValue();
@@ -1379,7 +1425,9 @@ public static ProcessModel createDataModel (){
 			}
 		}
 	
-	
+		/* 
+		 * Sort the list by Converting it into collections
+		 */	
 		if (!targetList.isEmpty()) {
 			Set<Object> strSet = Arrays.stream(targetList.toArray()).collect(
 					Collectors.toSet());
@@ -1391,6 +1439,11 @@ public static ProcessModel createDataModel (){
 		}
 
 		Collections.sort(targetList);
+	
+		
+		/* 
+		 * Generate TaskChar for Model .. 65 == a
+		 */	
 		int theEnd = 65 + targetList.size();
 		for (int vchar = 65; vchar < theEnd; vchar++) {
 			char c = (char) vchar;
@@ -1406,6 +1459,9 @@ public static ProcessModel createDataModel (){
 		}
 	
 	
+		/* 
+		 * Mapped or create a Constraints
+		 */	
 	for (Entry<String, Alphabet> activity : alphabetMapx.entrySet()) {
 			String key = activity.getKey();
 			Alphabet alphabet = activity.getValue();
@@ -1417,15 +1473,18 @@ public static ProcessModel createDataModel (){
 			taskCharList.clear();
 
 			if (alphabet.constrain.equals("existence")) {
-				/*
-				 * if (BranchCombination.getParentLetter(k).equals(k)) {
-				 * continue; }
-				 */
+			
+				/* 
+				 * if not activation continue
+				 */	
 				if (alphabet.isSingle) {
 					continue;
 				}
 			}
 
+			/* 
+			 * special case for absence
+			 */	
 			if (alphabet.constrain.equals("absence")) {
 				if (alphabet.isSingle) {
 					continue;
@@ -1490,6 +1549,15 @@ public static ProcessModel createDataModel (){
 
 						}
 					}
+				
+				//**********************Chain Constraint Start*****************
+				// check for Chain Constraints if it is not a single activity - un-comment below two lines
+				/*if(!alphabet.isSingle)
+				checkforChainConstraint(taskCharList,addtaskCharList,alphabet);*/
+				//**********************Chain Constraint End*****************
+				
+				
+		
 			} else {
 				String alphabetname = BranchCombination.getParentLetter(key);
 				String xnam = key.replace(key, alphabet.secondAlphabetKey);// alphabet.correlationlist[j];
@@ -1507,22 +1575,29 @@ public static ProcessModel createDataModel (){
 			// create new model for log generation..
 		     switch (alphabet.constrain) {
 	            case "response": 
-						Response response = new Response(new TaskCharSet(firstChar),
-								new TaskCharSet(taskCharList));
-						constraintList.add(response);
-						if (alphabet.correlationlist != null) {
-							for (int j = 1; j < alphabet.correlationlist.length; j++) {
-								taskCharList.clear();
-								targetList.add(alphabet.correlationlist[j]);
-								if (alphabet.isRoot == false) {
-									taskCharList.add(getAlphabetValue(alphabet.correlationlist[j]));
-									Response response2 = new Response(new TaskCharSet(
-											firstChar), new TaskCharSet(taskCharList));
-									constraintList.add(response2);
-								}
+				Response response = new Response(new TaskCharSet(firstChar),
+						new TaskCharSet(taskCharList));
+				constraintList.add(response);
+				if (alphabet.correlationlist != null) {
+					for (int j = 1; j < alphabet.correlationlist.length; j++) {
+						taskCharList.clear();
+						targetList.add(alphabet.correlationlist[j]);
+						if (alphabet.isRoot == false) {
+							taskCharList
+									.add(getAlphabetValue(alphabet.correlationlist[j]));
+
+							if (!addConstraints(alphabet.correlationlist[j], firstChar, taskCharList,
+									constraintList)) {
+								Response response2 = new Response(
+										new TaskCharSet(firstChar),
+										new TaskCharSet(taskCharList));
+								constraintList.add(response2);
 							}
-		
+
 						}
+					}
+
+				}
 						break;
 						
 	            case "alternateresponse" :
@@ -1535,10 +1610,14 @@ public static ProcessModel createDataModel (){
 								targetList.add(alphabet.correlationlist[j]);
 								if (alphabet.isRoot == false) {
 									taskCharList.add(getAlphabetValue(alphabet.correlationlist[j]));
-									AlternateResponse res2 = new AlternateResponse(
-											new TaskCharSet(firstChar),
-											new TaskCharSet(taskCharList));
-									constraintList.add(res2);
+								/*	*/
+									
+									if (!addConstraints(alphabet.correlationlist[j],firstChar,taskCharList, constraintList)){
+										AlternateResponse res2 = new AlternateResponse(
+												new TaskCharSet(firstChar),
+												new TaskCharSet(taskCharList));
+										constraintList.add(res2);
+									}
 		
 								}
 							}
@@ -1557,10 +1636,14 @@ public static ProcessModel createDataModel (){
 	
 							if (alphabet.isRoot == false) {
 								taskCharList.add(getAlphabetValue(alphabet.correlationlist[j]));
-								NotSuccession notresponse2 = new NotSuccession(
-										new TaskCharSet(firstChar),
-										new TaskCharSet(taskCharList));
-								constraintList.add(notresponse2);
+								/**/
+								
+								if (!addConstraints(alphabet.correlationlist[j],firstChar,taskCharList, constraintList)){
+									NotSuccession notresponse2 = new NotSuccession(
+											new TaskCharSet(firstChar),
+											new TaskCharSet(taskCharList));
+									constraintList.add(notresponse2);
+								}
 	
 							}
 						}
@@ -1578,11 +1661,13 @@ public static ProcessModel createDataModel (){
 		
 								if (alphabet.isRoot == false) {
 									taskCharList.add(getAlphabetValue(alphabet.correlationlist[j]));
-									RespondedExistence respondedexistence2 = new RespondedExistence(
-											new TaskCharSet(firstChar),
-											new TaskCharSet(taskCharList));
-									constraintList.add(respondedexistence2);
-		
+									/**/
+									if (!addConstraints(alphabet.correlationlist[j],firstChar,taskCharList, constraintList)){
+										RespondedExistence respondedexistence2 = new RespondedExistence(
+												new TaskCharSet(firstChar),
+												new TaskCharSet(taskCharList));
+										constraintList.add(respondedexistence2);
+									}
 								}
 							}
 		
@@ -1600,10 +1685,13 @@ public static ProcessModel createDataModel (){
 	
 							if (alphabet.isRoot == false) {
 								taskCharList.add(getAlphabetValue(alphabet.correlationlist[j]));
-								NotChainSuccession notchainresponse2 = new NotChainSuccession(
-										new TaskCharSet(firstChar),
-										new TaskCharSet(taskCharList));
-								constraintList.add(notchainresponse2);
+								
+								if (!addConstraints(alphabet.correlationlist[j],firstChar,taskCharList, constraintList)){
+									NotChainSuccession notchainresponse2 = new NotChainSuccession(
+											new TaskCharSet(firstChar),
+											new TaskCharSet(taskCharList));
+									constraintList.add(notchainresponse2);
+								} 
 	
 							}
 						}
@@ -1620,10 +1708,17 @@ public static ProcessModel createDataModel (){
 								targetList.add(alphabet.correlationlist[j]);
 								if (alphabet.isRoot == false) {
 									taskCharList.add(getAlphabetValue(alphabet.correlationlist[j]));
-									ChainResponse chainresponse2 = new ChainResponse(
+									/*ChainResponse chainresponse2 = new ChainResponse(
 											new TaskCharSet(firstChar),
 											new TaskCharSet(taskCharList));
-									constraintList.add(chainresponse2);
+									constraintList.add(chainresponse2);*/
+									
+									if (!addConstraints(alphabet.correlationlist[j],firstChar,taskCharList, constraintList)){
+										ChainResponse chainresponse2 = new ChainResponse(
+												new TaskCharSet(firstChar),
+												new TaskCharSet(taskCharList));
+										constraintList.add(chainresponse2);
+									} 
 								}
 							}
 		
@@ -1641,10 +1736,13 @@ public static ProcessModel createDataModel (){
 		
 								if (alphabet.isRoot == false) {
 									taskCharList.add(getAlphabetValue(alphabet.correlationlist[j]));
-									NotCoExistence notrespondedexistence2 = new NotCoExistence(
-											new TaskCharSet(firstChar),
-											new TaskCharSet(taskCharList));
-									constraintList.add(notrespondedexistence2);
+																
+									if (!addConstraints(alphabet.correlationlist[j],firstChar,taskCharList, constraintList)){
+										NotCoExistence notrespondedexistence2 = new NotCoExistence(
+												new TaskCharSet(firstChar),
+												new TaskCharSet(taskCharList));
+										constraintList.add(notrespondedexistence2);
+									} 
 		
 								}// false
 							}
@@ -1661,10 +1759,15 @@ public static ProcessModel createDataModel (){
 							targetList.add(alphabet.correlationlist[j]);
 							if (alphabet.isRoot == false) {
 								taskCharList.add(getAlphabetValue(alphabet.correlationlist[j]));
-								Precedence precedence2 = new Precedence(
-										new TaskCharSet(taskCharList), new TaskCharSet(
-												firstChar));
-								constraintList.add(precedence2);
+								
+								
+								if (!addConstraints(alphabet.correlationlist[j],firstChar,taskCharList, constraintList)){
+									Precedence precedence2 = new Precedence(
+											new TaskCharSet(taskCharList), new TaskCharSet(
+													firstChar));
+									constraintList.add(precedence2);
+								} 
+	
 	
 							}
 						}
@@ -1682,10 +1785,14 @@ public static ProcessModel createDataModel (){
 								targetList.add(alphabet.correlationlist[j]);
 								if (alphabet.isRoot == false) {
 									taskCharList.add(getAlphabetValue(alphabet.correlationlist[j]));
-									AlternatePrecedence alternateprecedence2 = new AlternatePrecedence(
-											new TaskCharSet(taskCharList), new TaskCharSet(
-													firstChar));
-									constraintList.add(alternateprecedence2);
+									
+									
+									if (!addConstraints(alphabet.correlationlist[j],firstChar,taskCharList, constraintList)){
+										AlternatePrecedence alternateprecedence2 = new AlternatePrecedence(
+												new TaskCharSet(taskCharList), new TaskCharSet(
+														firstChar));
+										constraintList.add(alternateprecedence2);
+									}
 								}
 							}
 	
@@ -1703,10 +1810,14 @@ public static ProcessModel createDataModel (){
 									targetList.add(alphabet.correlationlist[j]);
 									if (alphabet.isRoot == false) {
 										taskCharList.add(getAlphabetValue(alphabet.correlationlist[j]));
-										ChainPrecedence chainprecedence2 = new ChainPrecedence(
-												new TaskCharSet(taskCharList), new TaskCharSet(
-														firstChar));
-										constraintList.add(chainprecedence2);
+										
+										
+										if (!addConstraints(alphabet.correlationlist[j],firstChar,taskCharList, constraintList)){
+											ChainPrecedence chainprecedence2 = new ChainPrecedence(
+													new TaskCharSet(taskCharList), new TaskCharSet(
+															firstChar));
+											constraintList.add(chainprecedence2);
+										}
 			
 									}
 								}
@@ -1725,10 +1836,14 @@ public static ProcessModel createDataModel (){
 									targetList.add(alphabet.correlationlist[j]);
 									if (alphabet.isRoot == false) {
 										taskCharList.add(getAlphabetValue(alphabet.correlationlist[j]));
-										NotSuccession notprecedence2 = new NotSuccession(
-												new TaskCharSet(taskCharList), new TaskCharSet(
-														firstChar));
-										constraintList.add(notprecedence2);
+										
+										
+										if (!addConstraints(alphabet.correlationlist[j],firstChar,taskCharList, constraintList)){
+											NotSuccession notprecedence2 = new NotSuccession(
+													new TaskCharSet(taskCharList), new TaskCharSet(
+															firstChar));
+											constraintList.add(notprecedence2);
+										}
 			
 									}
 								}
@@ -1746,10 +1861,14 @@ public static ProcessModel createDataModel (){
 								targetList.add(alphabet.correlationlist[j]);
 								if (alphabet.isRoot == false) {
 									taskCharList.add(getAlphabetValue(alphabet.correlationlist[j]));
-									NotChainSuccession notchainprecedence2 = new NotChainSuccession(
-											new TaskCharSet(taskCharList), new TaskCharSet(
-													firstChar));
-									constraintList.add(notchainprecedence2);
+									
+									
+									if (!addConstraints(alphabet.correlationlist[j],firstChar,taskCharList, constraintList)){
+										NotChainSuccession notchainprecedence2 = new NotChainSuccession(
+												new TaskCharSet(taskCharList), new TaskCharSet(
+														firstChar));
+										constraintList.add(notchainprecedence2);
+									}
 		
 								}
 							}
@@ -1850,6 +1969,138 @@ public static ProcessModel createDataModel (){
 
 }
 	
+/* 
+ * Function for Adding Chain Constraints
+ *  */	
+	private static void checkforChainConstraint(
+			ArrayList<TaskChar> taskCharList, List<TaskChar> addtaskCharList,
+			Alphabet alphabet) {
+		if (alphabet.correlationlist != null) {
+			for (int j = 0; j < alphabet.correlationlist.length; j++) {
+				for (Entry<String, Alphabet> activity : alphabetMapx.entrySet()) {
+					if (!activity.getKey().equals(alphabet.alphabetkey)) {
+						if (BranchCombination
+								.getParentLetter(activity.getKey()).equals(
+										alphabet.correlationlist[j])) {
+							TaskChar tk = getAlphabetValue(activity.getKey());
+							if (!(tk == null)) {
+								taskCharList.add(tk);
+							}
+						}
+					}
+				}
+
+			}
+
+		}
+
+	}
+
+	/* 
+	 * add Constraints in activation based on the given condition
+	 *  */	
+	
+	public static boolean addConstraints(String key, TaskChar firstChar,
+			List<TaskChar> taskCharList, List<Constraint> constraintList) {
+		
+				
+		Alphabet activityConstraint = acitivityConstraintList.get(key);
+		if (activityConstraint == null) {
+			return false;
+		}
+
+		
+
+		switch (activityConstraint.constrain) {
+		case "response":
+			Response response2 = new Response(new TaskCharSet(firstChar),
+					new TaskCharSet(taskCharList));
+			constraintList.add(response2);
+			break;
+		case "chainresponse":
+			ChainResponse chainresponse2 = new ChainResponse(new TaskCharSet(
+					firstChar), new TaskCharSet(taskCharList));
+			constraintList.add(chainresponse2);
+			break;
+		case "notresponse":
+			NotSuccession notresponse3 = new NotSuccession(new TaskCharSet(
+					firstChar), new TaskCharSet(taskCharList));
+			constraintList.add(notresponse3);
+			break;
+		case "alternateresponse":
+			AlternateResponse res2 = new AlternateResponse(new TaskCharSet(
+					firstChar), new TaskCharSet(taskCharList));
+			constraintList.add(res2);
+			break;
+		case "respondedexistence":
+			RespondedExistence respondedexistence2 = new RespondedExistence(
+					new TaskCharSet(firstChar), new TaskCharSet(taskCharList));
+			constraintList.add(respondedexistence2);
+			break;
+			
+		case "notchainresponse" : 
+			NotChainSuccession notchainresponse2 = new NotChainSuccession(
+					new TaskCharSet(firstChar),
+					new TaskCharSet(taskCharList));
+			constraintList.add(notchainresponse2);
+			break;
+			
+		case "notrespondedexistence" :
+			NotCoExistence notrespondedexistence2 = new NotCoExistence(
+					new TaskCharSet(firstChar),
+					new TaskCharSet(taskCharList));
+			constraintList.add(notrespondedexistence2);
+			break;
+			
+		case "precedence": 
+			Precedence precedence2 = new Precedence(
+					new TaskCharSet(taskCharList), new TaskCharSet(
+							firstChar));
+			constraintList.add(precedence2);
+			break;
+			
+			
+		case "alternateprecedence": 
+			AlternatePrecedence alternateprecedence2 = new AlternatePrecedence(
+					new TaskCharSet(taskCharList), new TaskCharSet(
+							firstChar));
+			constraintList.add(alternateprecedence2);
+			break;
+			
+			
+		case "chainprecedence": 
+			ChainPrecedence chainprecedence2 = new ChainPrecedence(
+					new TaskCharSet(taskCharList), new TaskCharSet(
+							firstChar));
+			constraintList.add(chainprecedence2);
+			break;
+			
+		case "notprecedence": 
+			NotSuccession notprecedence2 = new NotSuccession(
+					new TaskCharSet(taskCharList), new TaskCharSet(
+							firstChar));
+			constraintList.add(notprecedence2);
+			break;
+			
+		case "notchainprecedence" : 
+			NotChainSuccession notchainprecedence2 = new NotChainSuccession(
+					new TaskCharSet(taskCharList), new TaskCharSet(
+							firstChar));
+			constraintList.add(notchainprecedence2);
+			break;
+			
+			
+		default:
+			return false;
+
+		}
+
+		return true;
+	}
+
+	/* 
+	 *Get Value of TaskChar from the Generated List
+	 *  */	
 	
 public static TaskChar getAlphabetValue(String search){
 	TaskChar ret = null; 
@@ -1879,7 +2130,14 @@ public static String getAlphabetKey(String search){
 		return ret;
 }
 
-	private static void CheckforPrecendence() {
+
+
+
+/* 
+ *Special conversion of activites for precedence
+ *for example opposite of Response.
+ *  */	
+private static void CheckforPrecendence() {
 		
 	LinkedHashMap<String, Alphabet> abMaptemp = new LinkedHashMap<String, Alphabet>();
 		String aa ="";
@@ -2068,6 +2326,8 @@ public static String getAlphabetKey(String search){
 				.getConstraintDefinitions()) {
 			constrain = cd.getName().replace("-", "").replace(" ", "")
 					.toLowerCase();
+			firstName = "";
+			lastname = "";
 			for (Parameter p : cd.getParameters()) {
 
 				for (nl.tue.declare.domain.model.ActivityDefinition ad : cd
@@ -2099,9 +2359,20 @@ public static String getAlphabetKey(String search){
 							String temp = ad.getName().replace(" ", "");
 							alphabetList.add(temp);
 							countedListB.add(temp);
-							System.out.println(ad.getName());
+							lastname = temp;
+						//	System.out.println(ad.getName());
 						}
 					}
+					
+					
+					if (!lastname.isEmpty()) {
+						Alphabet constraints = new Alphabet();
+						constraints.constrain = constrain;
+						constraints.alphabetkey = lastname;
+						constraints.alphabetname = lastname;
+						acitivityConstraintList.put(lastname, constraints);
+					}
+					//System.out.println("Last Name: " + lastname + ": Const: "+ constrain);
 				}
 			}
 		}
@@ -2299,6 +2570,11 @@ public static String getAlphabetKey(String search){
 		
 	}
 	
+
+	
+	/* 
+	 Add all activites in the List.
+	 *  */	
 	public static void Addnew(String fname, String lname, String act, String ilpcond, boolean isActivated,
 			String relcond,String FullCondition,String cons, boolean isroot)
 	{
@@ -2585,7 +2861,7 @@ public static String getAlphabetKey(String search){
 						String test = alphabet.secondAlphabetKey;
 						System.out.println("xxx" + alphabet.constrain);
 						if (test.isEmpty()) {
-							test = "XX";
+							test = "";
 						}
 						test = test + "::";
 
